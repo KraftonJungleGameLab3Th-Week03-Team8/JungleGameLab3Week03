@@ -38,12 +38,28 @@ public class InputManager : MonoBehaviour
 
     Rigidbody2D _rb;
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void InitializeSingleton()
+    {
+        if (_instance == null)
+        {
+            GameObject inputManagerObj = new GameObject("InputManager");
+            _instance = inputManagerObj.AddComponent<InputManager>();
+            DontDestroyOnLoad(inputManagerObj);
+        }
+    }
+
     private void Awake()
     {
         if (_instance == null)
         {
             _instance = this;
             Init();
+            DontDestroyOnLoad(gameObject);
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
         }
     }
 
