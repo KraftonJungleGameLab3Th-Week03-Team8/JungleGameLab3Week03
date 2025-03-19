@@ -9,11 +9,15 @@ public class InputManager : MonoBehaviour
     #region 입력값
     [SerializeField] private Vector2 _moveDir;
     [SerializeField] private bool _isJump;
+    [SerializeField] private bool _isChargeJump;
     [SerializeField] private bool _isDown;
+    [SerializeField] private bool _isDash;
 
     public Vector2 MoveDir { get { return _moveDir; } }
     public bool IsJump { get { return _isJump; } }
+    public bool IsChargeJump { get { return _isChargeJump; } }
     public bool IsDown { get { return _isDown; } }
+    public bool IsDash { get { return _isDash; } }
     #endregion
 
     #region InputSystem
@@ -27,6 +31,7 @@ public class InputManager : MonoBehaviour
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
     public Action<Vector2> moveAction;
     public Action jumpAction;
+    public Action jumpChargeAction;
     public Action downAction;
     public Action dashAction;
     #endregion
@@ -54,8 +59,8 @@ public class InputManager : MonoBehaviour
         // 활성화 = 다른 오브젝트의 컴포넌트여도 자동 호출되게 세팅
         _moveAction.Enable();
         _jumpAction.Enable();
-        _downAction.Enable();
-        _dashAction.Enable();
+        //_downAction.Enable();
+        //_dashAction.Enable();
 
         #region 키 입력 이벤트 등록
         _moveAction.performed += OnMove;
@@ -64,11 +69,16 @@ public class InputManager : MonoBehaviour
         _jumpAction.started += OnJumpStarted;
         _jumpAction.canceled += OnJumpCanceled;
 
-        _downAction.started += OnDown;
-        _downAction.canceled += OnDown;
+        //_downAction.started += OnDown;
+        //_downAction.canceled += OnDown;
 
-        _dashAction.performed += OnDash;
+        //_dashAction.performed += OnDash;
         #endregion
+
+        _isJump = false;
+        _isChargeJump = false;
+        _isDown = false;
+        _isDash = false;
     }
 
     //private void OnEnable()
@@ -100,10 +110,13 @@ public class InputManager : MonoBehaviour
     #region 차지 점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
+        _isChargeJump = true;
+        jumpChargeAction?.Invoke();
     }
 
     void OnJumpCanceled(InputAction.CallbackContext context)
     {
+        _isChargeJump = false;
         _isJump = true;
         if (_isJump)
         {
@@ -131,10 +144,12 @@ public class InputManager : MonoBehaviour
 
     void OnDash(InputAction.CallbackContext context)
     {
+        _isDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
             Debug.Log("Dash started");
             dashAction?.Invoke();
+            _isDash = false;
         }
     }
 }
