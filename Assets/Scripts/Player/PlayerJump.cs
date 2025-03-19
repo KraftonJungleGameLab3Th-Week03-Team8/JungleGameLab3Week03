@@ -4,26 +4,39 @@ public class PlayerJump : MonoBehaviour
 {
     //일단 rigidbody 다 가져올게요. 나중에 리팩토링 ㄱㄱ
     private Rigidbody2D _rb;
-    private float _jumpForce;
+    private InputManager _inputManager;
+    [SerializeField] private float _jumpForce;
+    private float _jumpForceChargeValue;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _jumpForce = 15;
+        //_inputManager = InputManager.Instance;
+        _jumpForce = 0;
+        _jumpForceChargeValue = 3f;
+    }
+
+    private void FixedUpdate()
+    {
+        if(_inputManager.IsChargeJump)
+        {
+            _jumpForce += _jumpForceChargeValue;
+        }
     }
 
     private void OnEnable()
     {
-        InputManager.Instance.jumpChargeAction += ConstraintPosition;
-        InputManager.Instance.jumpAction += ReleaseConstraint;
-        InputManager.Instance.jumpAction += Jump;
+        _inputManager = InputManager.Instance;
+        _inputManager.jumpChargeAction += ConstraintPosition;
+        _inputManager.jumpAction += ReleaseConstraint;
+        _inputManager.jumpAction += Jump;
     }
 
     private void OnDisable()
     {
-        InputManager.Instance.jumpChargeAction -= ConstraintPosition;
-        InputManager.Instance.jumpAction -= ReleaseConstraint;
-        InputManager.Instance.jumpAction -= Jump;
+        _inputManager.jumpChargeAction -= ConstraintPosition;
+        _inputManager.jumpAction -= ReleaseConstraint;
+        _inputManager.jumpAction -= Jump;
     }
 
     private void ConstraintPosition()
@@ -39,5 +52,6 @@ public class PlayerJump : MonoBehaviour
     private void Jump()
     {
         _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+        _jumpForce = 0;
     }
 }
