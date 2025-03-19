@@ -24,7 +24,7 @@ public class InputManager : MonoBehaviour
     private InputAction _dashAction;
     #endregion
 
-    #region 플레이어 액션 등록
+    #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
     public Action<Vector2> moveAction;
     public Action jumpAction;
     public Action downAction;
@@ -51,7 +51,7 @@ public class InputManager : MonoBehaviour
         //_downAction = _playerInputSystem.Player.Down;
         //_dashAction = _playerInputSystem.Player.Dash;
 
-        // 활성화
+        // 활성화 = 다른 오브젝트의 컴포넌트여도 자동 호출되게 세팅
         _moveAction.Enable();
         _jumpAction.Enable();
         _downAction.Enable();
