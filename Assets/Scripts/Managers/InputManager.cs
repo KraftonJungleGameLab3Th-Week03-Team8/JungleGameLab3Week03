@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
     #endregion
 
     #region InputSystem
-    private PlayerInputSystem _playerInputSystem;
+    private InputSystem_Actions _playerInputSystem;
     private InputAction _moveAction;
     private InputAction _jumpAction;
     private InputAction _downAction;
@@ -44,12 +44,12 @@ public class InputManager : MonoBehaviour
 
     private void Init()
     {
-        _playerInputSystem = new PlayerInputSystem();
+        _playerInputSystem = new InputSystem_Actions();
 
         _moveAction = _playerInputSystem.Player.Move;
         _jumpAction = _playerInputSystem.Player.Jump;
-        _downAction = _playerInputSystem.Player.Down;
-        _dashAction = _playerInputSystem.Player.Dash;
+        //_downAction = _playerInputSystem.Player.Down;
+        //_dashAction = _playerInputSystem.Player.Dash;
 
         // 활성화
         _moveAction.Enable();
