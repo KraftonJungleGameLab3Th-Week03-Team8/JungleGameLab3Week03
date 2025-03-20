@@ -13,8 +13,12 @@ public class Manager : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
+            Init();
         }
     }
 
-    
+    private void Init()
+    {
+        _playerTransform = GameObject.Find("Player").transform;
+    }
 }
