@@ -1,25 +1,27 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager
 {
-    private static GameManager _instance;
-    public static GameManager Instance { get { return _instance; } }
-
-    Transform _playerTransform;
+    public PlayerController PlayerController { get { return _playerController; } }
+    public CameraController CameraController { get { return _cameraController; } }
+    PlayerController _playerController;
     CameraController _cameraController;
 
-    private void Awake()
-    {
-        Init();
-    }
-
-    private void Init()
+    public void Init()
     {
         _cameraController = Camera.main.gameObject.GetComponent<CameraController>();
 
+        //TODO
         /*
-         TODO
         플레이어 소환 및  초기화 등
          */
+
+        SpawnPlayer();
+    }
+
+    public void SpawnPlayer()
+    {
+        GameObject playerPrefab = Manager.Resource.Instantiate("PlayerPrefab");
+        _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
     }
 }

@@ -1,16 +1,23 @@
+using System;
 using UnityEngine;
 
 public class PlayerLanding : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private Rigidbody2D _rb;
+    [SerializeField] private float _downForce;
+
+    private void Start()
     {
-        
+        _rb = GetComponent<Rigidbody2D>();
+        _downForce = 300f;
+        Manager.Input.downAction += OnDownCanceled;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDownCanceled()
     {
-        
+        _rb.angularVelocity = 0;
+        _rb.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        _rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+        _rb.AddForce(Vector2.down * _downForce, ForceMode2D.Impulse);
     }
 }

@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a9c023d061f4bb4c941005567680c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerTransform: {fileID: 1096527199}
+  _playerTransform: {fileID: 0}
 --- !u!114 &179654130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +166,7 @@ MonoBehaviour:
   _isJump: 0
   _isChargeJump: 0
   _isDown: 0
+  _isChargeDown: 0
   _isDash: 0
   _isGround: 0
 --- !u!4 &179654131
@@ -242,7 +243,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4655418710861258466, guid: 587fc6d037ea32345b3e79542c9f452e, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -267,12 +268,12 @@ GameObject:
   - component: {fileID: 1096527197}
   - component: {fileID: 1096527196}
   - component: {fileID: 1096527195}
-  - component: {fileID: 1096527204}
-  - component: {fileID: 1096527203}
   - component: {fileID: 1096527200}
   - component: {fileID: 1096527201}
-  - component: {fileID: 1096527205}
   - component: {fileID: 1096527202}
+  - component: {fileID: 1096527203}
+  - component: {fileID: 1096527204}
+  - component: {fileID: 1096527205}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -371,7 +372,7 @@ Rigidbody2D:
   m_Mass: 10
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 4
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -381,7 +382,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!212 &1096527198
 SpriteRenderer:
@@ -487,26 +488,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1096527194}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c19fd707e8d99e5499e5c2bfd5fb2855, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _dashForce: 0
-  _dashTime: 0
-  _reduceDashForce: 0
---- !u!114 &1096527203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1096527194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9a36b5ce6f8dca45a10f6d9817d3ed3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _downForce: 0
---- !u!114 &1096527204
+--- !u!114 &1096527203
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -519,7 +505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rayYOffset: 0
---- !u!114 &1096527205
+--- !u!114 &1096527204
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -531,6 +517,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46fc39a4dafa22a49973a07e7bc12ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotateSpeed: 0
+  _rotateSpeedCharge: 0
+  _rotateSpeedMax: 0
+--- !u!114 &1096527205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096527194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19fd707e8d99e5499e5c2bfd5fb2855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _dashForce: 0
+  _dashTime: 0
+  _reduceDashForce: 0
 --- !u!1 &1377146679
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,7 +544,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1377146680}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enviroment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -817,7 +821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4655418710861258466, guid: 587fc6d037ea32345b3e79542c9f452e, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
