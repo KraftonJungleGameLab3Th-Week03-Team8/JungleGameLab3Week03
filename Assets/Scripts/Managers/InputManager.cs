@@ -25,7 +25,8 @@ public class InputManager : MonoBehaviour
     private InputAction _moveAction;
     private InputAction _jumpAction;
     private InputAction _downAction;
-    private InputAction _dashAction;
+    private InputAction _leftDashAction;
+    private InputAction _rightDashAction;
     #endregion
 
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
@@ -33,7 +34,7 @@ public class InputManager : MonoBehaviour
     public Action jumpAction;
     public Action jumpChargeAction;
     public Action downAction;
-    public Action dashAction;
+    public Action<Vector2> dashAction;
     #endregion
 
     Rigidbody2D _rb;
@@ -70,13 +71,15 @@ public class InputManager : MonoBehaviour
         _moveAction = _playerInputSystem.Player.Move;
         _jumpAction = _playerInputSystem.Player.Jump;
         //_downAction = _playerInputSystem.Player.Down;
-        //_dashAction = _playerInputSystem.Player.Dash;
+        _leftDashAction = _playerInputSystem.Player.LeftDash;
+        _rightDashAction = _playerInputSystem.Player.RightDash;
 
         // 활성화 = 다른 오브젝트의 컴포넌트여도 자동 호출되게 세팅
         _moveAction.Enable();
         _jumpAction.Enable();
         //_downAction.Enable();
-        //_dashAction.Enable();
+        _leftDashAction.Enable();
+        _rightDashAction.Enable();
 
         #region 키 입력 이벤트 등록
         _moveAction.performed += OnMove;
@@ -88,7 +91,8 @@ public class InputManager : MonoBehaviour
         //_downAction.started += OnDown;
         //_downAction.canceled += OnDown;
 
-        //_dashAction.performed += OnDash;
+        _leftDashAction.performed += OnLeftDash;
+        _rightDashAction.performed += OnRightDash;
         #endregion
 
         _isJump = false;
@@ -158,13 +162,22 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    void OnDash(InputAction.CallbackContext context)
+    void OnLeftDash(InputAction.CallbackContext context)
     {
         _isDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
-            Debug.Log("Dash started");
-            dashAction?.Invoke();
+            dashAction?.Invoke(Vector2.left);
+            _isDash = false;
+        }
+    }
+
+    void OnRightDash(InputAction.CallbackContext context)
+    {
+        _isDash = true;
+        if (context.phase == InputActionPhase.Performed)
+        {
+            dashAction?.Invoke(Vector2.right);
             _isDash = false;
         }
     }
