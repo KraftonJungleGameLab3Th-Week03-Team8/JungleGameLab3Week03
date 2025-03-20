@@ -11,13 +11,15 @@ public class InputManager : MonoBehaviour
     [SerializeField] private bool _isJump;
     [SerializeField] private bool _isChargeJump;
     [SerializeField] private bool _isDown;
+    [SerializeField] private bool _isChargeDown;
     [SerializeField] private bool _isDash;
     [SerializeField] private bool _isGround;
 
     public Vector2 MoveDir { get { return _moveDir; } }
     public bool IsJump { get { return _isJump; } }
     public bool IsChargeJump { get { return _isChargeJump; } }
-    public bool IsDown { get { return _isDown; } }
+    public bool IsDown { get { return _isDown; } set { _isDown = value; } }
+    public bool IsChargeDown { get { return _isChargeDown; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
     public bool IsGround { get { return _isGround; } set { _isGround = value; } }
     #endregion
@@ -35,6 +37,8 @@ public class InputManager : MonoBehaviour
     public Action<Vector2> moveAction;
     public Action jumpAction;
     public Action jumpChargeAction;
+    public Action airStopAction;
+    public Action airRotateAction;
     public Action downAction;
     public Action<Vector2> dashAction;
     #endregion
@@ -90,7 +94,8 @@ public class InputManager : MonoBehaviour
         _jumpAction.started += OnJumpStarted;
         _jumpAction.canceled += OnJumpCanceled;
         
-        _downAction.canceled += OnDown;
+        _downAction.started += OnDownStarted;
+        _downAction.canceled += OnDownCanceled;
 
         _leftDashAction.performed += OnLeftDash;
         _rightDashAction.performed += OnRightDash;
@@ -99,6 +104,7 @@ public class InputManager : MonoBehaviour
         _isJump = false;
         _isChargeJump = false;
         _isDown = false;
+        _isChargeDown = false;
         _isDash = false;
     }
 
@@ -141,6 +147,10 @@ public class InputManager : MonoBehaviour
 
     void OnJumpCanceled(InputAction.CallbackContext context)
     {
+        if (!_isGround)
+        {
+            return;
+        }
         _isChargeJump = false;
         _isJump = true;
         if (_isJump)
@@ -152,7 +162,7 @@ public class InputManager : MonoBehaviour
     }
     #endregion
 
-    void OnDown(InputAction.CallbackContext context)
+    void OnDownStarted(InputAction.CallbackContext context)
     {
         if (_isGround)
         {
@@ -161,16 +171,22 @@ public class InputManager : MonoBehaviour
         // 다운키 누르고 있으면 에어스탑, 때면 다운
         if (context.started)
         {
-            //Debug.Log("Down started");
+            _isChargeDown = true;
+            airStopAction?.Invoke();
         }
-        else if (context.canceled)
+    }
+    void OnDownCanceled(InputAction.CallbackContext context)
+    {
+        if (!_isChargeDown)
         {
-            //Debug.Log("Down cancled");
-            downAction?.Invoke();
+            return;
+        }
+        if (context.canceled)
+        {
+            _isChargeDown = false;
             _isDown = true;
             
-            //땅에 닿았을때 false 처리 해야할거 같습니다.
-            //_isDown = false;
+            downAction?.Invoke();
         }
     }
 

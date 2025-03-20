@@ -166,6 +166,7 @@ MonoBehaviour:
   _isJump: 0
   _isChargeJump: 0
   _isDown: 0
+  _isChargeDown: 0
   _isDash: 0
   _isGround: 0
 --- !u!4 &179654131
@@ -271,6 +272,7 @@ GameObject:
   - component: {fileID: 1096527201}
   - component: {fileID: 1096527202}
   - component: {fileID: 1096527203}
+  - component: {fileID: 1096527204}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -502,6 +504,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rayYOffset: 0
+--- !u!114 &1096527204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1096527194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46fc39a4dafa22a49973a07e7bc12ac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rotateSpeed: 0
+  _rotateSpeedCharge: 0
 --- !u!1 &1377146679
 GameObject:
   m_ObjectHideFlags: 0
