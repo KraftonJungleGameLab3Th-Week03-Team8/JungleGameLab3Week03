@@ -131,6 +131,10 @@ public class InputManager : MonoBehaviour
     #region 차지 점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
+        if (!_isGround)
+        {
+            return;
+        }
         _isChargeJump = true;
         jumpChargeAction?.Invoke();
     }
@@ -150,7 +154,7 @@ public class InputManager : MonoBehaviour
 
     void OnDown(InputAction.CallbackContext context)
     {
-        if (!_isGround)
+        if (_isGround)
         {
             return;
         }
