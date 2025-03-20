@@ -4,29 +4,35 @@ public class PlayerController : MonoBehaviour
 {
     private InputManager _inputManager;
     
-    void OnEnable()
+    [Header("Ray Settings")]
+    private float _playerWidth;
+    private float _playerHeight;
+    private Ray2D _ray;
+    [SerializeField]private float _rayYOffset;
+    
+    private void OnEnable()
     {
         _inputManager = InputManager.Instance;
+        var boxCollider = GetComponent<BoxCollider2D>();
+        _playerWidth = boxCollider.size.x * transform.localScale.x;
+        _playerHeight = boxCollider.size.y * transform.localScale.y;
+        _rayYOffset = 0.02f;
     }
 
-    void Update()
+    private void Update()
     {
-        //레이케스팅으로 down 방향으로 쏴서 땅에 닿았는지 확인
-        Ray2D ray = new Ray2D(transform.position, Vector2.down);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, 1f, LayerMask.GetMask("Ground"));
-        
-        //debug 시각화
-        Debug.DrawRay(ray.origin, ray.direction, Color.red); 
-        
-        //닿았으면 _inputManager의 _isGrounded를 true로 바꿔줌
-        if (hit.collider != null)
-        {
-            _inputManager.IsGround = true;
-        }
-        else
-        {
-            _inputManager.IsGround = false;
-        }
-        
+        // 좌측 하단에서 가로(right) 방향으로 레이 쏘기
+        _ray = new Ray2D(transform.position - new Vector3(_playerWidth / 2, _playerHeight / 2 + _rayYOffset, 0), Vector2.right);
+        RaycastHit2D hit = Physics2D.Raycast(_ray.origin, _ray.direction, _playerWidth, LayerMask.GetMask("Ground"));
+
+        DrawDebugRay();
+
+        _inputManager.IsGround = hit.collider != null;
+    }
+
+    private void DrawDebugRay()
+    {
+        // 실제 레이캐스트 길이만큼 디버그용 레이 그리기
+        Debug.DrawRay(_ray.origin, _ray.direction * _playerWidth, Color.red);
     }
 }
