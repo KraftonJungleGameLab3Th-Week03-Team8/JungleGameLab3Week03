@@ -163,6 +163,28 @@
                     "isPartOfComposite": true
                 },
                 {
+                    "name": "",
+                    "id": "6a50f8b9-44f4-4369-910b-aa6cc8ee3f5e",
+                    "path": "<Keyboard>/d",
+                    "interactions": "DoubleTap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightDash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7fc4375e-6e7b-49e2-9c63-2ac2d3244975",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "DoubleTap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightDash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
                     "name": "One Modifier",
                     "id": "f6ba0d28-a10b-49bf-9e65-641693120c4a",
                     "path": "OneModifier",
@@ -194,6 +216,28 @@
                     "action": "LeftDash",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "59bc3a57-790f-446a-a92e-c0bc2c87be64",
+                    "path": "<Keyboard>/a",
+                    "interactions": "DoubleTap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftDash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "584b6d98-288c-40cb-ba8d-348ec3905f88",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "DoubleTap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LeftDash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
