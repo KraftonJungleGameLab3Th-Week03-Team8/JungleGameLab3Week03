@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private InputManager _inputManager;
+    private Rigidbody2D _rb;
     
     [Header("Ray Settings")]
     private float _playerWidth;
@@ -14,6 +15,7 @@ public class PlayerController : MonoBehaviour
     {
         _inputManager = InputManager.Instance;
         var boxCollider = GetComponent<BoxCollider2D>();
+        _rb = GetComponent<Rigidbody2D>();
         _playerWidth = boxCollider.size.x * transform.localScale.x;
         _playerHeight = boxCollider.size.y * transform.localScale.y;
         _rayYOffset = 0.02f;
@@ -26,8 +28,21 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(_ray.origin, _ray.direction, _playerWidth, LayerMask.GetMask("Ground"));
 
         DrawDebugRay();
-
-        _inputManager.IsGround = hit.collider != null;
+        
+        //땅에 닿았을 때
+        if (hit.collider != null)
+        {
+            _inputManager.IsGround = true;
+            if (_inputManager.IsDown)
+            {
+                _inputManager.IsDown = false;
+                _rb.constraints = RigidbodyConstraints2D.None;
+            }
+        }
+        else // 공중에 떠있을 때
+        {
+            _inputManager.IsGround = false;
+        }
     }
 
     private void DrawDebugRay()
