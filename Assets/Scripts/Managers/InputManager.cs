@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class InputManager : MonoBehaviour
+public class InputManager
 {
     private static InputManager _instance;
     public static InputManager Instance { get { return _instance; } }
@@ -36,34 +36,7 @@ public class InputManager : MonoBehaviour
     public Action dashAction;
     #endregion
 
-    Rigidbody2D _rb;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void InitializeSingleton()
-    {
-        if (_instance == null)
-        {
-            GameObject inputManagerObj = new GameObject("InputManager");
-            _instance = inputManagerObj.AddComponent<InputManager>();
-            DontDestroyOnLoad(inputManagerObj);
-        }
-    }
-
-    private void Awake()
-    {
-        if (_instance == null)
-        {
-            _instance = this;
-            Init();
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (_instance != this)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    private void Init()
+    public void Init()
     {
         _playerInputSystem = new PlayerInputSystem();
 
