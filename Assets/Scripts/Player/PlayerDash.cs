@@ -59,8 +59,13 @@ public class PlayerDash : MonoBehaviour
 
     private IEnumerator RemoveGravityCoroutine()
     {
-        _rb.linearVelocityY = 0f;
-        yield return new WaitForSeconds(_dashTime);
+        float elapsedTime = 0f;
+        while(elapsedTime < _dashTime)
+        {
+            elapsedTime += Time.deltaTime;
+            _rb.linearVelocityY = 0f;
+            yield return null;
+        }
         _inputManager.IsDash = false;
     }
 }
