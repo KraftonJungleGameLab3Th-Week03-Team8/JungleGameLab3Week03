@@ -168,6 +168,11 @@ public class InputManager : MonoBehaviour
         {
             return;
         }
+
+        if (_isDown)
+        {
+            return;
+        }
         // 다운키 누르고 있으면 에어스탑, 때면 다운
         if (context.started)
         {
