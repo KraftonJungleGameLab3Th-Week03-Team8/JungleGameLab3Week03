@@ -37,6 +37,14 @@ public class PlayerController : MonoBehaviour
         _inputManager.IsGround = hit.collider != null;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            _inputManager.IsDash = false;
+        }
+    }
+
     private void DrawDebugRay()
     {
         // 실제 레이캐스트 길이만큼 디버그용 레이 그리기
