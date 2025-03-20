@@ -7,8 +7,8 @@ public class MGPlayerDash : MonoBehaviour
 {
     private Rigidbody2D _rb;
     private InputManager _inputManager;
-    [SerializeField] private float _dashDistance = 4f;
-    [SerializeField] private float _dashTime = 0.5f;
+    [SerializeField] private float _dashDistance = 5f;
+    [SerializeField] private float _dashTime = 0.1f;
     private float _prevGravityScale;
     private bool _isDashed;
     private bool _isDashing;
