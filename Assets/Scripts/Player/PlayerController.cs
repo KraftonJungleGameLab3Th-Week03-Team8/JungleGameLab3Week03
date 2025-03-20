@@ -3,13 +3,20 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private InputManager _inputManager;
-    
+    private Rigidbody2D _rb;
+
     [Header("Ray Settings")]
     private float _playerWidth;
     private float _playerHeight;
     private Ray2D _ray;
     [SerializeField]private float _rayYOffset;
-    
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+    }
+
     private void OnEnable()
     {
         _inputManager = InputManager.Instance;
