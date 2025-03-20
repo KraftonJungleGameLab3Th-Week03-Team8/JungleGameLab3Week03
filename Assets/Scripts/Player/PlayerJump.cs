@@ -13,7 +13,7 @@ public class PlayerJump : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         //_inputManager = InputManager.Instance;
         _jumpForce = 0;
-        _jumpForceChargeValue = 3f;
+        _jumpForceChargeValue = 5f;
     }
 
     private void FixedUpdate()

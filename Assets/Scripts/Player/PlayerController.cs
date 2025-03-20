@@ -4,13 +4,19 @@ public class PlayerController : MonoBehaviour
 {
     private InputManager _inputManager;
     private Rigidbody2D _rb;
-    
+
     [Header("Ray Settings")]
     private float _playerWidth;
     private float _playerHeight;
     private Ray2D _ray;
     [SerializeField]private float _rayYOffset;
-    
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+        _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+    }
+
     private void OnEnable()
     {
         _inputManager = InputManager.Instance;
@@ -42,6 +48,14 @@ public class PlayerController : MonoBehaviour
         else // 공중에 떠있을 때
         {
             _inputManager.IsGround = false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
+        {
+            _inputManager.IsDash = false;
         }
     }
 
