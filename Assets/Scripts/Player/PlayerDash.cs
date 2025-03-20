@@ -54,7 +54,10 @@ public class PlayerDash : MonoBehaviour
         _inputManager.IsDash = false;
 
         // 이 제약 해제가 스탑에어의 제약 전에 호출되면 안됨. 머지후 테스할 예정.
-        _rb.constraints = RigidbodyConstraints2D.None;
+        if (!_inputManager.IsChargeDown && !_inputManager.IsDown)
+        {
+            _rb.constraints = RigidbodyConstraints2D.None;
+        }
     }
 
     /* 중력 제거 코드 책임분리하려고 했던 코드. 근데 대시코루틴에 합쳤어요
