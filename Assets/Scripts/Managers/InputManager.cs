@@ -12,12 +12,14 @@ public class InputManager : MonoBehaviour
     [SerializeField] private bool _isChargeJump;
     [SerializeField] private bool _isDown;
     [SerializeField] private bool _isDash;
+    [SerializeField] private bool _isGround;
 
     public Vector2 MoveDir { get { return _moveDir; } }
     public bool IsJump { get { return _isJump; } }
     public bool IsChargeJump { get { return _isChargeJump; } }
     public bool IsDown { get { return _isDown; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
+    public bool IsGround { get { return _isGround; } set { _isGround = value; } }
     #endregion
 
     #region InputSystem
@@ -70,14 +72,14 @@ public class InputManager : MonoBehaviour
 
         _moveAction = _playerInputSystem.Player.Move;
         _jumpAction = _playerInputSystem.Player.Jump;
-        //_downAction = _playerInputSystem.Player.Down;
+        _downAction = _playerInputSystem.Player.Down;
         _leftDashAction = _playerInputSystem.Player.LeftDash;
         _rightDashAction = _playerInputSystem.Player.RightDash;
 
         // 활성화 = 다른 오브젝트의 컴포넌트여도 자동 호출되게 세팅
         _moveAction.Enable();
         _jumpAction.Enable();
-        //_downAction.Enable();
+        _downAction.Enable();
         _leftDashAction.Enable();
         _rightDashAction.Enable();
 
@@ -87,9 +89,8 @@ public class InputManager : MonoBehaviour
 
         _jumpAction.started += OnJumpStarted;
         _jumpAction.canceled += OnJumpCanceled;
-
-        //_downAction.started += OnDown;
-        //_downAction.canceled += OnDown;
+        
+        _downAction.canceled += OnDown;
 
         _leftDashAction.performed += OnLeftDash;
         _rightDashAction.performed += OnRightDash;
@@ -130,6 +131,10 @@ public class InputManager : MonoBehaviour
     #region 차지 점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
+        if (!_isGround)
+        {
+            return;
+        }
         _isChargeJump = true;
         jumpChargeAction?.Invoke();
     }
@@ -149,16 +154,23 @@ public class InputManager : MonoBehaviour
 
     void OnDown(InputAction.CallbackContext context)
     {
+        if (_isGround)
+        {
+            return;
+        }
+        // 다운키 누르고 있으면 에어스탑, 때면 다운
         if (context.started)
         {
             //Debug.Log("Down started");
-            _isDown = true;
-            downAction?.Invoke();
         }
         else if (context.canceled)
         {
             //Debug.Log("Down cancled");
-            _isDown = false;
+            downAction?.Invoke();
+            _isDown = true;
+            
+            //땅에 닿았을때 false 처리 해야할거 같습니다.
+            //_isDown = false;
         }
     }
 
