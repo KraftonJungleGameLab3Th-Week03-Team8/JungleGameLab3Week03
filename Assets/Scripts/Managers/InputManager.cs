@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
     public bool IsJump { get { return _isJump; } }
     public bool IsChargeJump { get { return _isChargeJump; } }
     public bool IsDown { get { return _isDown; } }
-    public bool IsDash { get { return _isDash; } }
+    public bool IsDash { get { return _isDash; } set { _isDash = value; } }
     #endregion
 
     #region InputSystem
@@ -168,7 +168,8 @@ public class InputManager : MonoBehaviour
         if (context.phase == InputActionPhase.Performed)
         {
             dashAction?.Invoke(Vector2.left);
-            _isDash = false;
+            //액션에 코루틴이 있어서 isDash 세터 추가했습니다..
+            //_isDash = false;
         }
     }
 
@@ -178,7 +179,7 @@ public class InputManager : MonoBehaviour
         if (context.phase == InputActionPhase.Performed)
         {
             dashAction?.Invoke(Vector2.right);
-            _isDash = false;
+            //_isDash = false;
         }
     }
 }
