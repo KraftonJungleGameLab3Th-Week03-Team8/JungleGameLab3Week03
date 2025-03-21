@@ -35,34 +35,64 @@ public class PlayerCheckObstacle : MonoBehaviour
         //땅에 닿았을 때
         if (hit.collider != null)
         {
-            Debug.Log("Ground");
+            Manager.Game.PlayerController.RB.gravityScale = 0f;
+            //Debug.Log("Ground");
             isGround = true;
             Manager.Game.PlayerController.LandOnGround();
         }
         else // 공중에 떠있을 때
         {
+            Manager.Game.PlayerController.RB.gravityScale = 4f;
             isGround = false;
         }
     }
 
     // 벽 감지
-    public void CheckWall(ref bool isWall)
+    public void CheckWall(ref bool isWall, ref bool isLeftWall, ref bool isRightWall)
     {
-        // 좌측에서 가로(right) 방향으로 레이 쏘기
-        Vector3 startPosition = transform.position - new Vector3(_playerWidth * 0.55f, 0, 0);
-        Ray2D ray = new Ray2D(startPosition, Vector2.right);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, _playerWidth * 1.1f, _wallLayer);
-        Debug.DrawRay(ray.origin, ray.direction * _playerWidth * 1.1f, Color.blue);   // 디버깅
-
-        //땅에 닿았을 때
-        if (hit.collider != null)
+        
+        // 왼쪽 벽 체크
+        Vector3 startPosition = transform.position;
+        Ray2D leftRay = new Ray2D(startPosition, Vector2.left);
+        RaycastHit2D leftHit = Physics2D.Raycast(leftRay.origin, leftRay.direction, _playerWidth * 0.55f, _wallLayer);
+        Debug.DrawRay(leftRay.origin, leftRay.direction * _playerWidth * 0.55f, Color.blue);   // 디버깅
+        
+        // 오른쪽 벽 체크
+        Ray2D rightRay = new Ray2D(startPosition, Vector2.right);
+        RaycastHit2D rightHit = Physics2D.Raycast(rightRay.origin, rightRay.direction, _playerWidth * 0.55f, _wallLayer);
+        Debug.DrawRay(rightRay.origin, rightRay.direction * _playerWidth * 0.55f, Color.green);   // 디버깅
+        
+        // 둘 중 하나라도 닿으면 IsWall = true
+        if (leftHit.collider != null || rightHit.collider != null)
         {
-            Debug.Log("Wall");
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
             isWall = true;
         }
-        else // 벽에 안닿았을 때
+        else
         {
             isWall = false;
+        }
+        
+        // 왼쪽 벽 체크
+        if (leftHit.collider != null)
+        {
+            Debug.Log("Left Wall");
+            isLeftWall = true;
+        }
+        else
+        {
+            isLeftWall = false;
+        }
+        
+        // 오른쪽 벽 체크
+        if (rightHit.collider != null)
+        {
+            Debug.Log("Right Wall");
+            isRightWall = true;
+        }
+        else
+        {
+            isRightWall = false;
         }
     }
 }
