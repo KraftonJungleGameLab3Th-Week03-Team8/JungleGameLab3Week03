@@ -197,6 +197,11 @@ public class InputManager : MonoBehaviour
 
     void OnLeftDash(InputAction.CallbackContext context)
     {
+        if (_isDown)
+        {
+            return;
+        }
+
         _isDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
@@ -208,6 +213,11 @@ public class InputManager : MonoBehaviour
 
     void OnRightDash(InputAction.CallbackContext context)
     {
+        if(_isDown)
+        {
+            return;
+        }
+
         _isDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
