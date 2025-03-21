@@ -1,34 +1,19 @@
-using System;
 using UnityEngine;
 
 public class PlayerLanding : MonoBehaviour
 {
-    private Rigidbody2D _rb;
-    private InputManager _inputManager;
-    [SerializeField] private float _downForce;
+    private float _landForce = 300f;
 
     private void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        _downForce = 300f;
+        Manager.Input.landAction += Land;
     }
 
-    private void OnEnable()
+    private void Land(Rigidbody2D rb)
     {
-        _inputManager = InputManager.Instance;
-        _inputManager.downAction += OnDownCanceled;
-    }
-
-    private void OnDisable()
-    {
-        _inputManager.jumpChargeAction -= OnDownCanceled;
-        
-    }
-    void OnDownCanceled()
-    {
-        _rb.angularVelocity = 0;
-        _rb.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        _rb.constraints = RigidbodyConstraints2D.FreezePositionX;
-        _rb.AddForce(Vector2.down * _downForce, ForceMode2D.Impulse);
+        rb.angularVelocity = 0;
+        rb.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        rb.constraints = RigidbodyConstraints2D.FreezePositionX;
+        rb.AddForce(Vector2.down * _landForce, ForceMode2D.Impulse);
     }
 }
