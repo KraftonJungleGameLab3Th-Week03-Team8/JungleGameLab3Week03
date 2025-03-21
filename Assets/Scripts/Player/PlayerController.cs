@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public bool IsRightWall { get { return _isRightWall; } }
 
     Rigidbody2D _rb;
+    private float _gravityScale;
     BoxCollider2D _collider;
 
     [SerializeField] bool _isMove;
@@ -38,14 +39,17 @@ public class PlayerController : MonoBehaviour
     PlayerMove _playerMove;
     PlayerCheckObstacle _playerCheckObstacle;
     PlayerGrab _playerGrab;
+    PlayerJump _playerJump;
 
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _gravityScale = _rb.gravityScale;
         _collider = GetComponent<BoxCollider2D>();
 
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
+        _playerJump = GetComponent<PlayerJump>();
         _playerGrab = GetComponent<PlayerGrab>();
     }
 
@@ -57,23 +61,30 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        _playerMove.Move(_rb);
+        if(Manager.Game.PlayerController.IsJump)
+        {
+            _playerJump.controlJumpGravity(_rb);
+        }
         _playerGrab.Grab(_rb);
         if (!_isGrab)
-        {
-            _playerMove.Move(_rb);    
-        }
-        
     }
 
+    /* [Legacy - charge jump]
     public void ReadyJump()
     {
         _rb.constraints = RigidbodyConstraints2D.FreezePosition;
         _isChargeJump = true;
         _isJump = true;
     }
+    */
 
     public void LandOnGround()
     {
         _rb.constraints = RigidbodyConstraints2D.None;
+        _isJump = false;
+        _isLanding = false;
+        _isDash = false;
+        _rb.gravityScale = _gravityScale;
     }
 }

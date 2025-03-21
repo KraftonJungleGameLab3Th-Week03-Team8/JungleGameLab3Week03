@@ -175,7 +175,7 @@ public partial class @PlayerInputSystem: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""2d35eff1-1e9e-401f-85b2-bf13999817f3"",
                     ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold(duration=0.15)"",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Jump"",
