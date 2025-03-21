@@ -5,6 +5,7 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float _defaultJumpForce = 0;
     [SerializeField] private float _jumpForce = 0;
     [SerializeField] private float _jumpForceChargeValue;
+    [SerializeField] private float _jumpForceLimit;
 
     private void Start()
     {

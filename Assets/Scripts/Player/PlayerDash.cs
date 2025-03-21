@@ -33,7 +33,7 @@ public class PlayerDash : MonoBehaviour
         {
             elapsedTime += Time.fixedDeltaTime;
             // 감속
-            _rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
+            rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
             _reduceDashForce -= Time.fixedDeltaTime * 3000f;
             yield return new WaitForFixedUpdate();
         }
