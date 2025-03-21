@@ -14,7 +14,7 @@ public class PlayerDash : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _dashForce = 500f;
+        _dashForce = 800f;
         _dashTime = 0.2f;
         _reduceDashForce = -220f;
     }
@@ -43,13 +43,13 @@ public class PlayerDash : MonoBehaviour
         _rb.constraints = RigidbodyConstraints2D.FreezePositionY;
         float elapsedTime = 0f;
         _rb.AddForce(dir * _dashForce, ForceMode2D.Impulse);
-
+        Debug.Log("대시 시작");
         while (elapsedTime < _dashTime && _inputManager.IsDash)
         {
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.fixedDeltaTime;
             // 감속
             _rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         _inputManager.IsDash = false;
 
