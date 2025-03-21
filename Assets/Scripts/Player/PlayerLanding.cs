@@ -10,7 +10,7 @@ public class PlayerLanding : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _downForce = 300f;
+        _downForce = 1000f;
     }
 
     private void OnEnable()

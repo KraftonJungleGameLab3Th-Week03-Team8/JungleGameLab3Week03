@@ -13,9 +13,9 @@ public class PlayerJump : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         //_inputManager = InputManager.Instance;
-        _jumpForce = 0;
-        _jumpForceChargeValue = 5f;
-        _jumpForceLimit = 400f;
+        _jumpForce = 180f;
+        _jumpForceChargeValue = 15f;
+        _jumpForceLimit = 800f;
     }
 
     private void FixedUpdate()
@@ -54,6 +54,6 @@ public class PlayerJump : MonoBehaviour
     private void Jump()
     {
         _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-        _jumpForce = 0;
+        _jumpForce = 180f;
     }
 }
