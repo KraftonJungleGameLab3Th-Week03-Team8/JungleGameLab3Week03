@@ -152,34 +152,56 @@ public class InputManager
     #region 대시
     void OnLeftDash(InputAction.CallbackContext context)
     {
+        if (_playerController.IsChargeJump)
+        {
+            return;
+        }
+        if (_playerController.IsChargeLanding)
+        {
+            return;
+        }
         if(_playerController.IsLanding)
         {
             return;
         }
 
-        _isPressDash = true;
+        if (_playerController.IsDash)
+        {
+            return;
+        }
+
         if (context.phase == InputActionPhase.Performed)
         {
             Debug.Log("왼쪽 대시~");
-
+            _playerController.IsDash = true;
             dashAction?.Invoke(_rb, Vector2.left);
-            //액션에 코루틴이 있어서 isDash 세터 추가했습니다..
-            //_isDash = false;
         }
     }
 
     void OnRightDash(InputAction.CallbackContext context)
     {
-        if (_playerController.IsLanding)
+        if (_playerController.IsChargeJump)
+        {
+            return;
+        }
+        if (_playerController.IsChargeLanding)
+        {
+            return;
+        }
+        if(_playerController.IsLanding)
         {
             return;
         }
 
-        _isPressDash = true;
+        if (_playerController.IsDash)
+        {
+            return;
+        }
+
         if (context.phase == InputActionPhase.Performed)
         {
+            _playerController.IsDash = true;
             dashAction?.Invoke(_rb, Vector2.right);
-            //_isDash = false;
         }
     }
     #endregion

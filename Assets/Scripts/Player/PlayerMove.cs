@@ -6,7 +6,7 @@ public class PlayerMove : MonoBehaviour
 
     public void Move(Rigidbody2D rb)
     {
-        if(!Manager.Input.IsPressDash)
+        if(!Manager.Game.PlayerController.IsDash)
         {
             Manager.Game.PlayerController.IsMove = true;
             rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;
