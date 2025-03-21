@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerAirStop : MonoBehaviour
 {
     private Rigidbody2D _rb;
-    private InputManager _inputManager;
+    private float _defaultRotateSpeed = 10f;
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _rotateSpeedCharge;
     [SerializeField] private float _rotateSpeedMax;
@@ -12,6 +12,9 @@ public class PlayerAirStop : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
+
+        Manager.Input.airStopAction += OnDownStarted;
+
         _rotateSpeed = 10f;
         _rotateSpeedCharge = 0.5f;
         _rotateSpeedMax = 25f;
@@ -19,30 +22,24 @@ public class PlayerAirStop : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_inputManager.IsChargeDown)
+        if(Manager.Input.IsPressLand)
         {
             if (_rotateSpeed <= _rotateSpeedMax)
             {
-                _rotateSpeed += _rotateSpeedCharge;
-                _rb.AddTorque(_rotateSpeed);
+                Rotate();
             }
         }
     }
 
-    private void OnEnable()
+    private void Rotate()
     {
-        _inputManager = InputManager.Instance;
-        _inputManager.airStopAction += OnDownStarted;
-    }
-
-    private void OnDisable()
-    {
-        _inputManager.airStopAction -= OnDownStarted;
+        _rotateSpeed += _rotateSpeedCharge;
+        _rb.AddTorque(_rotateSpeed);
     }
 
     private void OnDownStarted()
     {
-        _rotateSpeed = 10f;
+        _rotateSpeed = _defaultRotateSpeed;
         _rb.constraints = RigidbodyConstraints2D.FreezePosition;
     }
 }

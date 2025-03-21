@@ -2,56 +2,33 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    //일단 rigidbody 다 가져올게요. 나중에 리팩토링 ㄱㄱ
-    private Rigidbody2D _rb;
-    private InputManager _inputManager;
-    [SerializeField] private float _jumpForce;
-    private float _jumpForceChargeValue;
+    [SerializeField] private float _defaultJumpForce = 0;
+    [SerializeField] private float _jumpForce = 0;
+    [SerializeField] private float _jumpForceChargeValue;
 
     private void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
-        //_inputManager = InputManager.Instance;
         _jumpForce = 0;
         _jumpForceChargeValue = 5f;
+        Manager.Input.jumpAction += Jump;
     }
 
     private void FixedUpdate()
     {
-        if(_inputManager.IsChargeJump)
+        if(Manager.Input.IsPressJump)  // 차지 점프 시, 점프 파워 증가
         {
             _jumpForce += _jumpForceChargeValue;
         }
     }
 
-    private void OnEnable()
+    private void Jump(Rigidbody2D rb)
     {
-        _inputManager = InputManager.Instance;
-        _inputManager.jumpChargeAction += ConstraintPosition;
-        _inputManager.jumpAction += ReleaseConstraint;
-        _inputManager.jumpAction += Jump;
-    }
-
-    private void OnDisable()
-    {
-        _inputManager.jumpChargeAction -= ConstraintPosition;
-        _inputManager.jumpAction -= ReleaseConstraint;
-        _inputManager.jumpAction -= Jump;
-    }
-
-    private void ConstraintPosition()
-    {
-        _rb.constraints = RigidbodyConstraints2D.FreezePosition;
-    }
-
-    private void ReleaseConstraint()
-    {
-        _rb.constraints = RigidbodyConstraints2D.None;
-    }
-
-    private void Jump()
-    {
-        _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-        _jumpForce = 0;
+        if (Manager.Game.PlayerController.IsGround)
+        {
+            Debug.Log("점프");
+            rb.constraints = RigidbodyConstraints2D.None;
+            rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+            _jumpForce = _defaultJumpForce;
+        }
     }
 }

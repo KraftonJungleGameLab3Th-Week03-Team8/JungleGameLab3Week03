@@ -1,67 +1,61 @@
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class PlayerController : MonoBehaviour
 {
-    private InputManager _inputManager;
-    private Rigidbody2D _rb;
+    public Rigidbody2D RB { get { return _rb; } }
+    public BoxCollider2D Collider { get { return _collider; } }
 
-    [Header("Ray Settings")]
-    private float _playerWidth;
-    private float _playerHeight;
-    private Ray2D _ray;
-    [SerializeField]private float _rayYOffset;
+    public bool IsMove { get { return _isMove; } set { _isMove = value; } }
+    public bool IsJump { get { return _isJump; } set { _isJump = value; } }
+    public bool IsChargeJump { get { return _isChargeJump; } set { _isChargeJump = value; } }
+    public bool IsLanding { get { return _isLanding; } set { _isLanding = value; } }
+    public bool IsChargeLanding { get { return _isChargeDown; } set { _isChargeDown = value; } }
+    public bool IsDash { get { return _isDash; } set { _isDash = value; } }
 
-    private void Start()
+    public bool IsGround { get { return _isGround; } }
+    public bool IsWall { get { return _isWall; } }
+
+    Rigidbody2D _rb;
+    BoxCollider2D _collider;
+
+    [SerializeField] bool _isMove;
+    [SerializeField] bool _isJump;
+    [SerializeField] bool _isChargeJump;
+    [SerializeField] bool _isLanding;
+    [SerializeField] bool _isChargeDown;
+    [SerializeField] bool _isDash;
+    
+    [SerializeField] bool _isGround;
+    [SerializeField] bool _isWall;
+
+    PlayerMove _playerMove;
+    PlayerCheckObstacle _playerCheckObstacle;
+
+    void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-    }
+        _collider = GetComponent<BoxCollider2D>();
 
-    private void OnEnable()
-    {
-        _inputManager = InputManager.Instance;
-        var boxCollider = GetComponent<BoxCollider2D>();
-        _rb = GetComponent<Rigidbody2D>();
-        _playerWidth = boxCollider.size.x * transform.localScale.x;
-        _playerHeight = boxCollider.size.y * transform.localScale.y;
-        _rayYOffset = 0.02f;
+        _playerMove = GetComponent<PlayerMove>();
+        _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
     }
 
     private void Update()
     {
-        // 좌측 하단에서 가로(right) 방향으로 레이 쏘기
-        _ray = new Ray2D(transform.position - new Vector3(_playerWidth / 2, _playerHeight / 2 + _rayYOffset, 0), Vector2.right);
-        RaycastHit2D hit = Physics2D.Raycast(_ray.origin, _ray.direction, _playerWidth, LayerMask.GetMask("Ground"));
-
-        DrawDebugRay();
-        
-        //땅에 닿았을 때
-        if (hit.collider != null)
-        {
-            _inputManager.IsGround = true;
-            if (_inputManager.IsDown)
-            {
-                _inputManager.IsDown = false;
-                _rb.constraints = RigidbodyConstraints2D.None;
-            }
-        }
-        else // 공중에 떠있을 때
-        {
-            _inputManager.IsGround = false;
-        }
+        _playerCheckObstacle.CheckGround(ref _isGround);
+        _playerCheckObstacle.CheckWall(ref _isWall);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void FixedUpdate()
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Wall"))
-        {
-            _inputManager.IsDash = false;
-        }
+        _playerMove.Move(_rb);
     }
 
-    private void DrawDebugRay()
+    public void ReadyJump()
     {
-        // 실제 레이캐스트 길이만큼 디버그용 레이 그리기
-        Debug.DrawRay(_ray.origin, _ray.direction * _playerWidth, Color.red);
+        _rb.constraints = RigidbodyConstraints2D.FreezePosition;
+        _isChargeJump = true;
+        _isJump = true;
     }
 }

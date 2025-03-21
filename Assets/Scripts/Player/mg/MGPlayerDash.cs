@@ -1,12 +1,9 @@
-using System.Collections;
-using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class MGPlayerDash : MonoBehaviour
 {
     private Rigidbody2D _rb;
-    private InputManager _inputManager;
+
     [SerializeField] private float _dashDistance = 5f;
     [SerializeField] private float _dashTime = 0.1f;
     private float _prevGravityScale;
@@ -19,22 +16,13 @@ public class MGPlayerDash : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-
-        _isDashed = true;
-        _isDashing = false;
-}
-
-    private void OnEnable()
-    {
-        _inputManager = InputManager.Instance;
-        _inputManager.dashAction += Dash;
-        //_inputManager.airStopAction += StopDash;
+        //Manager.Input.dashAction += Dash;
     }
 
-    private void OnDisable()
+    public void Init()
     {
-        _inputManager.dashAction -= Dash;
-        //_inputManager.airStopAction -= StopDash;
+        _isDashed = true;
+        _isDashing = false;
     }
 
     private void FixedUpdate()
@@ -78,7 +66,7 @@ public class MGPlayerDash : MonoBehaviour
         _rb.gravityScale = _prevGravityScale;
         _isDashed = true;
         _isDashing = false;
-        _inputManager.IsDash = false;
+        Manager.Input.IsPressDash = false;
     }
 
     [ContextMenu("Dash(right)")]
