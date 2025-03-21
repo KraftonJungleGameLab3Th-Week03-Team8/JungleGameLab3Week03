@@ -62,12 +62,11 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         _playerMove.Move(_rb);
-        if(Manager.Game.PlayerController.IsJump)
+        _playerGrab.Grab(_rb);
+        if (Manager.Game.PlayerController.IsJump && !_isGrab)
         {
             _playerJump.controlJumpGravity(_rb);
         }
-        _playerGrab.Grab(_rb);
-        if (!_isGrab)
     }
 
     /* [Legacy - charge jump]
