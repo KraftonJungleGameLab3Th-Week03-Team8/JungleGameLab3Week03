@@ -11,9 +11,9 @@ public class PlayerDash : MonoBehaviour
 
     private void Start()
     {
-        _dashForce = 500f;
-        _dashTime = 0.2f;
-        _reduceDashForce = -220f;
+        _dashForce = 1000f;
+        _dashTime = 0.25f;
+        _reduceDashForce = -2000f;
 
         Manager.Input.dashAction += Dash;
     }
@@ -33,12 +33,13 @@ public class PlayerDash : MonoBehaviour
         {
             elapsedTime += Time.fixedDeltaTime;
             // 감속
-            rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
-            yield return null;
+            _rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
+            _reduceDashForce -= Time.fixedDeltaTime * 3000f;
+            yield return new WaitForFixedUpdate();
         }
         Manager.Input.IsPressDash = false;
+        _reduceDashForce = -1800f;
 
-        // 이 제약 해제가 스탑에어의 제약 전에 호출되면 안됨. 머지후 테스할 예정.
         if (!Manager.Input.IsPressLand && !Manager.Input.IsPressLand)
         {
             rb.constraints = RigidbodyConstraints2D.None;

@@ -9,7 +9,8 @@ public class PlayerJump : MonoBehaviour
     private void Start()
     {
         _jumpForce = 0;
-        _jumpForceChargeValue = 5f;
+        _jumpForceChargeValue = 15f;
+        _jumpForceLimit = 800f;
         Manager.Input.jumpAction += Jump;
     }
 
