@@ -20,7 +20,6 @@ public class PlayerFlashJump : MonoBehaviour
 
     private void Dash(Rigidbody2D rb, Vector2 dir)
     {
-        rb.AddTorque(1000f);
         rb.linearVelocity = Vector2.zero;
         Vector2 dashDirection = (dir + new Vector2(0, _acceleration)).normalized;
         Debug.Log("dashDirection : " + dashDirection);

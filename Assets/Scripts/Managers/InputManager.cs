@@ -83,12 +83,14 @@ public class InputManager
         {
             _moveDir = context.ReadValue<Vector2>();
             _playerController.IsMove = true;
+            _playerController.IsGrab = true;
             //Debug.Log("이동: " + _moveDir);
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
             _moveDir = Vector2.zero;
             _playerController.IsMove = false;
+            _playerController.IsGrab = false;
             //Debug.Log("정지: " + _moveDir);
         }
     }
