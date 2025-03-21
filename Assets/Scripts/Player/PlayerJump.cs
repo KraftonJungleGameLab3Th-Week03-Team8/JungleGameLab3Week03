@@ -6,19 +6,21 @@ public class PlayerJump : MonoBehaviour
     private Rigidbody2D _rb;
     private InputManager _inputManager;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _jumpForceLimit;
     private float _jumpForceChargeValue;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
         //_inputManager = InputManager.Instance;
-        _jumpForce = 0;
-        _jumpForceChargeValue = 5f;
+        _jumpForce = 180f;
+        _jumpForceChargeValue = 15f;
+        _jumpForceLimit = 800f;
     }
 
     private void FixedUpdate()
     {
-        if(_inputManager.IsChargeJump)
+        if(_inputManager.IsChargeJump && _jumpForce < _jumpForceLimit)
         {
             _jumpForce += _jumpForceChargeValue;
         }
@@ -52,6 +54,6 @@ public class PlayerJump : MonoBehaviour
     private void Jump()
     {
         _rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-        _jumpForce = 0;
+        _jumpForce = 180f;
     }
 }
