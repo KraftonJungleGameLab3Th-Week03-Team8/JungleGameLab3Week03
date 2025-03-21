@@ -3,20 +3,21 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class InputManager
 {
+    PlayerController _playerController;
+    Rigidbody2D _rb;
+
     #region 입력값
     [SerializeField] private Vector2 _moveDir;
-    [SerializeField] private bool _isJump;
-    [SerializeField] private bool _isChargeJump;
-    [SerializeField] private bool _isDown;
-    [SerializeField] private bool _isChargeDown;
-    [SerializeField] private bool _isDash;
+    [SerializeField] private bool _isPressJump;
+    [SerializeField] private bool _isPressLand;
+    [SerializeField] private bool _isPressChargeDown;
+    [SerializeField] private bool _isPressDash;
 
     public Vector2 MoveDir { get { return _moveDir; } }
-    public bool IsJump { get { return _isJump; } }
-    public bool IsChargeJump { get { return _isChargeJump; } }
-    public bool IsDown { get { return _isDown; } set { _isDown = value; } }
-    public bool IsChargeDown { get { return _isChargeDown; } }
-    public bool IsDash { get { return _isDash; } set { _isDash = value; } }
+    public bool IsPressMove { get { return _moveDir != Vector2.zero; } }
+    public bool IsPressJump { get { return _isPressJump; } }
+    public bool IsPressLand { get { return _isPressLand; } }
+    public bool IsPressDash { get { return _isPressDash; } set { _isPressDash = value; } }
     #endregion
 
     #region InputSystem
@@ -30,16 +31,19 @@ public class InputManager
 
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
     public Action<Vector2> moveAction;
-    public Action jumpAction;
-    public Action jumpChargeAction;
+    public Action<Rigidbody2D> jumpAction;
+    public Action<Rigidbody2D> jumpChargeAction;
     public Action airStopAction;
     public Action airRotateAction;
-    public Action downAction;
-    public Action<Vector2> dashAction;
+    public Action<Rigidbody2D> downAction;
+    public Action<Rigidbody2D, Vector2> dashAction;
     #endregion
 
     public void Init()
     {
+        _playerController = Manager.Game.PlayerController;
+        _rb = _playerController.RB;
+
         _playerInputSystem = new PlayerInputSystem();
 
         _moveInputAction = _playerInputSystem.Player.Move;
@@ -62,18 +66,17 @@ public class InputManager
         _jumpInputAction.started += OnJumpStarted;
         _jumpInputAction.canceled += OnJumpCanceled;
         
-        _downInputAction.started += OnDownStarted;
-        _downInputAction.canceled += OnDownCanceled;
+        _downInputAction.started += OnAirStopStarted;
+        _downInputAction.canceled += OnAirStopCanceled;
 
         _leftDashInputAction.performed += OnLeftDash;
         _rightDashInputAction.performed += OnRightDash;
         #endregion
 
-        _isJump = false;
-        _isChargeJump = false;
-        _isDown = false;
-        _isChargeDown = false;
-        _isDash = false;
+        _isPressJump = false;
+        _isPressLand = false;
+        _isPressChargeDown = false;
+        _isPressDash = false;
     }
 
     void OnMove(InputAction.CallbackContext context)
@@ -81,11 +84,13 @@ public class InputManager
         if (context.phase == InputActionPhase.Performed)
         {
             _moveDir = context.ReadValue<Vector2>();
+            _playerController.IsMove = true;
             //Debug.Log("이동: " + _moveDir);
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
             _moveDir = Vector2.zero;
+            _playerController.IsMove = false;
             //Debug.Log("정지: " + _moveDir);
         }
     }
@@ -94,63 +99,50 @@ public class InputManager
     void OnJumpStarted(InputAction.CallbackContext context)
     {
         Debug.Log("JumpStarted");
-
-        if (!Manager.Game.PlayerController.IsGround)
-        {
-            return;
-        }
-        _isChargeJump = true;
-        jumpChargeAction?.Invoke();
+        _isPressJump = true;
+        _playerController.ReadyJump();
+        //jumpChargeAction?.Invoke(Manager.Game.PlayerController.RB);
     }
 
     void OnJumpCanceled(InputAction.CallbackContext context)
     {
-        if (!Manager.Game.PlayerController.IsGround)
-        {
-            return;
-        }
-        _isChargeJump = false;
-        _isJump = true;
-        if (_isJump)
-        {
-            jumpAction?.Invoke();
-            //Debug.Log("Jump");
-            _isJump = false;
-        }
+        _isPressJump = false;
+        _playerController.IsChargeJump = false;
+        _playerController.IsJump = false; ;
+        jumpAction?.Invoke(_rb);
     }
     #endregion
 
-    #region 다운
-    void OnDownStarted(InputAction.CallbackContext context)
+    #region 에어 스탑, 슈퍼 히어로 랜딩
+    void OnAirStopStarted(InputAction.CallbackContext context)
     {
         if (Manager.Game.PlayerController.IsGround)
         {
             return;
         }
 
-        if (_isDown)
-        {
-            return;
-        }
         // 다운키 누르고 있으면 에어스탑, 때면 다운
-        if (context.started)
+        if (!_playerController.IsLanding && context.started)
         {
-            _isChargeDown = true;
+            _isPressLand = true;
+            _playerController.IsChargeLanding = true;
             airStopAction?.Invoke();
         }
     }
-    void OnDownCanceled(InputAction.CallbackContext context)
+    void OnAirStopCanceled(InputAction.CallbackContext context)
     {
-        if (!_isChargeDown)
+        if (!_playerController.IsChargeLanding)
         {
             return;
         }
+
         if (context.canceled)
         {
-            _isChargeDown = false;
-            _isDown = true;
-            
-            downAction?.Invoke();
+            _isPressLand = false;
+            Debug.Log("슈히랜!");
+            _playerController.IsChargeLanding = false;
+            _playerController.IsLanding = true;
+            downAction?.Invoke(Manager.Game.PlayerController.RB);
         }
     }
     #endregion
@@ -158,12 +150,12 @@ public class InputManager
     #region 대시
     void OnLeftDash(InputAction.CallbackContext context)
     {
-        _isDash = true;
+        _isPressDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
             Debug.Log("왼쪽 대시~");
 
-            dashAction?.Invoke(Vector2.left);
+            dashAction?.Invoke(_rb, Vector2.left);
             //액션에 코루틴이 있어서 isDash 세터 추가했습니다..
             //_isDash = false;
         }
@@ -171,10 +163,10 @@ public class InputManager
 
     void OnRightDash(InputAction.CallbackContext context)
     {
-        _isDash = true;
+        _isPressDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
-            dashAction?.Invoke(Vector2.right);
+            dashAction?.Invoke(_rb, Vector2.right);
             //_isDash = false;
         }
     }
@@ -195,14 +187,5 @@ public class InputManager
 
         // e다운
         downAction = null;
-    }
-
-    void OnDisable()
-    {
-        //_moveAction.Disable();
-        //_jumpAction.Disable();
-        //_downAction.Disable();
-        //_leftDashAction.Disable();
-        //_rightDashAction.Disable();
     }
 }

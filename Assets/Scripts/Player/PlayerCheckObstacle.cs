@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerCheckObstacle : MonoBehaviour
 {
-    Rigidbody2D _rb;
     BoxCollider2D _boxCollider;
 
     [Header("Ray Settings")]
@@ -10,17 +9,19 @@ public class PlayerCheckObstacle : MonoBehaviour
     [SerializeField] private float _playerHeight;
     [SerializeField] private float _rayYOffset;
 
-    [SerializeField] LayerMask _groundLayer = 1 << 6;
-    [SerializeField] LayerMask _wallLayer = 1 << 7;
-
+    [SerializeField] LayerMask _groundLayer;
+    [SerializeField] LayerMask _wallLayer;
 
     void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
         _boxCollider = GetComponent<BoxCollider2D>();
         _playerWidth = _boxCollider.size.x * transform.localScale.x;
         _playerHeight = _boxCollider.size.y * transform.localScale.y;
         _rayYOffset = 0.02f;
+
+        // 레이어 마스크 설정
+        _groundLayer = 1 << (int)Define.Platform.Ground;
+        _wallLayer = 1 << (int)Define.Platform.Wall;
     }
 
     // 땅 감지
@@ -35,13 +36,8 @@ public class PlayerCheckObstacle : MonoBehaviour
         if (hit.collider != null)
         {
             Debug.Log("Ground");
-
             isGround = true;
-            if (Manager.Input.IsDown)
-            {
-                Manager.Input.IsDown = false;
-                _rb.constraints = RigidbodyConstraints2D.None;
-            }
+            Manager.Game.PlayerController.IsLanding = false;
         }
         else // 공중에 떠있을 때
         {
@@ -62,13 +58,7 @@ public class PlayerCheckObstacle : MonoBehaviour
         if (hit.collider != null)
         {
             Debug.Log("Wall");
-
             isWall = true;
-            if (Manager.Input.IsDown)
-            {
-                Manager.Input.IsDown = false;
-                _rb.constraints = RigidbodyConstraints2D.None;
-            }
         }
         else // 벽에 안닿았을 때
         {

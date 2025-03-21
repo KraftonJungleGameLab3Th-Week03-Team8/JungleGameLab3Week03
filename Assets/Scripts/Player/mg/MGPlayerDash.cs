@@ -16,7 +16,7 @@ public class MGPlayerDash : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody2D>();
-        Manager.Input.dashAction += Dash;
+        //Manager.Input.dashAction += Dash;
     }
 
     public void Init()
@@ -66,7 +66,7 @@ public class MGPlayerDash : MonoBehaviour
         _rb.gravityScale = _prevGravityScale;
         _isDashed = true;
         _isDashing = false;
-        Manager.Input.IsDash = false;
+        Manager.Input.IsPressDash = false;
     }
 
     [ContextMenu("Dash(right)")]

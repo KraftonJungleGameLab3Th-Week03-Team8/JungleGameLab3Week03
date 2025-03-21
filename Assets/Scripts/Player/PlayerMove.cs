@@ -2,28 +2,18 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    private float _moveSpeed;
-    private Rigidbody2D _rb;
+    private float _moveSpeed = 5f;
 
-    private void Start()
+    public void Move(Rigidbody2D rb)
     {
-        _moveSpeed = 5f;
-        _rb = GetComponent<Rigidbody2D>();
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-    }
-
-    private void Move()
-    {
-        if(!Manager.Input.IsDash)
+        if(!Manager.Input.IsPressDash)
         {
-            _rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;
+            Manager.Game.PlayerController.IsMove = true;
+            rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;
         }
         else
         {
+            Manager.Game.PlayerController.IsMove = false;
             Debug.Log("무브 안됨(IsDash)");
         }
     }

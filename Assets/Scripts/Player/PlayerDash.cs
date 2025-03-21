@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerDash : MonoBehaviour
 {
-    private Rigidbody2D _rb;
     [SerializeField] private float _dashForce;
     //[SerializeField] private float _dashDistance;
     // 콘테스트 : 한수찬ver 거리말고 시간으로 대시범위를 잡았습니다.
@@ -12,7 +11,6 @@ public class PlayerDash : MonoBehaviour
 
     private void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
         _dashForce = 500f;
         _dashTime = 0.2f;
         _reduceDashForce = -220f;
@@ -20,31 +18,30 @@ public class PlayerDash : MonoBehaviour
         Manager.Input.dashAction += Dash;
     }
 
-    private void Dash(Vector2 dir)
+    private void Dash(Rigidbody2D rb, Vector2 dir)
     {
-        //_rb.AddForce(dir * _dashForce, ForceMode2D.Impulse);
-        StartCoroutine(DashCoroutine(dir));
+        StartCoroutine(DashCoroutine(rb, dir));
     }
 
-    private IEnumerator DashCoroutine(Vector2 dir)
+    private IEnumerator DashCoroutine(Rigidbody2D rb, Vector2 dir)
     {
-        _rb.constraints = RigidbodyConstraints2D.FreezePositionY;
+        rb.constraints = RigidbodyConstraints2D.FreezePositionY;
         float elapsedTime = 0f;
-        _rb.AddForce(dir * _dashForce, ForceMode2D.Impulse);
+        rb.AddForce(dir * _dashForce, ForceMode2D.Impulse);
 
-        while (elapsedTime < _dashTime && Manager.Input.IsDash)
+        while (elapsedTime < _dashTime && Manager.Input.IsPressDash)
         {
             elapsedTime += Time.deltaTime;
             // 감속
-            _rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
+            rb.AddForce(dir * _reduceDashForce, ForceMode2D.Force);
             yield return null;
         }
-        Manager.Input.IsDash = false;
+        Manager.Input.IsPressDash = false;
 
         // 이 제약 해제가 스탑에어의 제약 전에 호출되면 안됨. 머지후 테스할 예정.
-        if (!Manager.Input.IsChargeDown && !Manager.Input.IsDown)
+        if (!Manager.Input.IsPressLand && !Manager.Input.IsPressLand)
         {
-            _rb.constraints = RigidbodyConstraints2D.None;
+            rb.constraints = RigidbodyConstraints2D.None;
         }
     }
 }
