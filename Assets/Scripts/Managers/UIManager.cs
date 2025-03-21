@@ -2,9 +2,6 @@ using UnityEngine;
 
 public class UIManager
 {
-<<<<<<< Updated upstream
-}
-=======
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,4 +24,3 @@ public class UIManager
         // 페이드 in/out
 
 }
->>>>>>> Stashed changes
