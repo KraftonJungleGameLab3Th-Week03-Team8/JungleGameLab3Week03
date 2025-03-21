@@ -1,16 +1,27 @@
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+
+    public void Init()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    /// <summary>
+    /// BGM 재생
+    /// </summary>
+    public void PlayBGM()
     {
-        
+
+    }
+
+    /// <summary>
+    /// 효과음 재생
+    /// </summary>
+    public void PlaySFX()
+    {
+
     }
 }
