@@ -12,9 +12,12 @@ public class PlayerController : MonoBehaviour
     public bool IsLanding { get { return _isLanding; } set { _isLanding = value; } }
     public bool IsChargeLanding { get { return _isChargeDown; } set { _isChargeDown = value; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
+    public bool IsGrab { get { return _isGrab; } set { _isGrab = value; } }
 
     public bool IsGround { get { return _isGround; } }
     public bool IsWall { get { return _isWall; } }
+    public bool IsLeftWall { get { return _isLeftWall; } }
+    public bool IsRightWall { get { return _isRightWall; } }
 
     Rigidbody2D _rb;
     BoxCollider2D _collider;
@@ -25,12 +28,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isLanding;
     [SerializeField] bool _isChargeDown;
     [SerializeField] bool _isDash;
+    [SerializeField] bool _isGrab;
     
     [SerializeField] bool _isGround;
     [SerializeField] bool _isWall;
+    [SerializeField] bool _isLeftWall;
+    [SerializeField] bool _isRightWall;
 
     PlayerMove _playerMove;
     PlayerCheckObstacle _playerCheckObstacle;
+    PlayerGrab _playerGrab;
 
     void Awake()
     {
@@ -39,17 +46,23 @@ public class PlayerController : MonoBehaviour
 
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
+        _playerGrab = GetComponent<PlayerGrab>();
     }
 
     private void Update()
     {
         _playerCheckObstacle.CheckGround(ref _isGround);
-        _playerCheckObstacle.CheckWall(ref _isWall);
+        _playerCheckObstacle.CheckWall(ref _isWall, ref _isLeftWall, ref _isRightWall);
     }
 
     private void FixedUpdate()
     {
-        _playerMove.Move(_rb);
+        _playerGrab.Grab(_rb);
+        if (!_isGrab)
+        {
+            _playerMove.Move(_rb);    
+        }
+        
     }
 
     public void ReadyJump()
