@@ -37,7 +37,8 @@ public class PlayerDash : MonoBehaviour
             _reduceDashForce -= Time.fixedDeltaTime * 3000f;
             yield return new WaitForFixedUpdate();
         }
-        Manager.Input.IsPressDash = false;
+
+        //Manager.Input.IsPressDash = false; 
         _reduceDashForce = -1800f;
 
         if (!Manager.Input.IsPressLand && !Manager.Input.IsPressLand)

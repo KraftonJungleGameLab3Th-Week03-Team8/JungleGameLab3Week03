@@ -22,7 +22,7 @@ public class PlayerAirStop : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Manager.Input.IsPressLand)
+        if (Manager.Input.IsPressLand)
         {
             if (_rotateSpeed <= _rotateSpeedMax)
             {
