@@ -96,6 +96,11 @@ public class InputManager
     #region 차지 점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
+        if(!_playerController.IsGround)
+        {
+            return;
+        }
+
         Debug.Log("JumpStarted");
         _isPressJump = true;
         _playerController.ReadyJump();
@@ -147,6 +152,11 @@ public class InputManager
     #region 대시
     void OnLeftDash(InputAction.CallbackContext context)
     {
+        if(_playerController.IsLanding)
+        {
+            return;
+        }
+
         _isPressDash = true;
         if (context.phase == InputActionPhase.Performed)
         {
@@ -160,6 +170,11 @@ public class InputManager
 
     void OnRightDash(InputAction.CallbackContext context)
     {
+        if (_playerController.IsLanding)
+        {
+            return;
+        }
+
         _isPressDash = true;
         if (context.phase == InputActionPhase.Performed)
         {

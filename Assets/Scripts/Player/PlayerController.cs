@@ -58,4 +58,9 @@ public class PlayerController : MonoBehaviour
         _isChargeJump = true;
         _isJump = true;
     }
+
+    public void LandOnGround()
+    {
+        _rb.constraints = RigidbodyConstraints2D.None;
+    }
 }

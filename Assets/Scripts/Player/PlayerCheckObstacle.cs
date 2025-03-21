@@ -38,6 +38,7 @@ public class PlayerCheckObstacle : MonoBehaviour
             Debug.Log("Ground");
             isGround = true;
             Manager.Game.PlayerController.IsLanding = false;
+            Manager.Game.PlayerController.LandOnGround();
         }
         else // 공중에 떠있을 때
         {

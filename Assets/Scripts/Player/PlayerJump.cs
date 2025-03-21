@@ -17,7 +17,7 @@ public class PlayerJump : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Manager.Input.IsPressJump)  // 차지 점프 시, 점프 파워 증가
+        if(Manager.Input.IsPressJump && _jumpForce < _jumpForceLimit)  // 차지 점프 시, 점프 파워 증가
         {
             _jumpForce += _jumpForceChargeValue;
         }
