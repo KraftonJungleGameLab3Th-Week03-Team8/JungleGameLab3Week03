@@ -66,7 +66,7 @@ public class MGPlayerDash : MonoBehaviour
         _rb.gravityScale = _prevGravityScale;
         _isDashed = true;
         _isDashing = false;
-        Manager.Input.IsPressDash = false;
+        //Manager.Input.IsPressDash = false;
     }
 
     [ContextMenu("Dash(right)")]

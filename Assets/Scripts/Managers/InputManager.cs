@@ -7,17 +7,16 @@ public class InputManager
     Rigidbody2D _rb;
 
     #region 입력값
-    [SerializeField] private Vector2 _moveDir;
-    [SerializeField] private bool _isPressJump;
-    [SerializeField] private bool _isPressLand;
-    [SerializeField] private bool _isPressChargeDown;
-    [SerializeField] private bool _isPressDash;
+    private Vector2 _moveDir;
+    private bool _isPressJump;
+    private bool _isPressLand;
+    private bool _isPressDash;
 
     public Vector2 MoveDir { get { return _moveDir; } }
     public bool IsPressMove { get { return _moveDir != Vector2.zero; } }
     public bool IsPressJump { get { return _isPressJump; } }
     public bool IsPressLand { get { return _isPressLand; } }
-    public bool IsPressDash { get { return _isPressDash; } set { _isPressDash = value; } }
+    public bool IsPressDash { get { return _isPressDash; } }
     #endregion
 
     #region InputSystem
@@ -30,12 +29,9 @@ public class InputManager
     #endregion
 
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
-    public Action<Vector2> moveAction;
     public Action<Rigidbody2D> jumpAction;
-    public Action<Rigidbody2D> jumpChargeAction;
     public Action airStopAction;
-    public Action airRotateAction;
-    public Action<Rigidbody2D> downAction;
+    public Action<Rigidbody2D> landAction;
     public Action<Rigidbody2D, Vector2> dashAction;
     #endregion
 
@@ -46,18 +42,21 @@ public class InputManager
 
         _playerInputSystem = new PlayerInputSystem();
 
+        #region InputAction 할당
         _moveInputAction = _playerInputSystem.Player.Move;
         _jumpInputAction = _playerInputSystem.Player.Jump;
         _downInputAction = _playerInputSystem.Player.Down;
         _leftDashInputAction = _playerInputSystem.Player.LeftDash;
         _rightDashInputAction = _playerInputSystem.Player.RightDash;
+        #endregion
 
-        // 활성화 = 다른 오브젝트의 컴포넌트여도 자동 호출되게 세팅
+        #region 활성화
         _moveInputAction.Enable();
         _jumpInputAction.Enable();
         _downInputAction.Enable();
         _leftDashInputAction.Enable();
         _rightDashInputAction.Enable();
+        #endregion
 
         #region 키 입력 이벤트 등록
         _moveInputAction.performed += OnMove;
@@ -75,7 +74,6 @@ public class InputManager
 
         _isPressJump = false;
         _isPressLand = false;
-        _isPressChargeDown = false;
         _isPressDash = false;
     }
 
@@ -101,7 +99,6 @@ public class InputManager
         Debug.Log("JumpStarted");
         _isPressJump = true;
         _playerController.ReadyJump();
-        //jumpChargeAction?.Invoke(Manager.Game.PlayerController.RB);
     }
 
     void OnJumpCanceled(InputAction.CallbackContext context)
@@ -138,11 +135,11 @@ public class InputManager
 
         if (context.canceled)
         {
-            _isPressLand = false;
             Debug.Log("슈히랜!");
+            _isPressLand = false;
             _playerController.IsChargeLanding = false;
             _playerController.IsLanding = true;
-            downAction?.Invoke(Manager.Game.PlayerController.RB);
+            landAction?.Invoke(Manager.Game.PlayerController.RB);
         }
     }
     #endregion
@@ -175,17 +172,9 @@ public class InputManager
     public void Clear()
     {
         /* 액션 해제 */
-        // 점프
-        jumpChargeAction = null;
-        jumpAction = null;
-
-        // 대시
-        dashAction = null;
-
-        // Air Stop
-        airStopAction = null;
-
-        // e다운
-        downAction = null;
+        jumpAction = null;      // 점프 
+        dashAction = null;      // 대시
+        airStopAction = null;   // Air Stop
+        landAction = null;      // 다운
     }
 }

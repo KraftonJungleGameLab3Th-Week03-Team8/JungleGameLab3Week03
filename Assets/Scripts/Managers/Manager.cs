@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
 public class Manager : MonoBehaviour
@@ -30,18 +29,6 @@ public class Manager : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if(UnityEngine.Input.GetKeyDown(KeyCode.T))
-        {
-            GameObject test = Resource.Load<GameObject>("Prefabs/TestPlayer");
-            if (test != null)
-            {
-                Instantiate(test);
-            }
-        }
-    }
-
     // Manager 초기화
     private void Init()
     {
@@ -58,5 +45,10 @@ public class Manager : MonoBehaviour
     private void Clear()
     {
         Input.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        Clear();
     }
 }
