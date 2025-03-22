@@ -26,6 +26,9 @@ public class InputManager
     private InputAction _downInputAction;
     private InputAction _leftDashInputAction;
     private InputAction _rightDashInputAction;
+
+    private InputAction _gameStartInputAction;
+    private InputAction _gameExitInputAction;
     #endregion
 
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
@@ -34,6 +37,11 @@ public class InputManager
     public Action<Rigidbody2D> landAction;
     public Action<Rigidbody2D, Vector2> dashAction;
     public Action<Rigidbody2D> wallJumpAction;   // 벽점프
+    #endregion
+
+    #region UI 액션 등록
+    public Action gameStartAction;
+    public Action gameExitAction;
     #endregion
 
     public void Init()
@@ -78,6 +86,12 @@ public class InputManager
         _isJumpCut = false;
         _isPressLand = false;
         _isPressDash = false;
+    }
+
+    public void FindPlayer()
+    {
+        _playerController = Manager.Game.PlayerController;
+        _rb = _playerController.RB;
     }
 
     void OnMove(InputAction.CallbackContext context)

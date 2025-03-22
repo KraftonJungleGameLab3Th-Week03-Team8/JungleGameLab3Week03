@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
@@ -6,6 +7,8 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D RB => _rb;
     public BoxCollider2D Collider => _collider;
+
+    public TextMeshPro MumbleText => _mumbleText;
 
     public bool IsMove { get { return _isMove; } set { _isMove = value; } }
     public bool IsJump { get { return _isJump; } set { _isJump = value; } }
@@ -18,6 +21,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _rb;
     private BoxCollider2D _collider;
+    TextMeshPro _mumbleText;
     private float _gravityScale;
     public float GravityScale { get { return _gravityScale; } set { _gravityScale = value; }}
     
