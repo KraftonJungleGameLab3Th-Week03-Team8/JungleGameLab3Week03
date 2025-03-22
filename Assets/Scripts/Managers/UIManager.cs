@@ -1,26 +1,42 @@
+using System.Collections;
 using UnityEngine;
 
 public class UIManager
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    Canvas _inGameUI;
+    Canvas _titleUI;
+    Canvas _timerUI;
+
+    public void Init()
     {
-        
+        _inGameUI = GameObject.FindAnyObjectByType<InGameUI>().GetComponent<Canvas>();
+        _titleUI = _inGameUI.transform.GetChild(0).GetComponent<Canvas>();
+        _timerUI = _inGameUI.transform.GetChild(1).GetComponent<Canvas>();
+
+        Manager.Input.gameStartAction += GameStart; // 게임 시작 액션 등록
     }
 
-    // Update is called once per frame
-    void Update()
+    // 게임 시작
+    public void GameStart()
     {
-        
+        _titleUI.enabled = false;
+        _timerUI.enabled = true;
+
+        Manager.Game.Init();
     }
 
-    // 타이틀 화면 캔버스 제어
-        // 타이틀명, 시작버튼?
-    
-    // 플레이 타임 제어
-        // 타이머 시작, 정지/일시정지, 초기화
-    // 슈퍼 히어로 랜딩
-    // 각종 연출
-        // 페이드 in/out
+    // 시간 측정
+    public void UpdateTime()
+    {
 
+    }
+
+    // 랜딩 후 혼잣말
+    IEnumerator MumbleCoroutine(string message)
+    {
+        Manager.Game.PlayerController.MumbleText.enabled = true;
+        Manager.Game.PlayerController.MumbleText.text = message;
+        yield return new WaitForSeconds(1.0f);
+        Manager.Game.PlayerController.MumbleText.enabled = false;
+    }
 }

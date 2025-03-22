@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Manager : MonoBehaviour
@@ -29,6 +30,11 @@ public class Manager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        UI.UpdateTime();
+    }
+
     // Manager 초기화
     private void Init()
     {
@@ -37,12 +43,12 @@ public class Manager : MonoBehaviour
          초기화가 필요한 매니저 초기화 시키기
          */
         Resource.Init();
-        Game.Init();
         Sound.Init();
         Input.Init();
+        UI.Init();
     }
 
-    private void Clear()
+    public void Clear()
     {
         Input.Clear();
     }

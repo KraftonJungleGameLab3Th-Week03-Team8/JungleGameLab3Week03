@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class GameManager
 {
-    public PlayerController PlayerController { get { return _playerController; } }
-    public CameraController CameraController { get { return _cameraController; } }
-    PlayerController _playerController;
-    CameraController _cameraController;
+    public bool IsGameStart => _isGameStart;
+    public PlayerController PlayerController =>_playerController;
+    public CameraController CameraController => _cameraController;
+    private bool _isGameStart;
+    private PlayerController _playerController;
+    private CameraController _cameraController;
+
 
     public void Init()
     {
@@ -15,13 +18,32 @@ public class GameManager
         /*
         플레이어 소환 및  초기화 등
          */
-
-        SpawnPlayer();
+        GameStart();
+        Manager.Input.gameExitAction += GameExit;
     }
 
     public void SpawnPlayer()
     {
         GameObject playerPrefab = Manager.Resource.Instantiate("PlayerPrefab");
         _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
+        Manager.Input.FindPlayer();
+
+        Debug.Log("플레이어 등록 완료");
+    }
+
+    public void GameStart()
+    {
+        Debug.Log("게임 시작");
+
+        _isGameStart = true;
+        SpawnPlayer();
+        _cameraController.SetTarget(_playerController.transform);
+    }
+
+    public void GameExit()
+    {
+        Debug.LogWarning("게임 종료");
+        //Manager.Instance.Clear();  // InputManager 초기화
+        Application.Quit();
     }
 }

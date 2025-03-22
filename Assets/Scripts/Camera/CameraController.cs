@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
         _cam = FindAnyObjectByType<Camera>();
         _camTr = _cam.transform;
 
-        SetTarget(FindAnyObjectByType<PlayerInput>().transform);
+        //SetTarget(FindAnyObjectByType<PlayerInput>().transform);
     }
 
     public void SetTarget(Transform target)
@@ -46,6 +46,9 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (_targetTr == null)
+            return;
+
         Vector3 targetPos = new Vector3(_targetTr.position.x + targetPositionOffset.x, _targetTr.position.y + targetPositionOffset.y, _originPos.z);
         Vector3 localTargetPos = _camTr.InverseTransformPoint(targetPos);
 

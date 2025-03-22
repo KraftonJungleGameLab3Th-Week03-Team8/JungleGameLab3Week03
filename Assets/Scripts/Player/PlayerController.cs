@@ -1,10 +1,13 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
 public class PlayerController : MonoBehaviour
 {
-    public Rigidbody2D RB { get { return _rb; } }
-    public BoxCollider2D Collider { get { return _collider; } }
+    public Rigidbody2D RB => _rb;
+    public BoxCollider2D Collider => _collider;
+
+    public TextMeshPro MumbleText => _mumbleText;
 
     public bool IsMove { get { return _isMove; } set { _isMove = value; } }
     public bool IsJump { get { return _isJump; } set { _isJump = value; } }
@@ -14,13 +17,14 @@ public class PlayerController : MonoBehaviour
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
     public bool IsGrab { get { return _isGrab; } set { _isGrab = value; } }
 
-    public bool IsGround { get { return _isGround; } }
-    public bool IsWall { get { return _isWall; } }
-    public bool IsLeftWall { get { return _isLeftWall; } }
-    public bool IsRightWall { get { return _isRightWall; } }
+    public bool IsGround => _isGround;
+    public bool IsWall => _isWall;
+    public bool IsLeftWall => _isLeftWall;
+    public bool IsRightWall => _isRightWall;
 
     Rigidbody2D _rb;
     BoxCollider2D _collider;
+    TextMeshPro _mumbleText;
 
     [SerializeField] bool _isMove;
     [SerializeField] bool _isJump;
@@ -43,6 +47,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
+        _mumbleText = GetComponentInChildren<TextMeshPro>();
 
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
@@ -62,7 +67,6 @@ public class PlayerController : MonoBehaviour
         {
             _playerMove.Move(_rb);    
         }
-        
     }
 
     public void ReadyJump()
