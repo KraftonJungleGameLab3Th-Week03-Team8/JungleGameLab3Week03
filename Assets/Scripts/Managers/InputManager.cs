@@ -8,13 +8,15 @@ public class InputManager
 
     #region 입력값
     private Vector2 _moveDir;
-    private bool _isPressJump;
+    //private bool _isHoldJump;
+    private bool _isJumpCut;
     private bool _isPressLand;
     private bool _isPressDash;
 
     public Vector2 MoveDir { get { return _moveDir; } }
     public bool IsPressMove { get { return _moveDir != Vector2.zero; } }
-    public bool IsPressJump { get { return _isPressJump; } }
+    //public bool IsHoldJump { get { return _isHoldJump; } }
+    public bool IsJumpCut { get { return _isJumpCut; } set { _isJumpCut = value; } }
     public bool IsPressLand { get { return _isPressLand; } }
     public bool IsPressDash { get { return _isPressDash; } }
     #endregion
@@ -64,9 +66,10 @@ public class InputManager
         _moveInputAction.performed += OnMove;
         _moveInputAction.canceled += OnMove;
 
-        _jumpInputAction.started += OnJumpStarted;
-        _jumpInputAction.canceled += OnJumpCanceled;
-        
+        _jumpInputAction.started += OnJump;
+        //_jumpInputAction.performed += OnJump;
+        _jumpInputAction.canceled += OnJump;
+
         _downInputAction.started += OnAirStopStarted;
         _downInputAction.canceled += OnAirStopCanceled;
 
@@ -74,7 +77,8 @@ public class InputManager
         _rightDashInputAction.performed += OnRightDash;
         #endregion
 
-        _isPressJump = false;
+        //_isHoldJump = false;
+        _isJumpCut = false;
         _isPressLand = false;
         _isPressDash = false;
     }
@@ -108,29 +112,35 @@ public class InputManager
         }
         else
         {
-            if(!_playerController.IsGround)
+            if (!_playerController.IsGround)
             {
                 return;
             }
 
             Debug.Log("JumpStarted");
-            _isPressJump = true;
-            _playerController.ReadyJump();
+            //_isPressJump = true;
+            //_playerController.ReadyJump();
         }
     }
+    #endregion
 
-    void OnJumpCanceled(InputAction.CallbackContext context)
+    #region 숏점프, 롱점프 스펙트럼버전
+    void OnJump(InputAction.CallbackContext context)
     {
-        if (_playerController.IsGrab)
+        if (context.phase == InputActionPhase.Started)
         {
-            
-        }
-        else
-        {
-            _isPressJump = false;
-            _playerController.IsChargeJump = false;
-            _playerController.IsJump = false; ;
+            if (!_playerController.IsGround || !_playerController.IsJump)
+            {
+                return;
+            }
             jumpAction?.Invoke(_rb);
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            if (_playerController.IsJump && _rb.linearVelocity.y > 0)
+            {
+                _isJumpCut = true;
+            }
         }
     }
     #endregion
@@ -145,7 +155,7 @@ public class InputManager
 
         if (_playerController.IsWall)
         {
-            return;   
+            return;
         }
 
         if (_playerController.IsGrab)
@@ -194,7 +204,7 @@ public class InputManager
         {
             return;
         }
-        if(_playerController.IsLanding)
+        if (_playerController.IsLanding)
         {
             return;
         }
@@ -222,7 +232,7 @@ public class InputManager
         {
             return;
         }
-        if(_playerController.IsLanding)
+        if (_playerController.IsLanding)
         {
             return;
         }
@@ -243,7 +253,7 @@ public class InputManager
     public void Clear()
     {
         /* 액션 해제 */
-        jumpAction = null;      // 점프 
+        jumpAction = null;     // 점프
         dashAction = null;      // 대시
         airStopAction = null;   // Air Stop
         landAction = null;      // 다운
