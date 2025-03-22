@@ -20,10 +20,10 @@ public class PlayerController : MonoBehaviour
     public bool IsRightWall { get { return _isRightWall; } }
 
     private Rigidbody2D _rb;
+    private BoxCollider2D _collider;
     private float _gravityScale;
     public float GravityScale { get { return _gravityScale; } set { _gravityScale = value; }}
-    private BoxCollider2D _collider;
-
+    
     [SerializeField] bool _isMove;
     [SerializeField] bool _isJump;
     [SerializeField] bool _isChargeJump;
@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        //_gravityScale = _rb.gravityScale;
         _collider = GetComponent<BoxCollider2D>();
 
         _playerMove = GetComponent<PlayerMove>();
@@ -102,19 +101,12 @@ public class PlayerController : MonoBehaviour
     {
         _playerMove.Move(_rb);
         _playerGrab.Grab(_rb);
-        /*
-        if (Manager.Game.PlayerController.IsJump && !_isGrab)
-        {
-            _playerJump.ControlJumpGravity(_rb);
-        }
-        */
     }
 
     public void SetGravityScale(float gravityScale)
     {
         _rb.gravityScale = gravityScale;
     }
-
 
     /* [Legacy - charge jump]
     public void ReadyJump()

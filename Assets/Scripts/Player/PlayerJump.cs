@@ -3,11 +3,14 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    [SerializeField] private float _gravityStrength;
-    //[SerializeField] private float _gravityScale;
+    [Header("JumpForce 결정변수")]
     [SerializeField] private float _jumpHeight;
     [SerializeField] private float _jumpTimeToApex;
-    [SerializeField] private float _jumpForce;
+
+    private float _gravityStrength;
+    private float _jumpForce;
+
+    [Header("점프 상태 중력 관리 변수")]
     [SerializeField] private float _jumpCutGravityMultiplier;
     [SerializeField] private float _maxFallSpeed;
     [SerializeField] private float _jumpHangTime;
