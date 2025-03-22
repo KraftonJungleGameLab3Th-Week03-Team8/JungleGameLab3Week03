@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     public bool IsChargeLanding { get { return _isChargeDown; } set { _isChargeDown = value; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
     public bool IsGrab { get { return _isGrab; } set { _isGrab = value; } }
+    public bool IsGrabJump { get { return _isGrabJump; } set { _isGrabJump = value; } }
 
     public bool IsGround { get { return _isGround; } }
     public bool IsWall { get { return _isWall; } }
     public bool IsLeftWall { get { return _isLeftWall; } }
     public bool IsRightWall { get { return _isRightWall; } }
+    public bool IsWallJumping { get { return _isWallJumping; } set { _isWallJumping = value; } }
 
     Rigidbody2D _rb;
     BoxCollider2D _collider;
@@ -29,11 +31,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isChargeDown;
     [SerializeField] bool _isDash;
     [SerializeField] bool _isGrab;
+    [SerializeField] bool _isGrabJump;
     
     [SerializeField] bool _isGround;
     [SerializeField] bool _isWall;
     [SerializeField] bool _isLeftWall;
     [SerializeField] bool _isRightWall;
+
+    private bool _isWallJumping = false;
 
     PlayerMove _playerMove;
     PlayerCheckObstacle _playerCheckObstacle;
@@ -57,12 +62,17 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _playerGrab.Grab(_rb);
-        if (!_isGrab)
+        // 1. 벽점프 중이 아닐 경우에만 Grab 가능
+        if (!IsGrabJump && !IsWallJumping)
         {
-            _playerMove.Move(_rb);    
+            _playerGrab.Grab(_rb);
         }
-        
+
+        // 2. Grab 상태이거나 땅에 서 있으면 이동 가능
+        if (IsGrab || IsGround)
+        {
+            _playerMove.Move(_rb);
+        }
     }
 
     public void ReadyJump()
@@ -75,5 +85,10 @@ public class PlayerController : MonoBehaviour
     public void LandOnGround()
     {
         _rb.constraints = RigidbodyConstraints2D.None;
+    }
+    
+    public void GrabJump()
+    {
+        _playerGrab.GrabJump(_rb);
     }
 }

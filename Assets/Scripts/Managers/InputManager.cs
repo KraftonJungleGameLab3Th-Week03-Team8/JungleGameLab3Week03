@@ -95,36 +95,60 @@ public class InputManager
         }
     }
 
-    #region 차지 점프
+    #region 점프, 벽점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
-        if(!_playerController.IsGround)
+        if (_playerController.IsGrab && !_playerController.IsGrabJump)
         {
-            return;
+            _playerController.IsGrabJump = true;
+            _playerController.GrabJump();
         }
+        else
+        {
+            if(!_playerController.IsGround)
+            {
+                return;
+            }
 
-        Debug.Log("JumpStarted");
-        _isPressJump = true;
-        _playerController.ReadyJump();
+            Debug.Log("JumpStarted");
+            _isPressJump = true;
+            _playerController.ReadyJump();
+        }
     }
 
     void OnJumpCanceled(InputAction.CallbackContext context)
     {
-        _isPressJump = false;
-        _playerController.IsChargeJump = false;
-        _playerController.IsJump = false; ;
-        jumpAction?.Invoke(_rb);
+        if (_playerController.IsGrab)
+        {
+            
+        }
+        else
+        {
+            _isPressJump = false;
+            _playerController.IsChargeJump = false;
+            _playerController.IsJump = false; ;
+            jumpAction?.Invoke(_rb);
+        }
     }
     #endregion
 
     #region 에어 스탑, 슈퍼 히어로 랜딩
     void OnAirStopStarted(InputAction.CallbackContext context)
     {
-        if (Manager.Game.PlayerController.IsGround)
+        if (_playerController.IsGround)
         {
             return;
         }
 
+        if (_playerController.IsWall)
+        {
+            return;   
+        }
+
+        if (_playerController.IsGrab)
+        {
+            return;
+        }
         // 다운키 누르고 있으면 에어스탑, 때면 다운
         if (!_playerController.IsLanding && context.started)
         {
@@ -136,6 +160,11 @@ public class InputManager
     void OnAirStopCanceled(InputAction.CallbackContext context)
     {
         if (!_playerController.IsChargeLanding)
+        {
+            return;
+        }
+
+        if (_playerController.IsGrab)
         {
             return;
         }

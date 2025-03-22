@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerCheckObstacle : MonoBehaviour
@@ -11,7 +12,6 @@ public class PlayerCheckObstacle : MonoBehaviour
 
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
-
     void Start()
     {
         _boxCollider = GetComponent<BoxCollider2D>();
@@ -40,6 +40,8 @@ public class PlayerCheckObstacle : MonoBehaviour
             isGround = true;
             Manager.Game.PlayerController.IsLanding = false;
             Manager.Game.PlayerController.IsDash = false;
+            Manager.Game.PlayerController.IsGrabJump = false;
+            Manager.Game.PlayerController.IsWallJumping = false;
             Manager.Game.PlayerController.LandOnGround();
         }
         else // 공중에 떠있을 때
@@ -69,6 +71,10 @@ public class PlayerCheckObstacle : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
             isWall = true;
+            // 닿았을때 대시, 벽점프 초기화 하면 점프하고 다시 벽에 붙는 문제 발생
+            // 사유) 벽닿은 상태로 그대로 손을 놓으면 공중 제어가 되어야하고 점프를하면 공중제어는 못해도 점프는 초기화 되어야함.
+            
+            Manager.Game.PlayerController.IsDash = false;
         }
         else
         {
@@ -78,7 +84,7 @@ public class PlayerCheckObstacle : MonoBehaviour
         // 왼쪽 벽 체크
         if (leftHit.collider != null)
         {
-            Debug.Log("Left Wall");
+            //Debug.Log("Left Wall");
             isLeftWall = true;
         }
         else
@@ -89,7 +95,7 @@ public class PlayerCheckObstacle : MonoBehaviour
         // 오른쪽 벽 체크
         if (rightHit.collider != null)
         {
-            Debug.Log("Right Wall");
+            //Debug.Log("Right Wall");
             isRightWall = true;
         }
         else
