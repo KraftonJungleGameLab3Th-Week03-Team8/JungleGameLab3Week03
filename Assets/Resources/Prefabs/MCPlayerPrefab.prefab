@@ -229,10 +229,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 10
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 4
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -332,6 +332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ec89db01dcc3e447b49a240a9d97502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _isSeeRight: 1
   _isMove: 0
   _isJump: 0
   _isChargeJump: 0
@@ -342,8 +343,6 @@ MonoBehaviour:
   _isGrabJump: 0
   _isGround: 0
   _isWall: 0
-  _isLeftWall: 0
-  _isRightWall: 0
 --- !u!114 &3187278334014450663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,6 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a22a3eaeb06e8545a0b566dbcacc6ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moveSpeed: 5
 --- !u!114 &2214878444247671254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,10 +389,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9725fe9fefc8884cbbbb546a247772b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultJumpForce: 0
-  _jumpForce: 0
-  _jumpForceChargeValue: 0
-  _jumpForceLimit: 0
+  _jumpHeight: 3.5
+  _jumpTimeToApex: 0.3
+  _jumpCutGravityMultiplier: 2
+  _maxFallSpeed: 25
+  _jumpHangTime: 1
+  _jumpHangGravityMultiplier: 0.5
+  _fallGravityMultiplier: 1.5
 --- !u!114 &8621545516944072929
 MonoBehaviour:
   m_ObjectHideFlags: 0

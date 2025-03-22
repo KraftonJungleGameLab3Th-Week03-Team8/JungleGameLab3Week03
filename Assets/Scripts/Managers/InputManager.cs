@@ -8,17 +8,15 @@ public class InputManager
 
     #region 입력값
     private Vector2 _moveDir;
-    //private bool _isHoldJump;
     private bool _isJumpCut;
     private bool _isPressLand;
     private bool _isPressDash;
 
-    public Vector2 MoveDir { get { return _moveDir; } }
-    public bool IsPressMove { get { return _moveDir != Vector2.zero; } }
-    //public bool IsHoldJump { get { return _isHoldJump; } }
+    public Vector2 MoveDir => _moveDir;
+    public bool IsPressMove => _moveDir != Vector2.zero;
     public bool IsJumpCut { get { return _isJumpCut; } set { _isJumpCut = value; } }
-    public bool IsPressLand { get { return _isPressLand; } }
-    public bool IsPressDash { get { return _isPressDash; } }
+    public bool IsPressLand => _isPressLand;
+    public bool IsPressDash => _isPressDash;
     #endregion
 
     #region InputSystem
@@ -35,7 +33,6 @@ public class InputManager
     public Action airStopAction;
     public Action<Rigidbody2D> landAction;
     public Action<Rigidbody2D, Vector2> dashAction;
-    public Action<Rigidbody2D> wallHoldAction;   // 벽잡기
     public Action<Rigidbody2D> wallJumpAction;   // 벽점프
     #endregion
 
@@ -89,51 +86,31 @@ public class InputManager
         {
             _moveDir = context.ReadValue<Vector2>();
             Manager.Game.PlayerController.IsMove = true;
-            _playerController.IsGrab = true;
             Debug.Log("이동: " + _moveDir);
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
             Manager.Game.PlayerController.IsMove = false;
             _moveDir = Vector2.zero;
-            _playerController.IsGrab = false;
             Debug.Log("정지: " + _moveDir);
         }
     }
-
-    #region 점프, 벽점프
-    void OnJumpStarted(InputAction.CallbackContext context)
-    {
-
-        if (_playerController.IsWall && !_playerController.IsGround)
-        {
-            Debug.Log("벽점프");
-            wallJumpAction?.Invoke(_rb);
-        }
-        else
-        {
-            if (!_playerController.IsGround)
-            {
-                return;
-            }
-
-            Debug.Log("JumpStarted");
-            //_isPressJump = true;
-            //_playerController.ReadyJump();
-        }
-    }
-    #endregion
 
     #region 숏점프, 롱점프 스펙트럼버전
     void OnJump(InputAction.CallbackContext context)
     {
         if (context.phase == InputActionPhase.Started)
         {
-            if (!_playerController.IsGround || !_playerController.IsJump)
+            if (_playerController.IsHoldWall)    // 벽점프
             {
-                return;
+                Debug.Log("벽점프");
+                wallJumpAction?.Invoke(_rb);
             }
-            jumpAction?.Invoke(_rb);
+            else if (_playerController.IsGround)
+            {
+                // 점프
+                jumpAction?.Invoke(_rb);
+            }
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
@@ -148,20 +125,10 @@ public class InputManager
     #region 에어 스탑, 슈퍼 히어로 랜딩
     void OnAirStopStarted(InputAction.CallbackContext context)
     {
-        if (_playerController.IsGround)
-        {
+        bool isLockAirStopStart = _playerController.IsGround || _playerController.IsWall || _playerController.IsHoldWall;
+        if (isLockAirStopStart)
             return;
-        }
 
-        if (_playerController.IsWall)
-        {
-            return;
-        }
-
-        if (_playerController.IsGrab)
-        {
-            return;
-        }
         // 다운키 누르고 있으면 에어스탑, 때면 다운
         if (!_playerController.IsLanding && context.started)
         {
@@ -172,15 +139,9 @@ public class InputManager
     }
     void OnAirStopCanceled(InputAction.CallbackContext context)
     {
-        if (!_playerController.IsChargeLanding)
-        {
+        bool isLockSuperHeroLanding = !_playerController.IsChargeLanding || _playerController.IsHoldWall;
+        if(isLockSuperHeroLanding)
             return;
-        }
-
-        if (_playerController.IsGrab)
-        {
-            return;
-        }
 
         if (context.canceled)
         {
@@ -196,23 +157,9 @@ public class InputManager
     #region 대시
     void OnLeftDash(InputAction.CallbackContext context)
     {
-        if (_playerController.IsChargeJump)
-        {
+        bool isLockDash = _playerController.IsChargeLanding || _playerController.IsLanding || _playerController.IsDash;
+        if (isLockDash)
             return;
-        }
-        if (_playerController.IsChargeLanding)
-        {
-            return;
-        }
-        if (_playerController.IsLanding)
-        {
-            return;
-        }
-
-        if (_playerController.IsDash)
-        {
-            return;
-        }
 
         if (context.phase == InputActionPhase.Performed)
         {
@@ -224,23 +171,9 @@ public class InputManager
 
     void OnRightDash(InputAction.CallbackContext context)
     {
-        if (_playerController.IsChargeJump)
-        {
+        bool isLockDash = _playerController.IsChargeLanding || _playerController.IsLanding || _playerController.IsDash ;
+        if (isLockDash)
             return;
-        }
-        if (_playerController.IsChargeLanding)
-        {
-            return;
-        }
-        if (_playerController.IsLanding)
-        {
-            return;
-        }
-
-        if (_playerController.IsDash)
-        {
-            return;
-        }
 
         if (context.phase == InputActionPhase.Performed)
         {
