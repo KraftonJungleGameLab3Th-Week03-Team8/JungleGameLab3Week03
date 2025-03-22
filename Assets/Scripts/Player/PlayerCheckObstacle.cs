@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerCheckObstacle : MonoBehaviour
@@ -11,7 +12,6 @@ public class PlayerCheckObstacle : MonoBehaviour
 
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
-
     void Start()
     {
         _boxCollider = GetComponent<BoxCollider2D>();
@@ -35,7 +35,6 @@ public class PlayerCheckObstacle : MonoBehaviour
         //땅에 닿았을 때
         if (hit.collider != null)
         {
-            Manager.Game.PlayerController.RB.gravityScale = 0f;
             //Debug.Log("Ground");
             isGround = true;
             Manager.Game.PlayerController.LandOnGround();
@@ -47,52 +46,27 @@ public class PlayerCheckObstacle : MonoBehaviour
         }
     }
 
-    // 벽 감지
-    public void CheckWall(ref bool isWall, ref bool isLeftWall, ref bool isRightWall)
+    // 플레이어 앞 벽 체크
+    public void CheckWall(ref bool isWall)
     {
-        
-        // 왼쪽 벽 체크
-        Vector3 startPosition = transform.position;
-        Ray2D leftRay = new Ray2D(startPosition, Vector2.left);
-        RaycastHit2D leftHit = Physics2D.Raycast(leftRay.origin, leftRay.direction, _playerWidth * 0.55f, _wallLayer);
-        Debug.DrawRay(leftRay.origin, leftRay.direction * _playerWidth * 0.55f, Color.blue);   // 디버깅
-        
-        // 오른쪽 벽 체크
-        Ray2D rightRay = new Ray2D(startPosition, Vector2.right);
-        RaycastHit2D rightHit = Physics2D.Raycast(rightRay.origin, rightRay.direction, _playerWidth * 0.55f, _wallLayer);
-        Debug.DrawRay(rightRay.origin, rightRay.direction * _playerWidth * 0.55f, Color.green);   // 디버깅
-        
-        // 둘 중 하나라도 닿으면 IsWall = true
-        if (leftHit.collider != null || rightHit.collider != null)
+        Transform visual = Manager.Game.PlayerController.Visual;
+        Vector3 startPosition = visual.position;
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, visual.right, _playerWidth * 0.55f, _wallLayer);
+        Debug.DrawRay(startPosition, visual.right * _playerWidth * 0.55f, Color.green);   // 디버깅
+
+        // 벽 감지
+        if (hit.collider != null)
         {
             transform.rotation = Quaternion.Euler(0f, 0f, 0f);
             isWall = true;
+            // 닿았을때 대시, 벽점프 초기화 하면 점프하고 다시 벽에 붙는 문제 발생
+            // 사유) 벽닿은 상태로 그대로 손을 놓으면 공중 제어가 되어야하고 점프를하면 공중제어는 못해도 점프는 초기화 되어야함.
+
+            Manager.Game.PlayerController.IsDash = false;
         }
         else
         {
             isWall = false;
-        }
-        
-        // 왼쪽 벽 체크
-        if (leftHit.collider != null)
-        {
-            Debug.Log("Left Wall");
-            isLeftWall = true;
-        }
-        else
-        {
-            isLeftWall = false;
-        }
-        
-        // 오른쪽 벽 체크
-        if (rightHit.collider != null)
-        {
-            Debug.Log("Right Wall");
-            isRightWall = true;
-        }
-        else
-        {
-            isRightWall = false;
         }
     }
 }
