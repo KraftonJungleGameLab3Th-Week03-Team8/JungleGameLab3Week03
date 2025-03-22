@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
@@ -5,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D RB { get { return _rb; } }
     public BoxCollider2D Collider { get { return _collider; } }
+
+    public TextMeshPro MumbleText => _mumbleText;
 
     public bool IsMove { get { return _isMove; } set { _isMove = value; } }
     public bool IsJump { get { return _isJump; } set { _isJump = value; } }
@@ -23,7 +26,9 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D _collider;
     private float _gravityScale;
     public float GravityScale { get { return _gravityScale; } set { _gravityScale = value; }}
-    
+
+    TextMeshPro _mumbleText;
+
     [SerializeField] bool _isMove;
     [SerializeField] bool _isJump;
     [SerializeField] bool _isChargeJump;
@@ -46,6 +51,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
+        _mumbleText = GetComponentInChildren<TextMeshPro>();
 
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();

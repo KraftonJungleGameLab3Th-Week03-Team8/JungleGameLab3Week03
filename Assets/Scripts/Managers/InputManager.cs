@@ -28,6 +28,9 @@ public class InputManager
     private InputAction _downInputAction;
     private InputAction _leftDashInputAction;
     private InputAction _rightDashInputAction;
+
+    private InputAction _gameStartInputAction;
+    private InputAction _gameExitInputAction;
     #endregion
 
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
@@ -37,14 +40,22 @@ public class InputManager
     public Action<Rigidbody2D, Vector2> dashAction;
     #endregion
 
+    #region UI 액션 등록
+    public Action gameStartAction;
+    public Action gameExitAction;
+    #endregion
+
     public void Init()
     {
-        _playerController = Manager.Game.PlayerController;
-        _rb = _playerController.RB;
-
         _playerInputSystem = new PlayerInputSystem();
+        InitUIAction();
+        InitPlayerAction();
+    }
 
+    public void InitPlayerAction()
+    {
         #region InputAction 할당
+        // 플레이어
         _moveInputAction = _playerInputSystem.Player.Move;
         _jumpInputAction = _playerInputSystem.Player.Jump;
         _downInputAction = _playerInputSystem.Player.Down;
@@ -79,6 +90,31 @@ public class InputManager
         _isJumpCut = false;
         _isPressLand = false;
         _isPressDash = false;
+    }
+
+    public void InitUIAction()
+    {
+        #region InputAction 할당
+        // UI
+        _gameStartInputAction = _playerInputSystem.UI.GameStart;
+        _gameExitInputAction = _playerInputSystem.UI.GameExit;
+        #endregion
+
+        #region 활성화
+        _gameStartInputAction.Enable();
+        _gameExitInputAction.Enable();
+        #endregion
+        
+        #region 키 입력 이벤트 등록
+        _gameStartInputAction.performed += OnGameStart;
+        _gameExitInputAction.performed += OnGameExit;
+        #endregion
+    }
+
+    public void FindPlayer()
+    {
+        _playerController = Manager.Game.PlayerController;
+        _rb = _playerController.RB;
     }
 
     void OnMove(InputAction.CallbackContext context)
@@ -125,19 +161,19 @@ public class InputManager
     #region 차지 점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
-        if (!_playerController.IsGround)
+        if(!_playerController.IsGround)
         {
             return;
         }
 
         Debug.Log("JumpStarted");
-        __isHoldJump = true;
+        _isPressJump = true;
         _playerController.ReadyJump();
     }
 
     void OnJumpCanceled(InputAction.CallbackContext context)
     {
-        __isHoldJump = false;
+        _isPressJump = false;
         _playerController.IsChargeJump = false;
         _playerController.IsJump = false; ;
         jumpAction?.Invoke(_rb);
@@ -236,10 +272,52 @@ public class InputManager
     }
     #endregion
 
+    #region UI
+
+    void OnGameStart(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && !Manager.Game.IsGameStart)
+        {
+            //InitPlayerAction(); // 플레이어 InputSystem 초기화
+            gameStartAction?.Invoke();
+        }
+        //_gameStartInputAction = null; // 최초에 한 번만 누르면 되므로 바로 해제
+    }
+
+    void OnGameExit(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && Manager.Game.IsGameStart)
+        {
+            gameExitAction?.Invoke();
+        }
+    }
+
+    #endregion
+
     public void Clear()
     {
+        /* Input Action 비활성화 */
+        _moveInputAction.Disable();
+        _jumpInputAction.Disable();
+        _downInputAction.Disable();
+        _leftDashInputAction.Disable();
+        _rightDashInputAction.Disable();
+
+        _gameStartInputAction.Disable();
+        _gameExitInputAction.Disable();
+
+        /*Input Action 해제*/
+        _moveInputAction = null;
+        _jumpInputAction = null;
+        _downInputAction = null;
+        _leftDashInputAction = null;
+        _rightDashInputAction = null;
+
+        _gameStartInputAction = null;
+        _gameExitInputAction = null;
+
         /* 액션 해제 */
-        jumpAction = null;     // 점프
+        jumpAction = null;      // 점프 
         dashAction = null;      // 대시
         airStopAction = null;   // Air Stop
         landAction = null;      // 다운
