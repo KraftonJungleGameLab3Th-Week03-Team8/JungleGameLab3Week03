@@ -3,29 +3,55 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
-    [SerializeField] private float _jumpForce = 0;
-    [SerializeField] private float _fallMultiplier = 5f;
-    [SerializeField] private float _gravityScale = 3f;
-    //[SerializeField] private float _longJumpForce = 0;
+    [Header("JumpForce 결정변수")]
+    [SerializeField] private float _jumpHeight;
+    [SerializeField] private float _jumpTimeToApex;
+
+    private float _gravityStrength;
+    private float _jumpForce;
+
+    [Header("점프 상태 중력 관리 변수")]
+    [SerializeField] private float _jumpCutGravityMultiplier;
+    [SerializeField] private float _maxFallSpeed;
+    [SerializeField] private float _jumpHangTime;
+    [SerializeField] private float _jumpHangGravityMultiplier;
+    [SerializeField] private float _fallGravityMultiplier;
+
+    // 원래는 점프데이터 클래스를 만들어서 관리해야함. 일단 기능구현부터.
+    public float JumpCutGravityMultiplier { get { return _jumpCutGravityMultiplier; } }
+    public float MaxFallSpeed { get { return _maxFallSpeed; } }
+    public float JumpHangTime { get { return _jumpHangTime; } }
+    public float JumpHangGravityMultiplier { get { return _jumpHangGravityMultiplier; } }
+    public float FallGravityMultiplier { get { return _fallGravityMultiplier; } }
 
     private void Start()
     {
-        _jumpForce = 200f;
-        _fallMultiplier = 5f;
-        //_longJumpForce = 3000f;
         Manager.Input.jumpAction += Jump;
-        _gravityScale = Manager.Game.PlayerController.RB.gravityScale;
+
+        #region 중력 세팅
+        // 점프 높이와 시간 기반으로 중력 가속도 계산
+        _gravityStrength = -(2 * _jumpHeight) / Mathf.Pow(_jumpTimeToApex, 2);
+
+        // 중력 계수 설정 (유니티 기본 중력값과 비교해 상대적 스케일)
+        Manager.Game.PlayerController.GravityScale = _gravityStrength / Physics2D.gravity.y;
+
+        // 점프 시 필요한 초기 속도 계산
+        _jumpForce = Mathf.Abs(_gravityStrength) * _jumpTimeToApex;
+        #endregion
     }
 
     private void Jump(Rigidbody2D rb)
     {
-        if (Manager.Game.PlayerController.IsGround)
+        /* 점프 버퍼링을 위한 코드
+        if (rb.linearVelocityY < 0)
         {
-            Debug.Log("점프");
-            rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-            //Manager.Game.PlayerController.IsJump = true;
-            StartCoroutine(WaitOneSecondCouroutine());
+            _jumpForce -= rb.linearVelocityY;
         }
+        */
+        Debug.Log("점프");
+        rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+
+        StartCoroutine(WaitOneSecondCouroutine());
     }
 
     IEnumerator WaitOneSecondCouroutine()
@@ -33,36 +59,4 @@ public class PlayerJump : MonoBehaviour
         yield return new WaitForSeconds(Time.fixedDeltaTime);
         Manager.Game.PlayerController.IsJump = true;
     }
-
-    public void controlJumpGravity(Rigidbody2D rb)
-    {
-        //Debug.Log(rb.linearVelocityY);
-        // 떨어질때 중력 증가
-        if (rb.linearVelocityY < 0)
-        {
-            Debug.Log("중력 3단계");
-            rb.gravityScale = _gravityScale * _fallMultiplier;
-        }
-        else if (rb.linearVelocityY > 0 && Manager.Input.IsHoldJump)
-        {
-            Debug.Log("중력 1단계");
-            rb.gravityScale = _gravityScale;
-        }
-        else if (rb.linearVelocityY > 0 && !Manager.Input.IsHoldJump)
-        {
-            Debug.Log("중력 2단계");
-            rb.gravityScale = _gravityScale * (_fallMultiplier / 2);
-        }
-    }
-
-    /*
-    private void LongJump(Rigidbody2D rb)
-    {
-        if (Manager.Game.PlayerController.IsJump)
-        {
-            Debug.Log("롱 점프");
-            rb.AddForce(Vector2.up * _longJumpForce, ForceMode2D.Force);
-        }
-    }
-    */
 }
