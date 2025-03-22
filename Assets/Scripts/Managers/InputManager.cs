@@ -105,7 +105,7 @@ public class InputManager
     {
         if (context.phase == InputActionPhase.Started)
         {
-            if (!_playerController.IsGround || !_playerController.IsJump)
+            if (!_playerController.IsGround || _playerController.IsJump)
             {
                 return;
             }
