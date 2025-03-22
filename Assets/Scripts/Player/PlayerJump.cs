@@ -18,11 +18,11 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float _fallGravityMultiplier;
 
     // 원래는 점프데이터 클래스를 만들어서 관리해야함. 일단 기능구현부터.
-    public float JumpCutGravityMultiplier { get { return _jumpCutGravityMultiplier; } }
-    public float MaxFallSpeed { get { return _maxFallSpeed; } }
-    public float JumpHangTime { get { return _jumpHangTime; } }
-    public float JumpHangGravityMultiplier { get { return _jumpHangGravityMultiplier; } }
-    public float FallGravityMultiplier { get { return _fallGravityMultiplier; } }
+    public float JumpCutGravityMultiplier => _jumpCutGravityMultiplier;
+    public float MaxFallSpeed => _maxFallSpeed;
+    public float JumpHangTime => _jumpHangTime;
+    public float JumpHangGravityMultiplier => _jumpHangGravityMultiplier;
+    public float FallGravityMultiplier => _fallGravityMultiplier;
 
     private void Start()
     {
