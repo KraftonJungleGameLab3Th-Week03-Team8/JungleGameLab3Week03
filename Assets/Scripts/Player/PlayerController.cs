@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D _rb;
     private BoxCollider2D _collider;
+    [SerializeField] private Transform _playerTransform;
+    public Transform PlayerTransform { get { return _playerTransform; } }
     private float _gravityScale;
     public float GravityScale { get { return _gravityScale; } set { _gravityScale = value; }}
     
@@ -46,6 +48,7 @@ public class PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
+        _playerTransform = GetComponent<Transform>();
 
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();

@@ -38,6 +38,12 @@ public class PlayerCheckObstacle : MonoBehaviour
             Manager.Game.PlayerController.RB.gravityScale = 0f;
             //Debug.Log("Ground");
             isGround = true;
+
+            if(Manager.Game.PlayerController.IsLanding)
+            {
+                LandingEffect.MakeLandingEffect();
+            }
+
             Manager.Game.PlayerController.LandOnGround();
         }
         else // 공중에 떠있을 때
