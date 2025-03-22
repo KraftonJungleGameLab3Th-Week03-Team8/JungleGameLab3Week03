@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
@@ -39,6 +40,10 @@ public class PlayerController : MonoBehaviour
     #endregion
 
 
+
+    Coroutine _dashCoolTimeCoroutine;
+
+
     #region 플레이어 외형
     Transform _visual;  // 플레이어 외형
     public Transform Visual => _visual;
@@ -48,6 +53,7 @@ public class PlayerController : MonoBehaviour
     PlayerCheckObstacle _playerCheckObstacle;
     PlayerGrab _playerGrab;
     PlayerJump _playerJump;
+
 
     void Awake()
     {
@@ -136,12 +142,26 @@ public class PlayerController : MonoBehaviour
         _rb.gravityScale = 1f;  // 중력 복구
 
         _isHoldWall = false;    // 벽 붙잡기 X
-        _isDash = false;        // 대시 X
+        //_isDash = false;        // 대시 X
+
+        if(_dashCoolTimeCoroutine == null)
+        {
+            _dashCoolTimeCoroutine = StartCoroutine(WaitDashCoroutine());
+        }
+
         _isLanding = false;     // 랜딩 X
         _isJump = false;        // 점프 X
         _isGrabJump = false;    // 벽 점프 X
         Manager.Input.IsJumpCut = false;
     }
+
+    IEnumerator WaitDashCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _isDash = false;
+        _dashCoolTimeCoroutine = null;
+    }
+
 
     public void HoldWall()
     {
