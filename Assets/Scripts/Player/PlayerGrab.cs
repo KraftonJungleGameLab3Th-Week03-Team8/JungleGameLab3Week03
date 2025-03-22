@@ -18,36 +18,52 @@ public class PlayerGrab : MonoBehaviour
         
         //테스트용 변수
         _corutineTime = 100f;
+
+        Manager.Input.wallHoldAction += Grab;
+        Manager.Input.wallJumpAction += GrabJump;
     }
 
-    public void Grab(Rigidbody2D rb)
-    {        
+    //public void Grab(Rigidbody2D rb)    // 벽 잡기
+    //{        
+    //    float moveX = Manager.Input.MoveDir.x;
+
+    //    bool touchingWall = Manager.Game.PlayerController.IsWall;
+    //    bool pushingIntoWall =
+    //        (Manager.Game.PlayerController.IsLeftWall && moveX < -0.1f) ||
+    //        (Manager.Game.PlayerController.IsRightWall && moveX > 0.1f);
+
+    //    bool canGrab = !Manager.Game.PlayerController.IsGround && touchingWall && pushingIntoWall;
+
+    //    if (canGrab)
+    //    {
+    //        // ✅ Grab 진입 시 상태 초기화 (중요!)
+    //        Manager.Game.PlayerController.IsGrabJump = false;
+    //        Manager.Game.PlayerController.IsWallJumping = false;
+
+    //        Manager.Game.PlayerController.IsGrab = true;
+    //        rb.gravityScale = 0f;
+    //        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+    //    }
+    //    else
+    //    {
+    //        Manager.Game.PlayerController.IsGrab = false;
+    //    }
+    //}
+
+    public void Grab(Rigidbody2D rb)    // 벽 잡기
+    {
+        Debug.Log("벽잡기");
         float moveX = Manager.Input.MoveDir.x;
+        bool isWall = Manager.Game.PlayerController.IsWall;
 
-        bool touchingWall = Manager.Game.PlayerController.IsWall;
-        bool pushingIntoWall =
-            (Manager.Game.PlayerController.IsLeftWall && moveX < -0.1f) ||
-            (Manager.Game.PlayerController.IsRightWall && moveX > 0.1f);
-
-        bool canGrab = !Manager.Game.PlayerController.IsGround && touchingWall && pushingIntoWall;
-
-        if (canGrab)
+        if (isWall)
         {
-            // ✅ Grab 진입 시 상태 초기화 (중요!)
-            Manager.Game.PlayerController.IsGrabJump = false;
-            Manager.Game.PlayerController.IsWallJumping = false;
-
-            Manager.Game.PlayerController.IsGrab = true;
             rb.gravityScale = 0f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
         }
-        else
-        {
-            Manager.Game.PlayerController.IsGrab = false;
-        }
     }
 
-    public void GrabJump(Rigidbody2D rb)
+    public void GrabJump(Rigidbody2D rb)    // 벽 점프
     {
         Vector2 force = new Vector2(_wallJumpForceX, _wallJumpForceY);
         force.x *= -Mathf.Sign(Manager.Input.MoveDir.x);
@@ -62,7 +78,6 @@ public class PlayerGrab : MonoBehaviour
         // 상태 설정
         Manager.Game.PlayerController.IsGrabJump = true;
         Manager.Game.PlayerController.IsGrab = false;
-
         Manager.Game.PlayerController.IsWallJumping = true;
     }
 }

@@ -6,10 +6,10 @@ public class PlayerMove : MonoBehaviour
 
     public void Move(Rigidbody2D rb)
     {
-        if(!Manager.Game.PlayerController.IsDash && !Manager.Game.PlayerController.IsGrabJump && !Manager.Game.PlayerController.IsGrab && !Manager.Game.PlayerController.IsWallJumping)
+        if (!Manager.Game.PlayerController.IsDash)
         {
-            Manager.Game.PlayerController.IsMove = true;
             rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;
+            Manager.Game.PlayerController.Flip(rb.linearVelocityX);
         }
         else
         {

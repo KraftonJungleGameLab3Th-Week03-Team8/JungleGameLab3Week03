@@ -40,6 +40,13 @@ public class PlayerController : MonoBehaviour
 
     private bool _isWallJumping = false;
 
+    [SerializeField] bool _isSeeRight = true;
+    public bool IsSeeRight => _isSeeRight;
+
+
+    Transform _visual;  // 플레이어 외형
+    public Transform Visual => _visual;
+
     PlayerMove _playerMove;
     PlayerCheckObstacle _playerCheckObstacle;
     PlayerGrab _playerGrab;
@@ -52,12 +59,14 @@ public class PlayerController : MonoBehaviour
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
         _playerGrab = GetComponent<PlayerGrab>();
+
+        _visual = transform.GetChild(0);
     }
 
     private void Update()
     {
         _playerCheckObstacle.CheckGround(ref _isGround);
-        _playerCheckObstacle.CheckWall(ref _isWall, ref _isLeftWall, ref _isRightWall);
+        _playerCheckObstacle.CheckWall(ref _isWall);
     }
 
     private void FixedUpdate()
@@ -65,8 +74,20 @@ public class PlayerController : MonoBehaviour
         // 1. 벽점프 중이 아닐 경우에만 Grab 가능
         if (!IsGrabJump && !IsWallJumping)
         {
-            _playerGrab.Grab(_rb);
+            //_playerGrab.Grab(_rb);
         }
+
+
+
+        if (_isWall)
+        {
+            _playerGrab.Grab(_rb);
+            Debug.Log("벽 붙잡기");
+        }
+
+
+
+
 
         // 2. Grab 상태이거나 땅에 서 있으면 이동 가능
         if (IsGrab || IsGround)
@@ -84,11 +105,26 @@ public class PlayerController : MonoBehaviour
 
     public void LandOnGround()
     {
+        _rb.gravityScale = 0f;
+        IsLanding = false;
+        IsDash = false;
+        IsGrabJump = false;
+        IsWallJumping = false;
         _rb.constraints = RigidbodyConstraints2D.None;
     }
-    
-    public void GrabJump()
+
+    // 해당 방향으로 바라보게 플립
+    public void Flip(float x)
     {
-        _playerGrab.GrabJump(_rb);
+        if (x > 0)
+        {
+            _visual.rotation = Quaternion.identity;
+            _isSeeRight = true;
+        }
+        else if (x < 0)
+        {
+            _visual.rotation = Quaternion.Euler(0, 180, 0);
+            _isSeeRight = false;
+        }
     }
 }

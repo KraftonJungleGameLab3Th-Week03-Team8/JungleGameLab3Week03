@@ -21,7 +21,7 @@ public class GameManager
 
     public void SpawnPlayer()
     {
-        GameObject playerPrefab = Manager.Resource.Instantiate("PlayerPrefab");
+        GameObject playerPrefab = Manager.Resource.Instantiate("MCPlayerPrefab");
         _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
     }
 }

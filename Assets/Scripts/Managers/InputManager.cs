@@ -33,6 +33,8 @@ public class InputManager
     public Action airStopAction;
     public Action<Rigidbody2D> landAction;
     public Action<Rigidbody2D, Vector2> dashAction;
+    public Action<Rigidbody2D> wallHoldAction;   // 벽잡기
+    public Action<Rigidbody2D> wallJumpAction;   // 벽점프
     #endregion
 
     public void Init()
@@ -82,26 +84,27 @@ public class InputManager
         if (context.phase == InputActionPhase.Performed)
         {
             _moveDir = context.ReadValue<Vector2>();
-            _playerController.IsMove = true;
+            Manager.Game.PlayerController.IsMove = true;
             _playerController.IsGrab = true;
-            //Debug.Log("이동: " + _moveDir);
+            Debug.Log("이동: " + _moveDir);
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
+            Manager.Game.PlayerController.IsMove = false;
             _moveDir = Vector2.zero;
-            _playerController.IsMove = false;
             _playerController.IsGrab = false;
-            //Debug.Log("정지: " + _moveDir);
+            Debug.Log("정지: " + _moveDir);
         }
     }
 
     #region 점프, 벽점프
     void OnJumpStarted(InputAction.CallbackContext context)
     {
-        if (_playerController.IsGrab && !_playerController.IsGrabJump)
+
+        if (_playerController.IsWall && !_playerController.IsGround)
         {
-            _playerController.IsGrabJump = true;
-            _playerController.GrabJump();
+            Debug.Log("벽점프");
+            wallJumpAction?.Invoke(_rb);
         }
         else
         {
