@@ -426,13 +426,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9725fe9fefc8884cbbbb546a247772b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpHeight: 3.5
-  _jumpTimeToApex: 0.3
-  _jumpCutGravityMultiplier: 2
-  _maxFallSpeed: 120
-  _jumpHangTime: 1
+  _jumpHeight: 2.45
+  _jumpTimeToApex: 0.4
+  _jumpCutGravityMultiplier: 1.7
+  _maxFallSpeed: 25
+  _jumpHangTime: 0.25
   _jumpHangGravityMultiplier: 0.5
-  _fallGravityMultiplier: 1.5
+  _fallGravityMultiplier: 1.4
 --- !u!114 &8621545516944072929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,11 +445,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46fc39a4dafa22a49973a07e7bc12ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rotateSpeed: 0
-  _rotateSpeedCharge: 0
-  _rotateSpeedMax: 0
-  _startRotation: 0
+  _currentRotation: 0
   _startHeight: 0
+  _rotateSpeedCharge: 0
+  _rotationLimit: 0
 --- !u!114 &185908230766616554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,8 +473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68003d46fb5bd2469f94f33edf912a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _force: 0
-  _acceleration: 0
+  _force: 13
+  _acceleration: 0.8
 --- !u!114 &4327034975934213863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -488,8 +487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e4a2eaa96f35c24c84e9b64411e0688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wallJumpForceX: 0
-  _wallJumpForceY: 0
+  _wallJumpForceX: 5
+  _wallJumpForceY: 13
 --- !u!1 &6587826948573879142
 GameObject:
   m_ObjectHideFlags: 0
