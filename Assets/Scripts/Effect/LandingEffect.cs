@@ -12,7 +12,7 @@ public class LandingEffect : MonoBehaviour
         for (int i = 0; i < _numOfDust; i++)
         {
             // 플레이어 위치보다 y-1 위치에 생성
-            dustPrefab = Manager.Resource.Instantiate("Dust", playerTransform);
+            dustPrefab = Manager.Resource.Instantiate("Dust");
             dustPrefab.transform.position = new Vector3(playerTransform.position.x, playerTransform.position.y - 0.4f, playerTransform.position.z);
         }
     }
