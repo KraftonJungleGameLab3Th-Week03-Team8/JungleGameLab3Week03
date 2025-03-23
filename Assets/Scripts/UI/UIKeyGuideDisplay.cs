@@ -1,53 +1,90 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class UIKeyGuideDisplay : MonoBehaviour
 {
     [SerializeField] private RectTransform displayArea;
-    // 튜토리얼 키 출력 제어
-    // 특정 키, 플레이어 머리 위에 출력(월드 스페이스 활용)
-    // 컨트롤러별(Keyboard/Mouse, GamePad, ...)
-        // Move
-        // Jump
-            // Charging
-            // AirStop
-            // Landing
-        // Dash
-        // 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    //private static string _strDisplayArea = "Display Area";
+    public static string pathSpace = "space";
+    public static string pathLeftArrow = "leftArrow";
+    public static string pathRightArrow = "rightArrow";
+    public static string pathDownArrow = "downArrow";
+
+    [Header("Test")]
+    public string[] showKeys;
+    public bool isTrackingPlayerHead;
+    public bool isHold;
+    public bool isDoubleTab;
+
+
+    private void Awake()
     {
-        
+        displayArea = transform.GetChild(0).GetComponent<RectTransform>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        ResetKey();
+    }
+
+    private void Update()
+    {
+        if (isTrackingPlayerHead)
+        {
+            transform.position = Manager.Game.PlayerController.transform.position;
+            transform.position += Vector3.up;
+        }
+    }
+
+    [ContextMenu("ShowKey(Test)")]
+    private void TestShowKey()
+    {
+        ShowKey(showKeys);
+    }
+
+    [ContextMenu("ShowKey(Test0)")]
+    private void TestShowKey0()
+    {
+        ShowKey(showKeys[0], isHold, isDoubleTab);
     }
 
     public void ShowKey(string[] keyNames)
     {
         foreach(string keyName in keyNames)
         {
-            RectTransform keyTr = GameObject.Find(keyName).GetComponent<RectTransform>();
-            keyTr.parent = displayArea;
-            keyTr.GetComponent<Image>().color = SetAlphaColor(keyTr.GetComponent<Image>().color, 1f);
-            keyTr.GetComponentInChildren<TextMeshProUGUI>().color = SetAlphaColor(keyTr.GetComponentInChildren<TextMeshProUGUI>().color, 1f);            
+            ShowKey(keyName, false, false);
         }
-        
+    }
+
+    public void ShowKey(string keyName, bool isHold, bool isDubleTab)
+    {
+        UIKeySkin keySkin = transform.Find(keyName).GetComponent<UIKeySkin>();
+        if (keySkin != null)
+        {
+            keySkin?.transform.SetParent(displayArea);
+            keySkin?.Show(isHold, isDubleTab);
+        }
+    }
+
+    [ContextMenu("HideKey()")]
+    public void HideKey()
+    {
+        foreach(UIKeySkin keySkin in displayArea.GetComponentsInChildren<UIKeySkin>())
+        {
+            keySkin.transform.SetParent(transform);
+            keySkin.Hide();
+        }
     }
 
     public void ResetKey()
     {
-
-    }
-
-    public static Color SetAlphaColor(Color color, float setAlpha)
-    {
-        Color setAlpaColor = color;
-        setAlpaColor.a = setAlpha;
-        return setAlpaColor;
+        HideKey();
+        foreach (UIKeySkin keySkin in GetComponentsInChildren<UIKeySkin>())
+        {
+            keySkin.Hide();
+        }
     }
 }

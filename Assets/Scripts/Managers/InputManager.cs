@@ -26,6 +26,9 @@ public class InputManager
     private InputAction _downInputAction;
     private InputAction _leftDashInputAction;
     private InputAction _rightDashInputAction;
+
+    private InputAction _gameStartInputAction;
+    private InputAction _gameExitInputAction;
     #endregion
 
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
@@ -36,13 +39,39 @@ public class InputManager
     public Action<Rigidbody2D> wallJumpAction;   // 벽점프
     #endregion
 
+    #region UI 액션 등록
+    public Action gameStartAction;
+    public Action gameExitAction;
+    #endregion
+
     public void Init()
     {
-        _playerController = Manager.Game.PlayerController;
-        _rb = _playerController.RB;
-
         _playerInputSystem = new PlayerInputSystem();
 
+        InitUI();
+        InitPlayer();
+    }
+
+    void InitUI()
+    {
+        #region InputAction 할당
+        _gameStartInputAction = _playerInputSystem.UI.GameStart;
+        _gameExitInputAction = _playerInputSystem.UI.GameExit;
+        #endregion
+
+        #region 활성화
+        _gameStartInputAction.Enable();
+        _gameExitInputAction.Enable();
+        #endregion
+
+        #region 키 입력 이벤트 등록
+        _gameStartInputAction.performed += OnGameStart;
+        _gameExitInputAction.performed += OnGameExit;
+        #endregion
+    }
+
+    void InitPlayer()
+    {
         #region InputAction 할당
         _moveInputAction = _playerInputSystem.Player.Move;
         _jumpInputAction = _playerInputSystem.Player.Jump;
@@ -78,6 +107,12 @@ public class InputManager
         _isJumpCut = false;
         _isPressLand = false;
         _isPressDash = false;
+    }
+
+    public void FindPlayer()
+    {
+        _playerController = Manager.Game.PlayerController;
+        _rb = _playerController.RB;
     }
 
     void OnMove(InputAction.CallbackContext context)
@@ -179,6 +214,26 @@ public class InputManager
         {
             _playerController.IsDash = true;
             dashAction?.Invoke(_rb, Vector2.right);
+        }
+    }
+    #endregion
+
+    #region UI
+    void OnGameStart(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && !Manager.Game.IsGameStart)
+        {
+            //InitPlayerAction(); // 플레이어 InputSystem 초기화
+            gameStartAction?.Invoke();
+        }
+        //_gameStartInputAction = null; // 최초에 한 번만 누르면 되므로 바로 해제
+    }
+
+    void OnGameExit(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && Manager.Game.IsGameStart)
+        {
+            gameExitAction?.Invoke();
         }
     }
     #endregion
