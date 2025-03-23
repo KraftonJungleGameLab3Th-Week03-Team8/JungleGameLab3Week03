@@ -46,21 +46,38 @@ public class InputManager
 
     public void Init()
     {
-        _playerController = Manager.Game.PlayerController;
-        Debug.Log("InputManager.Init()");
-        _rb = _playerController.RB;
-
         _playerInputSystem = new PlayerInputSystem();
 
+        InitUI();
+        InitPlayer();
+    }
+
+    void InitUI()
+    {
+        #region InputAction 할당
+        _gameStartInputAction = _playerInputSystem.UI.GameStart;
+        _gameExitInputAction = _playerInputSystem.UI.GameExit;
+        #endregion
+
+        #region 활성화
+        _gameStartInputAction.Enable();
+        _gameExitInputAction.Enable();
+        #endregion
+
+        #region 키 입력 이벤트 등록
+        _gameStartInputAction.performed += OnGameStart;
+        _gameExitInputAction.performed += OnGameExit;
+        #endregion
+    }
+
+    void InitPlayer()
+    {
         #region InputAction 할당
         _moveInputAction = _playerInputSystem.Player.Move;
         _jumpInputAction = _playerInputSystem.Player.Jump;
         _downInputAction = _playerInputSystem.Player.Down;
         _leftDashInputAction = _playerInputSystem.Player.LeftDash;
         _rightDashInputAction = _playerInputSystem.Player.RightDash;
-
-        _gameStartInputAction = _playerInputSystem.UI.GameStart;
-        _gameExitInputAction = _playerInputSystem.UI.GameExit;
         #endregion
 
         #region 활성화
@@ -69,9 +86,6 @@ public class InputManager
         _downInputAction.Enable();
         _leftDashInputAction.Enable();
         _rightDashInputAction.Enable();
-
-        _gameStartInputAction.Enable();
-        _gameExitInputAction.Enable();
         #endregion
 
         #region 키 입력 이벤트 등록
@@ -87,9 +101,6 @@ public class InputManager
 
         _leftDashInputAction.performed += OnLeftDash;
         _rightDashInputAction.performed += OnRightDash;
-
-        _gameStartInputAction.performed += OnGameStart;
-        _gameExitInputAction.performed += OnGameExit;
         #endregion
 
         //_isHoldJump = false;

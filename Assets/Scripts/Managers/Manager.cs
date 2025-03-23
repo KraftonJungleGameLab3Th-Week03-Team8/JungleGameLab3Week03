@@ -45,11 +45,9 @@ public class Manager : MonoBehaviour
          */
         Resource.Init();
         Sound.Init();
-        Debug.Log("Manager.Init().third");
-        Game.Init();
+        //Game.Init();
         Input.Init();
-        Debug.Log("Manager.Init().4th");
-        //UI.Init();
+        UI.Init();
         Debug.Log("Manager.Init().5th");
     }
 
