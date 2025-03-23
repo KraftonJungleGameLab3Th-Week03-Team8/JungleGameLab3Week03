@@ -8,6 +8,7 @@ public class PlayerAirStop : MonoBehaviour
     [SerializeField] private float _rotateSpeed;
     [SerializeField] private float _rotateSpeedCharge;
     [SerializeField] private float _rotateSpeedMax;
+    [SerializeField] private float _startHeight;
 
     private void Start()
     {
@@ -39,6 +40,9 @@ public class PlayerAirStop : MonoBehaviour
 
     private void OnDownStarted()
     {
+        Manager.Game.PlayerController.SetGravityScale(Manager.Game.PlayerController.GravityScale);
+        _startHeight = transform.position.y;
+
         _rotateSpeed = _defaultRotateSpeed;
         _rb.constraints = RigidbodyConstraints2D.FreezePosition;
     }

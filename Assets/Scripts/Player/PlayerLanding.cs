@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerLanding : MonoBehaviour
 {
-    private float _landForce = 300f;
+    private float _landForce = 200f;
 
     private void Start()
     {
