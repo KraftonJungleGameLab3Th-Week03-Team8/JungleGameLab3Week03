@@ -5,15 +5,20 @@ public class GameManager
     public bool IsGameStart => _isGameStart;
     public PlayerController PlayerController =>_playerController;
     public CameraController CameraController => _cameraController;
+
+    public NewCameraController NewCameraController => _newCameraController;
+
     private bool _isGameStart;
     private PlayerController _playerController;
     private CameraController _cameraController;
+    private NewCameraController _newCameraController;
 
 
     public void Init()
     {
         _cameraController = Camera.main.gameObject.GetComponent<CameraController>();
-
+        _newCameraController = GameObject.FindAnyObjectByType<NewCameraController>();
+        
         //TODO
         /*
         플레이어 소환 및  초기화 등
@@ -44,7 +49,8 @@ public class GameManager
 
         _isGameStart = true;
         SpawnPlayer();
-        _cameraController.SetTarget(_playerController.transform);
+        //_cameraController.SetTarget(_playerController.transform);
+        _newCameraController.Init(_playerController.transform);
     }
 
     public void GameExit()
