@@ -3,6 +3,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+//public enum KeyskinName
+//{
+//    space,
+//    leftArrow,
+//    rightArrow,
+//    downArrow
+//}
+
 public class UIKeyGuideDisplay : MonoBehaviour
 {
     [SerializeField] private RectTransform displayArea;

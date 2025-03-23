@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class UIKeySkin : MonoBehaviour
 {
-    private static string nameHold = "Hold";
-    private static string nameDoubleTab = "DoubleTab";
+    private static string _nameHold = "Hold";
+    private static string _nameDoubleTab = "DoubleTab";
     public void Show(bool isHold, bool isDoubleTab)
     {
         SetAlpha(1f, isHold, isDoubleTab);
@@ -24,11 +24,11 @@ public class UIKeySkin : MonoBehaviour
         }
         foreach (TextMeshProUGUI text in GetComponentsInChildren<TextMeshProUGUI>())
         {
-            if (text.name == nameHold)
+            if (text.name == _nameHold)
             {
                 text.color = SetAlphaColor(text.color, (isHold) ? alpha : 0f);
             }
-            else if (text.name == nameDoubleTab)
+            else if (text.name == _nameDoubleTab)
             {
                 text.color = SetAlphaColor(text.color, (isDoubleTab) ? alpha : 0f);
             }
