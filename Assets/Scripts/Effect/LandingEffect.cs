@@ -5,12 +5,12 @@ public class LandingEffect : MonoBehaviour
     // 높이에 따라 생성되는 먼지의 개수달라지게 나중에 리팩토링 
     [SerializeField] static private int _numOfDust = 8;
 
-    static public void MakeLandingEffect(float startedPos)
+    static public void MakeLandingEffect(float extraForce)
     {
         Transform playerTransform = Manager.Game.PlayerController.PlayerTransform;
         GameObject dustPrefab;
 
-        _numOfDust = (int)(startedPos - playerTransform.position.y) / 2;
+        _numOfDust = (int)(extraForce) / 5;
         Debug.Log("먼지 개수 : " + _numOfDust);
         for (int i = 0; i < _numOfDust; i++)
         {
