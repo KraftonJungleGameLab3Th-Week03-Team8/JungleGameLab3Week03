@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153617894665547570}
   - component: {fileID: 2323154058019871430}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -97,7 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5357857929352362946}
   - component: {fileID: 6821618355694083634}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 3
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 185908230766616554}
   - component: {fileID: 281508394724636122}
   - component: {fileID: 4327034975934213863}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,17 +332,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ec89db01dcc3e447b49a240a9d97502, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerTransform: {fileID: 0}
   _isSeeRight: 1
   _isMove: 0
   _isJump: 0
-  _isChargeJump: 0
   _isLanding: 0
   _isChargeDown: 0
   _isDash: 0
-  _isGrab: 0
   _isGrabJump: 0
   _isGround: 0
   _isWall: 0
+  _isHoldWall: 0
 --- !u!114 &3187278334014450663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,7 +451,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wallJumpForceX: 0
   _wallJumpForceY: 0
-  _corutineTime: 0
 --- !u!1 &6587826948573879142
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,7 +461,7 @@ GameObject:
   m_Component:
   - component: {fileID: 909611621693520896}
   - component: {fileID: 7207131520182226659}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EyeBrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -527,7 +526,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -548,7 +547,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5733016451282702304}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -582,7 +581,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4028110974932710038}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MCPlayerPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

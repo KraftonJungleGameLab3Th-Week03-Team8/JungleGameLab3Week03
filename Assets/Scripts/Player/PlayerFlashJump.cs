@@ -19,20 +19,9 @@ public class PlayerFlashJump : MonoBehaviour
 
     private void Dash(Rigidbody2D rb, Vector2 dir)
     {
-        Debug.Log("대시" + dir);
-
-        //rb.linearVelocity = Vector2.zero;
         Vector2 dashDirection = (dir + new Vector2(0, _acceleration)).normalized;
         Debug.Log("dashDirection : " + dashDirection);
         rb.linearVelocity = dashDirection * _force;
-        //rb.AddForce(dashDirection * _force, ForceMode2D.Impulse);
-
-        //StartCoroutine(WaitOneFrameCoroutine());
+        Debug.Log("대시 rb.linearVelocity: " + rb.linearVelocity);
     }
-
-    //IEnumerator WaitOneFrameCoroutine()
-    //{
-    //    yield return new WaitForSeconds(0.2f);
-    //    Manager.Game.PlayerController.IsDash = true;
-    //}
 }

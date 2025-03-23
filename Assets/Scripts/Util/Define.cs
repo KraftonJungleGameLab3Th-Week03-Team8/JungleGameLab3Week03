@@ -6,4 +6,12 @@ public class Define
         Ground = 6,
         Wall
     }
+
+    public enum KeyskinName
+    {
+        space,
+        leftArrow,
+        rightArrow,
+        downArrow
+    }
 }
