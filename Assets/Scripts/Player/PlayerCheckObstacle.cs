@@ -39,8 +39,8 @@ public class PlayerCheckObstacle : MonoBehaviour
             isGround = true;
 
             if(Manager.Game.PlayerController.IsLanding)
-            {
-                LandingEffect.MakeLandingEffect();
+            {  
+                LandingEffect.MakeLandingEffect(Manager.Game.PlayerController.PlayerAirStop.StartHeight);
             }
 
             Manager.Game.PlayerController.LandOnGround();

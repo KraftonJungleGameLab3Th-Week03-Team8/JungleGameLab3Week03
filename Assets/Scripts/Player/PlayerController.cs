@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
     PlayerCheckObstacle _playerCheckObstacle;
     PlayerGrab _playerGrab;
     PlayerJump _playerJump;
+    PlayerAirStop _playerAirStop;
+    public PlayerAirStop PlayerAirStop => _playerAirStop;
 
 
     void Awake()
@@ -71,6 +73,7 @@ public class PlayerController : MonoBehaviour
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
         _playerJump = GetComponent<PlayerJump>();
         _playerGrab = GetComponent<PlayerGrab>();
+        _playerAirStop = GetComponent<PlayerAirStop>();
 
         _visual = transform.GetChild(0);
     }

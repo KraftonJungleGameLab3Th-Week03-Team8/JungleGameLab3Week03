@@ -9,6 +9,7 @@ public class PlayerAirStop : MonoBehaviour
     [SerializeField] private float _rotateSpeedCharge;
     [SerializeField] private float _rotateSpeedMax;
     [SerializeField] private float _startHeight;
+    public float StartHeight { get { return _startHeight; } }
 
     private void Start()
     {
