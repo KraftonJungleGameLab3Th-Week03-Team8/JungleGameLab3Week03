@@ -19,7 +19,7 @@ public class PlayerMove : MonoBehaviour
             rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;
             Manager.Game.PlayerController.Flip(rb.linearVelocityX);
         }
-        else
+        else if(Manager.Input.MoveDir.x == 0)
         {
             Manager.Game.PlayerController.IsMove = false;
             Debug.Log("무브 안됨");
