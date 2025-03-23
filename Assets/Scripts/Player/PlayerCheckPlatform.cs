@@ -22,7 +22,7 @@ public class PlayerCheckPlatform : MonoBehaviour
         _playerHeight = _boxCollider.size.y * transform.localScale.y;
         _rayYOffset = 0.02f;
 
-        _isCanAirStopHeight = 2.8f;
+        _isCanAirStopHeight = 0.9f;
 
         // 레이어 마스크 설정
         _groundLayer = 1 << (int)Define.Platform.Ground;
@@ -33,9 +33,9 @@ public class PlayerCheckPlatform : MonoBehaviour
     public void CheckGround(ref bool isGround , ref float coyoteTime , ref float coyoteTimeTimer)
     {
         // 좌측 하단에서 가로(right) 방향으로 레이 쏘기
-        Ray2D ray = new Ray2D(transform.position - new Vector3(_playerWidth / 2, _playerHeight / 2 + _rayYOffset, 0), Vector2.right);
-        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, _playerWidth, _groundLayer);
-        Debug.DrawRay(ray.origin, ray.direction * _playerWidth, Color.red);   // 디버깅
+        Ray2D ray = new Ray2D(transform.position - new Vector3(_playerWidth * 0.4f, _playerHeight / 2 + _rayYOffset, 0), Vector2.right);
+        RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, _playerWidth * 0.4f * 2, _groundLayer);
+        Debug.DrawRay(ray.origin, ray.direction * _playerWidth * 0.4f * 2, Color.red);   // 디버깅
 
         //땅에 닿았을 때
         if (hit.collider != null)
