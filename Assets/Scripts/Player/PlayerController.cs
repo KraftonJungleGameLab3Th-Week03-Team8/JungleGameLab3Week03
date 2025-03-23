@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public bool IsAirStop { get { return _isAirStop; } set { _isAirStop = value; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
     public bool IsGround => _isGround;
+    public bool IsReadyJumpBuffer { get { return _isReadyJumpBuffer; } set { _isReadyJumpBuffer = value; } }
 
     [SerializeField] bool _isSeeRight = true;
     [SerializeField] bool _isMove;
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isAirStop;
     [SerializeField] bool _isDash;    
     [SerializeField] bool _isGround;
+    [SerializeField] bool _isReadyJumpBuffer;
 
     Coroutine _dashCoolTimeCoroutine;   // 대시 쿨타임 코루틴 (땅 끊기는 문제 방지용)
     #endregion
@@ -106,12 +108,18 @@ public class PlayerController : MonoBehaviour
         {
             JumpBufferTimeTimer -= Time.deltaTime;
         }
-        if(_coyoteTimeTimer > 0f && _jumpBufferTimeTimer > 0f)
+
+        if(_coyoteTimeTimer > 0f && _jumpBufferTimeTimer > 0f && _isReadyJumpBuffer)
         {
             Debug.LogWarning("점프 버퍼");
 
-            //_playerJump.Jump(_rb);
+            _playerJump.Jump(_rb);
             _jumpBufferTimeTimer = 0f;
+            _isReadyJumpBuffer = false;
+        }
+        else if(_jumpBufferTime <= 0f)
+        {
+            _isReadyJumpBuffer = false;
         }
 
         #region 중력 깍기 : 점프, 벽, 땅 등등 다 여기서 처리하도록 이식해주세요.
@@ -240,6 +248,7 @@ public class PlayerController : MonoBehaviour
 
     public void DetachWallState()
     {
+        _isMove = true;         // 벽 다시 붙이게 하기 위해
         _isDash = false;        // 다시 대시 가능하게 하기 위함
         _isHoldWall = false;
         _isJump = true;
