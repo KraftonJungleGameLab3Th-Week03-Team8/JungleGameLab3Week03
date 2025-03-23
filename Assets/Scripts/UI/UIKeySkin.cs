@@ -39,7 +39,6 @@ public class UIKeySkin : MonoBehaviour
         }
     }
 
-
     static public Color SetAlphaColor(Color color, float setAlpha)
     {
         Color setAlpaColor = color;
