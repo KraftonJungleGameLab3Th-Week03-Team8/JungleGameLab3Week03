@@ -165,8 +165,8 @@ public class InputManager
         if (isLockAirStopStart)
             return;
 
-        // 다운키 누르고 있으면 에어스탑, 때면 다운
-        if (!_playerController.IsLanding && context.started)
+        // 최소 높이 이상이고 랜딩 아닌 경우, 해당 키 누르면 에어 스탑
+        if (_playerController.IsCanAirStop && !_playerController.IsLanding && context.started)
         {
             _isPressLand = true;
             _playerController.IsAirStop = true;

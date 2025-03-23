@@ -1,7 +1,6 @@
-using System.Collections;
 using UnityEngine;
 
-public class PlayerCheckObstacle : MonoBehaviour
+public class PlayerCheckPlatform : MonoBehaviour
 {
     BoxCollider2D _boxCollider;
 
@@ -9,6 +8,7 @@ public class PlayerCheckObstacle : MonoBehaviour
     [SerializeField] private float _playerWidth;
     [SerializeField] private float _playerHeight;
     [SerializeField] private float _rayYOffset;
+    [SerializeField] private float _isCanAirStopHeight;
 
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
@@ -21,6 +21,8 @@ public class PlayerCheckObstacle : MonoBehaviour
         _playerWidth = _boxCollider.size.x * transform.localScale.x;
         _playerHeight = _boxCollider.size.y * transform.localScale.y;
         _rayYOffset = 0.02f;
+
+        _isCanAirStopHeight = 2.8f;
 
         // 레이어 마스크 설정
         _groundLayer = 1 << (int)Define.Platform.Ground;
@@ -85,6 +87,27 @@ public class PlayerCheckObstacle : MonoBehaviour
         else
         {
             isWall = false;
+        }
+    }
+
+    public void CheckLandingHeight(ref bool isCanAirStop)
+    {
+        // 현재 위치에서 Ray를 쏴서 땅을 감지하고 땅과의 높이 계산
+        Transform visual = Manager.Game.PlayerController.Visual;
+        Vector3 startPosition = visual.position;
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, Vector2.down, 100f, _groundLayer);
+        Debug.DrawRay(startPosition, Vector2.down * _isCanAirStopHeight, Color.red);   // 최소 히어로 랜딩 높이 디버깅
+
+        // 랜딩 가능한 높이 감지
+        if (hit.collider != null)
+        {
+            float distance = Vector2.Distance(visual.position, hit.point);
+            Debug.Log("땅과의 거리 : " + distance);
+            isCanAirStop = distance >= _isCanAirStopHeight;
+        }
+        else
+        {
+            isCanAirStop = false;
         }
     }
 }

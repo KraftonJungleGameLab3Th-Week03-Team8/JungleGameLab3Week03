@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerGrab : MonoBehaviour
+public class PlayerInteractionWall : MonoBehaviour
 {
     [SerializeField] private float _wallJumpForceX;
     [SerializeField] private float _wallJumpForceY;
@@ -10,10 +10,11 @@ public class PlayerGrab : MonoBehaviour
         _wallJumpForceX = 5f;
         _wallJumpForceY = 13f;
 
-        Manager.Input.wallJumpAction += GrabJump;
+        Manager.Input.wallJumpAction += WallJump;
     }
 
-    public void Grab(Rigidbody2D rb)    // 벽 잡기
+    // 벽 잡기
+    public void WallHold(Rigidbody2D rb)
     {
         float moveX = Manager.Input.MoveDir.x;
         bool isWall = Manager.Game.PlayerController.IsWall;
@@ -26,16 +27,17 @@ public class PlayerGrab : MonoBehaviour
         }
     }
 
-    public void GrabJump(Rigidbody2D rb)    // 벽 점프
+    // 벽 점프
+    public void WallJump(Rigidbody2D rb)
     {
-        // 벽 점프 후 바라볼 방향 설정
+        /* 벽 점프 후 바라볼 방향 설정 */
         Vector2 jumpDirection = Vector2.right;
         float targetDirection = (Manager.Game.PlayerController.IsSeeRight) ? -1 : 1;
         jumpDirection.x *= targetDirection;
         //Manager.Game.PlayerController.Flip(-Manager.Game.PlayerController.Visual.transform.right.x);
         Manager.Game.PlayerController.Flip(jumpDirection.x);
 
-        // 벽 점프 힘 설정
+        /* 벽 점프 힘 설정 */
         Vector2 force = new Vector2(_wallJumpForceX, _wallJumpForceY);
         //force.x *= -Mathf.Sign(Manager.Input.MoveDir.x);
         force.x *= -Mathf.Sign(-targetDirection);

@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     public bool IsMove { get { return _isMove; } set { _isMove = value; } }
     public bool IsJump { get { return _isJump; } set { _isJump = value; } }
     public bool IsLanding { get { return _isLanding; } set { _isLanding = value; } }
+    public bool IsCanAirStop { get { return _isCanAirStop; } }
     public bool IsAirStop { get { return _isAirStop; } set { _isAirStop = value; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
     public bool IsGround => _isGround;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isMove;
     [SerializeField] bool _isJump;
     [SerializeField] bool _isLanding;
+    [SerializeField] bool _isCanAirStop;
     [SerializeField] bool _isAirStop;
     [SerializeField] bool _isDash;    
     [SerializeField] bool _isGround;
@@ -56,8 +58,8 @@ public class PlayerController : MonoBehaviour
     public PlayerAirStop PlayerAirStop => _playerAirStop;
     public PlayerLanding PlayerLanding => _playerLanding;
     PlayerMove _playerMove;
-    PlayerCheckObstacle _playerCheckObstacle;
-    PlayerGrab _playerGrab;
+    PlayerCheckPlatform _playerCheckObstacle;
+    PlayerInteractionWall _playerGrab;
     PlayerJump _playerJump;
     PlayerAirStop _playerAirStop;
     PlayerLanding _playerLanding;
@@ -69,9 +71,9 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<BoxCollider2D>();
 
         _playerMove = GetComponent<PlayerMove>();
-        _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
+        _playerCheckObstacle = GetComponent<PlayerCheckPlatform>();
         _playerJump = GetComponent<PlayerJump>();
-        _playerGrab = GetComponent<PlayerGrab>();
+        _playerGrab = GetComponent<PlayerInteractionWall>();
         _playerAirStop = GetComponent<PlayerAirStop>();
 
         _visual = transform.GetChild(0);
@@ -81,6 +83,7 @@ public class PlayerController : MonoBehaviour
     {
         _playerCheckObstacle.CheckGround(ref _isGround);
         _playerCheckObstacle.CheckWall(ref _isWall);
+        _playerCheckObstacle.CheckLandingHeight(ref _isCanAirStop);
 
         #region 중력 깍기 : 점프, 벽, 땅 등등 다 여기서 처리하도록 이식해주세요.
         if(_isGround)
@@ -165,7 +168,7 @@ public class PlayerController : MonoBehaviour
         if (_isWall && !_isGround && (_isMove || _isDash)) // 벽 감지, 공중, 이동 및 대시 중
         {
             HoldWallState();
-            _playerGrab.Grab(_rb);
+            _playerGrab.WallHold(_rb);
         }
         _playerMove.Move(_rb);
     }
