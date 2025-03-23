@@ -17,7 +17,7 @@ public class Dust : MonoBehaviour
         StartCoroutine(LandEffectCouroutine());
     }
 
-    IEnumerator LandEffectCouroutine()
+    private IEnumerator LandEffectCouroutine()
     {
         _rb.linearVelocity = new Vector2(0, _upForce);
         _cf.force = new Vector2(Random.Range(-_horizontalForce, _horizontalForce), 0);

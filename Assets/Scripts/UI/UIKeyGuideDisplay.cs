@@ -1,15 +1,4 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.UI;
-
-//public enum KeyskinName
-//{
-//    space,
-//    leftArrow,
-//    rightArrow,
-//    downArrow
-//}
 
 public class UIKeyGuideDisplay : MonoBehaviour
 {
@@ -26,7 +15,6 @@ public class UIKeyGuideDisplay : MonoBehaviour
     public bool isTrackingPlayerHead;
     public bool isHold;
     public bool isDoubleTab;
-
 
     private void Awake()
     {
@@ -47,6 +35,7 @@ public class UIKeyGuideDisplay : MonoBehaviour
         }
     }
 
+    /* 테스트 코드 */
     [ContextMenu("ShowKey(Test)")]
     private void TestShowKey()
     {

@@ -11,7 +11,6 @@ public class DoubleTapInteraction : IInputInteraction
         if (context.control.IsPressed()) // 키를 누르는 순간 실행
         {
             float currentTime = Time.time;
-
             if (lastTapTime > 0 && (currentTime - lastTapTime) <= doubleTapThreshold)
             {
                 // 더블탭으로 인식

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class InputManager
@@ -12,19 +11,21 @@ public class InputManager
     private bool _isJumpCut;
     private bool _isPressLand;
     private bool _isPressDash;
+    private bool _isPressJump;
 
     public Vector2 MoveDir => _moveDir;
-    public bool IsPressMove => _moveDir != Vector2.zero;
     public bool IsJumpCut { get { return _isJumpCut; } set { _isJumpCut = value; } }
     public bool IsPressLand => _isPressLand;
     public bool IsPressDash => _isPressDash;
+    public bool IsPressJump => _isPressJump;
     #endregion
 
     #region InputSystem
     private PlayerInputSystem _playerInputSystem;
+
     private InputAction _moveInputAction;
     private InputAction _jumpInputAction;
-    private InputAction _downInputAction;
+    private InputAction _landingInputAction;
     private InputAction _leftDashInputAction;
     private InputAction _rightDashInputAction;
 
@@ -37,10 +38,10 @@ public class InputManager
     public Action airStopAction;
     public Action<Rigidbody2D> landingAction;
     public Action<Rigidbody2D, Vector2> dashAction;
-    public Action<Rigidbody2D> wallJumpAction;   // 벽점프
+    public Action<Rigidbody2D> wallJumpAction;          // 벽점프
     #endregion
 
-    #region UI 액션 등록
+    #region UI 액션
     public Action gameStartAction;
     public Action gameExitAction;
     #endregion
@@ -76,7 +77,7 @@ public class InputManager
         #region InputAction 할당
         _moveInputAction = _playerInputSystem.Player.Move;
         _jumpInputAction = _playerInputSystem.Player.Jump;
-        _downInputAction = _playerInputSystem.Player.Down;
+        _landingInputAction = _playerInputSystem.Player.Down;
         _leftDashInputAction = _playerInputSystem.Player.LeftDash;
         _rightDashInputAction = _playerInputSystem.Player.RightDash;
         #endregion
@@ -84,7 +85,7 @@ public class InputManager
         #region 활성화
         _moveInputAction.Enable();
         _jumpInputAction.Enable();
-        _downInputAction.Enable();
+        _landingInputAction.Enable();
         _leftDashInputAction.Enable();
         _rightDashInputAction.Enable();
         #endregion
@@ -94,14 +95,15 @@ public class InputManager
         _moveInputAction.canceled += OnMove;
 
         _jumpInputAction.started += OnJump;
-        //_jumpInputAction.performed += OnJump;
         _jumpInputAction.canceled += OnJump;
 
-        _downInputAction.started += OnAirStopStarted;
-        _downInputAction.canceled += OnAirStopCanceled;
+        _landingInputAction.started += OnAirStopStarted;
+        _landingInputAction.canceled += OnAirStopCanceled;
 
         _leftDashInputAction.performed += OnLeftDash;
+        _leftDashInputAction.canceled += OnLeftDash;
         _rightDashInputAction.performed += OnRightDash;
+        _rightDashInputAction.canceled += OnRightDash;
         #endregion
 
         _isJumpCut = false;
@@ -109,6 +111,7 @@ public class InputManager
         _isPressDash = false;
     }
 
+    // Input, UI 초기화 후, 게임 시작 시에 찾기 용도
     public void FindPlayer()
     {
         _playerController = Manager.Game.PlayerController;
@@ -121,13 +124,13 @@ public class InputManager
         {
             _moveDir = context.ReadValue<Vector2>();
             Manager.Game.PlayerController.IsMove = true;
-            Debug.Log("이동: " + _moveDir);
+            //Debug.Log("이동: " + _moveDir);
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
             Manager.Game.PlayerController.IsMove = false;
             _moveDir = Vector2.zero;
-            Debug.Log("정지: " + _moveDir);
+            //Debug.Log("정지: " + _moveDir);
         }
     }
 
@@ -136,6 +139,8 @@ public class InputManager
     {
         if (context.phase == InputActionPhase.Started)
         {
+            _isPressJump = true;
+
             if (_playerController.IsHoldWall)    // 벽점프
             {
                 Debug.Log("벽점프");
@@ -144,11 +149,23 @@ public class InputManager
             else if (_playerController.IsGround)
             {
                 // 점프
+                Debug.LogWarning("일반 점프");
+
+                jumpAction?.Invoke(_rb);
+            }
+            else if(!_playerController.IsGround && _playerController.CoyoteTimeTimer > 0f)
+            {
+                // 코요테 점프
+                if (_playerController.CoyoteTimeTimer > 0f)
+                    Debug.LogWarning("코요테 타임 점프");
+
                 jumpAction?.Invoke(_rb);
             }
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
+            _isPressJump = false;
+
             if (_playerController.IsJump && _rb.linearVelocity.y > 0)
             {
                 _isJumpCut = true;
@@ -164,17 +181,18 @@ public class InputManager
         if (isLockAirStopStart)
             return;
 
-        // 다운키 누르고 있으면 에어스탑, 때면 다운
-        if (!_playerController.IsLanding && context.started)
+        // 최소 높이 이상이고 랜딩 아닌 경우, 해당 키 누르면 에어 스탑
+        if (_playerController.IsCanAirStop && !_playerController.IsLanding && context.started)
         {
             _isPressLand = true;
-            _playerController.IsChargeLanding = true;
+            _playerController.IsAirStop = true;
             airStopAction?.Invoke();
         }
     }
-    void OnAirStopCanceled(InputAction.CallbackContext context)
+
+    void OnAirStopCanceled(InputAction.CallbackContext context) // == 슈퍼 히어로 랜딩
     {
-        bool isLockSuperHeroLanding = !_playerController.IsChargeLanding || _playerController.IsHoldWall;
+        bool isLockSuperHeroLanding = !_playerController.IsAirStop || _playerController.IsHoldWall;
         if(isLockSuperHeroLanding)
             return;
 
@@ -182,7 +200,7 @@ public class InputManager
         {
             Debug.Log("슈히랜!");
             _isPressLand = false;
-            _playerController.IsChargeLanding = false;
+            _playerController.IsAirStop = false;
             _playerController.IsLanding = true;
             landingAction?.Invoke(Manager.Game.PlayerController.RB);
         }
@@ -192,7 +210,7 @@ public class InputManager
     #region 대시
     void OnLeftDash(InputAction.CallbackContext context)
     {
-        bool isLockDash = _playerController.IsChargeLanding || _playerController.IsLanding || _playerController.IsDash;
+        bool isLockDash = _playerController.IsAirStop || _playerController.IsLanding || _playerController.IsDash;
         if (isLockDash)
             return;
 
@@ -200,20 +218,30 @@ public class InputManager
         {
             Debug.Log("왼쪽 대시~");
             _playerController.IsDash = true;
+            _isPressDash = true;
             dashAction?.Invoke(_rb, Vector2.left);
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            _isPressDash = false;
         }
     }
 
     void OnRightDash(InputAction.CallbackContext context)
     {
-        bool isLockDash = _playerController.IsChargeLanding || _playerController.IsLanding || _playerController.IsDash ;
+        bool isLockDash = _playerController.IsAirStop || _playerController.IsLanding || _playerController.IsDash;
         if (isLockDash)
             return;
 
         if (context.phase == InputActionPhase.Performed)
         {
             _playerController.IsDash = true;
+            _isPressDash = true;
             dashAction?.Invoke(_rb, Vector2.right);
+        }
+        else if (context.phase == InputActionPhase.Canceled)
+        {
+            _isPressDash = false;
         }
     }
     #endregion
@@ -240,10 +268,26 @@ public class InputManager
 
     public void Clear()
     {
-        /* 액션 해제 */
-        jumpAction = null;     // 점프
-        dashAction = null;      // 대시
+        /* UI 관련 해제 */
+        _gameStartInputAction.Disable();
+        _gameExitInputAction.Disable();
+
+        _gameStartInputAction = null;
+        _gameExitInputAction = null;
+
+        /* 플레이어 관련 해제 */
+        // InputAction 해제
+        _moveInputAction.Disable();
+        _jumpInputAction.Disable();
+        _landingInputAction.Disable();
+        _leftDashInputAction.Disable();
+        _rightDashInputAction.Disable();
+
+        // 액션 해제
+        jumpAction = null;      // 점프
         airStopAction = null;   // Air Stop
-        landingAction = null;      // 다운
+        landingAction = null;   // 다운
+        dashAction = null;      // 대시
+        wallJumpAction = null;  // 벽점프
     }
 }
