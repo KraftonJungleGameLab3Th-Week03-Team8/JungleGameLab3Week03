@@ -81,7 +81,11 @@ public class PlayerController : MonoBehaviour
         _playerCheckObstacle.CheckWall(ref _isWall);
 
         #region 중력 깍기 : 점프, 벽, 땅 등등 다 여기서 처리하도록 이식해주세요.
-        if (!_isDash)
+        if(_isGround)
+        {
+            SetGravityScale(0f);
+        }
+        else if (!_isDash)
         {
             if (Manager.Input.IsJumpCut)
             {
