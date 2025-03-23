@@ -104,7 +104,6 @@ public class InputManager
         _rightDashInputAction.performed += OnRightDash;
         #endregion
 
-        //_isHoldJump = false;
         _isJumpCut = false;
         _isPressLand = false;
         _isPressDash = false;

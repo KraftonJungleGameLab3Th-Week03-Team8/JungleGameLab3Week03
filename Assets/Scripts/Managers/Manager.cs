@@ -12,14 +12,12 @@ public class Manager : MonoBehaviour
     public static ResourceManager Resource { get { return Instance._resource; } }
     public static SoundManager Sound { get { return Instance._sound; } }
     public static UIManager UI {  get { return Instance._ui; } }
-    public static TimeManager Time { get { return Instance._time; } }
 
     private GameManager _game = new GameManager();
     private InputManager _input = new InputManager();
     private ResourceManager _resource = new ResourceManager();
     private SoundManager _sound = new SoundManager();
     private UIManager _ui = new UIManager();
-    private TimeManager _time = new TimeManager();
     #endregion
 
     private void Awake()

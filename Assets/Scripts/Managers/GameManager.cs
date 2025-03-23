@@ -3,18 +3,22 @@ using UnityEngine;
 public class GameManager
 {
     public bool IsGameStart => _isGameStart;
+    public bool IsPause => _isPause;
+
     public PlayerController PlayerController =>_playerController;
+    public CameraController CameraController => _cameraController;
 
-    public CameraController NewCameraController => _newCameraController;
-
+    #region 게임 흐름 관련
     private bool _isGameStart;
-    private PlayerController _playerController;
-    private CameraController _newCameraController;
+    private bool _isPause;
+    #endregion
 
+    private PlayerController _playerController;
+    private CameraController _cameraController;
 
     public void Init()
     {
-        _newCameraController = GameObject.FindAnyObjectByType<CameraController>();
+        _cameraController = GameObject.FindAnyObjectByType<CameraController>();
         
         //TODO
         /*
@@ -41,7 +45,19 @@ public class GameManager
 
         _isGameStart = true;
         SpawnPlayer();
-        _newCameraController.Init(_playerController.transform);
+        _cameraController.Init(_playerController.transform);
+    }
+
+    public void SetPause()
+    {
+        _isPause = true;
+        Time.timeScale = 0f;
+    }
+
+    public void ReleasePause()
+    {
+        _isPause = false;
+        Time.timeScale = 1f;
     }
 
     public void GameExit()

@@ -27,7 +27,7 @@ public class PauseKeyTutorial : MonoBehaviour
             if (!useOnlyOnce)
                 _isExecuted = false;
             isInProcess = false;
-            Manager.Time.ReleasePause();
+            Manager.Game.ReleasePause();
             Manager.UI.HideKeyGuide();
         }
     }
@@ -84,7 +84,7 @@ public class PauseKeyTutorial : MonoBehaviour
             _isExecuted = true;
             isInProcess = true;
             if(usePuase)
-                Manager.Time.SetPause();
+                Manager.Game.SetPause();
             
             //Manager.UI.SetKeyGuidePosition(playerCtrl.transform.position + _displayPosOffset);
             foreach(Define.KeyskinName keyName in keyNames)
