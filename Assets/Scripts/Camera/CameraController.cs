@@ -7,25 +7,24 @@ public class CameraController : MonoBehaviour
 {
     private Camera _cam;
     private Transform _camTr;
-    private Vector3 _originPos = new Vector3(0f, 0f, -10f);
+    private readonly Vector3 _originPos = new Vector3(0f, 0f, -10f);
+
+    [field: SerializeField] public float test { get; set; }
     
     [Header("Tracking Target")]    
-    private Transform _targetTr;    
-    public Vector2 targetPositionOffset { get { return _targetPositionOffset; } set { _targetPositionOffset = value; } }
-    public float dampingOffset { get { return _dampingOffset; } set { _dampingOffset = value; } }
-    public Vector2 minTrackingRange { get { return _minTrackingRange; } set { _minTrackingRange = value; } }
-    public Vector2 maxTrackingRange { get { return _maxTrackingRange; } set { _maxTrackingRange = value; } }
+    private Transform _targetTr;
+    [field: SerializeField] public Vector2 targetPositionOffset { get; set; }
+    [field: SerializeField] [Min(0f)]public float dampingOffset { get; set; }
+    [field: SerializeField] public Vector2 minNonTrackingRange { get; set; }
+    [field: SerializeField] public Vector2 maxNonTrackingRange { get; set; }
     
-    [SerializeField] private Vector2 _targetPositionOffset;
-    [Min(0f)]
-    [SerializeField] private float _dampingOffset;
-    [SerializeField] private Vector2 _minTrackingRange;
-    [SerializeField] private Vector2 _maxTrackingRange;
+    [SerializeField] private float _lookAtOffsetX = 9f;
+    [SerializeField] private float _lookAtOffsetY = -5f;
+    [field: SerializeField] public Vector2 lookAtDir { get; set; }
+
+    [SerializeField] private bool _isLookAt;
     private bool _isTracking;
     private float _boundaryRangeX = 8.5f;
-
-    [SerializeField] private Vector2 _lookAtOffset;
-
 
     [Header("Test ShakeCamera")]
     public float testSecPlayTime;
@@ -61,7 +60,21 @@ public class CameraController : MonoBehaviour
         if (_targetTr == null)
             return;
 
-        Vector3 targetPos = new Vector3(_targetTr.position.x + targetPositionOffset.x, _targetTr.position.y + targetPositionOffset.y, _originPos.z);
+        Vector2 posTargetOffset = targetPositionOffset;
+        if(lookAtDir != Vector2.zero)
+        {
+            if (lookAtDir.x > 0f)
+                posTargetOffset.x = _lookAtOffsetX;
+            else if(lookAtDir.x < 0f)
+                posTargetOffset.x = -_lookAtOffsetX;
+
+            if (lookAtDir.y > 0f)
+                posTargetOffset.y = _lookAtOffsetY;
+            else if (lookAtDir.y < 0f)
+                posTargetOffset.y = -_lookAtOffsetY;
+        }
+
+        Vector3 targetPos = new Vector3(_targetTr.position.x + posTargetOffset.x, _targetTr.position.y + posTargetOffset.y, _originPos.z);
         Vector3 localTargetPos = _camTr.InverseTransformPoint(targetPos);
 
         // Camera Boundary Area
@@ -70,11 +83,11 @@ public class CameraController : MonoBehaviour
         if (targetPos.x < -_boundaryRangeX)
             targetPos.x = -_boundaryRangeX;
 
-        // Tracking Range
-        if(localTargetPos.x < minTrackingRange.x 
-            || localTargetPos.x > maxTrackingRange.x 
-            || localTargetPos.y < minTrackingRange.y 
-            || localTargetPos.y > maxTrackingRange.y)   
+        // Non-Tracking Range
+        if(localTargetPos.x < minNonTrackingRange.x 
+            || localTargetPos.x > maxNonTrackingRange.x 
+            || localTargetPos.y < minNonTrackingRange.y 
+            || localTargetPos.y > maxNonTrackingRange.y)   
         {
             _isTracking = true;
         }
@@ -86,12 +99,12 @@ public class CameraController : MonoBehaviour
             if (localTargetPos.sqrMagnitude < 0.01f)
                 _isTracking = false;
 
-            if (dampingOffset > 0f)
-            {
-                dampingOffset = dampingOffset / 10f * 9f;
-                if (dampingOffset < 0.001f)
-                    dampingOffset = 0f;
-            }
+            //if (dampingOffset > 0f)
+            //{
+            //    dampingOffset = dampingOffset / 10f * 9f;
+            //    if (dampingOffset < 0.001f)
+            //        dampingOffset = 0f;
+            //}
                 
         }
 
@@ -102,21 +115,16 @@ public class CameraController : MonoBehaviour
     {
         //Debug.Log("DashEffect()");
         //StartCoroutine(DashEffectCorountine());
-        dampingOffset = 4f;
+        //dampingOffset = 4f;
+        ShakePosCamera00();
     }
 
     IEnumerator DashEffectCorountine()
     {
-        float orginDampingOffset = _dampingOffset;
-        _dampingOffset = orginDampingOffset * 10f;
+        //float orginDampingOffset = _dampingOffset;
+        //_dampingOffset = orginDampingOffset * 10f;
         yield return new WaitForSeconds(0.2f);
-        _dampingOffset = orginDampingOffset;
-    }
-
-
-    public void LookAtDirection(Vector2 dir)
-    {
-        
+        //_dampingOffset = orginDampingOffset;
     }
 
 
@@ -157,39 +165,43 @@ public class CameraController : MonoBehaviour
     {
         StartCoroutine(ShakePosCameraCoroutine(testSecPlayTime, testSecPlayFreq, testShakeRange, testIsLerp));
     }
-
-
     /*
      * Landing 시작 시
      * Landing 완료(착시 시)
+     *  00: (0.15f, 40f, 0.1f, false);
      *  01: (0.2f, 80f, 0.2f, true);
      *  02: (0.3f, 80f, 0.4f, true);
      *  04: (0.6f, 80f, 0.7f, true);
      *  07: (3f, 80f, 1.4f, true);
      *  10: (5f, 100f, 2f, true);
      */
+    [ContextMenu("ShakePosCamera(00)")]
+    public void ShakePosCamera00()
+    {
+        StartCoroutine(ShakePosCameraCoroutine(0.15f, 70, 0.1f, false));
+    }
     [ContextMenu("ShakePosCamera(01)")]
-    private void ShakePosCamera01()
+    public void ShakePosCamera01()
     {
         StartCoroutine(ShakePosCameraCoroutine(0.2f, 80, 0.2f, true));
     }
     [ContextMenu("ShakePosCamera(02)")]
-    private void ShakePosCamera02()
+    public void ShakePosCamera02()
     {
         StartCoroutine(ShakePosCameraCoroutine(0.3f, 80, 0.4f, true));
     }
     [ContextMenu("ShakePosCamera(04)")]
-    private void ShakePosCamera04()
+    public void ShakePosCamera04()
     {
         StartCoroutine(ShakePosCameraCoroutine(0.6f, 80f, 0.7f, true));
     }
     [ContextMenu("ShakePosCamera(07)")]
-    private void ShakePosCamera07()
+    public void ShakePosCamera07()
     {
         StartCoroutine(ShakePosCameraCoroutine(3f, 80f, 1.4f, true));
     }
     [ContextMenu("ShakePosCamera(10)")]
-    private void ShakePosCamera10()
+    public void ShakePosCamera10()
     {
         StartCoroutine(ShakePosCameraCoroutine(5f, 100f, 2f, true));
     }
