@@ -47,6 +47,7 @@ public class InputManager
     public void Init()
     {
         _playerController = Manager.Game.PlayerController;
+        Debug.Log("InputManager.Init()");
         _rb = _playerController.RB;
 
         _playerInputSystem = new PlayerInputSystem();
@@ -57,6 +58,9 @@ public class InputManager
         _downInputAction = _playerInputSystem.Player.Down;
         _leftDashInputAction = _playerInputSystem.Player.LeftDash;
         _rightDashInputAction = _playerInputSystem.Player.RightDash;
+
+        _gameStartInputAction = _playerInputSystem.UI.GameStart;
+        _gameExitInputAction = _playerInputSystem.UI.GameExit;
         #endregion
 
         #region 활성화
@@ -65,6 +69,9 @@ public class InputManager
         _downInputAction.Enable();
         _leftDashInputAction.Enable();
         _rightDashInputAction.Enable();
+
+        _gameStartInputAction.Enable();
+        _gameExitInputAction.Enable();
         #endregion
 
         #region 키 입력 이벤트 등록
@@ -80,6 +87,9 @@ public class InputManager
 
         _leftDashInputAction.performed += OnLeftDash;
         _rightDashInputAction.performed += OnRightDash;
+
+        _gameStartInputAction.performed += OnGameStart;
+        _gameExitInputAction.performed += OnGameExit;
         #endregion
 
         //_isHoldJump = false;
@@ -193,6 +203,26 @@ public class InputManager
         {
             _playerController.IsDash = true;
             dashAction?.Invoke(_rb, Vector2.right);
+        }
+    }
+    #endregion
+
+    #region UI
+    void OnGameStart(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && !Manager.Game.IsGameStart)
+        {
+            //InitPlayerAction(); // 플레이어 InputSystem 초기화
+            gameStartAction?.Invoke();
+        }
+        //_gameStartInputAction = null; // 최초에 한 번만 누르면 되므로 바로 해제
+    }
+
+    void OnGameExit(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed && Manager.Game.IsGameStart)
+        {
+            gameExitAction?.Invoke();
         }
     }
     #endregion

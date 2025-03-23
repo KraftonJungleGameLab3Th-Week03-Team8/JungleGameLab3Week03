@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("PlayerController.Awake()");
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
 

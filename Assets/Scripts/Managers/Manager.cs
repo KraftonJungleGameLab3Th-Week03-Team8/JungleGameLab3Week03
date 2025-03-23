@@ -27,12 +27,13 @@ public class Manager : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(gameObject);
             Init();
+            //Invoke("Init", 0.2f);
         }
     }
 
     private void Update()
     {
-        UI.UpdateTime();
+        //UI.UpdateTime();
     }
 
     // Manager 초기화
@@ -44,8 +45,12 @@ public class Manager : MonoBehaviour
          */
         Resource.Init();
         Sound.Init();
+        Debug.Log("Manager.Init().third");
+        Game.Init();
         Input.Init();
-        UI.Init();
+        Debug.Log("Manager.Init().4th");
+        //UI.Init();
+        Debug.Log("Manager.Init().5th");
     }
 
     public void Clear()

@@ -24,8 +24,6 @@ public class UIKeySkin : MonoBehaviour
         }
         foreach (TextMeshProUGUI text in GetComponentsInChildren<TextMeshProUGUI>())
         {
-            Debug.Log("SetAlpha().text.name: " + text.name);
-            Debug.Log("text.name == nameHold" + (text.name == nameHold));
             if (text.name == nameHold)
             {
                 text.color = SetAlphaColor(text.color, (isHold) ? alpha : 0f);

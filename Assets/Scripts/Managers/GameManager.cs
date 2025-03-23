@@ -24,8 +24,15 @@ public class GameManager
 
     public void SpawnPlayer()
     {
+        Debug.Log("SpawnPlayer()");
         GameObject playerPrefab = Manager.Resource.Instantiate("MCPlayerPrefab");
-        _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
+
+        if (playerPrefab == null)
+            Debug.Log("널");
+        else
+            Debug.Log("소환됨");
+
+            _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
         Manager.Input.FindPlayer();
 
         Debug.Log("플레이어 등록 완료");

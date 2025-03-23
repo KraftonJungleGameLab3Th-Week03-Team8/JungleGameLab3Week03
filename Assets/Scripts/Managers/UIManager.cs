@@ -13,12 +13,10 @@ public class UIManager
 
     public void Init()
     {
-        //Debug.Log(float.MaxValue);
-        
-        _inGameUI = GameObject.FindAnyObjectByType<InGameUI>().GetComponent<Canvas>();
-        _titleUI = _inGameUI.transform.GetChild(0).GetComponent<Canvas>();
-        _timerUI = _inGameUI.transform.GetChild(1).GetComponent<Canvas>();
-        _keyGuideUI = GameObject.FindAnyObjectByType<UIKeyGuideDisplay>().GetComponent<Canvas>();
+        //_inGameUI = GameObject.FindAnyObjectByType<InGameUI>().GetComponent<Canvas>();
+        //_titleUI = _inGameUI.transform.GetChild(0).GetComponent<Canvas>();
+        //_timerUI = _inGameUI.transform.GetChild(1).GetComponent<Canvas>();
+        //_keyGuideUI = GameObject.FindAnyObjectByType<UIKeyGuideDisplay>().GetComponent<Canvas>();
 
         Manager.Input.gameStartAction += GameStart; // 게임 시작 액션 등록
     }
@@ -26,11 +24,11 @@ public class UIManager
     // 게임 시작
     public void GameStart()
     {
-        _titleUI.enabled = false;
-        _timerUI.enabled = true;
+        //_titleUI.enabled = false;
+        //_timerUI.enabled = true;
 
-        Manager.Game.Init();
-        _playTime = 0f;
+        //Manager.Game.Init();
+        //_playTime = 0f;
     }
 
     // 시간 측정
