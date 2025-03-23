@@ -1,75 +1,72 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 public class PlayerController : MonoBehaviour
 {
+    #region 물리 관련
     public Rigidbody2D RB => _rb;
     public BoxCollider2D Collider => _collider;
+    public float GravityScale { get { return _gravityScale; } set { _gravityScale = value; } }
+    private Rigidbody2D _rb;
+    private BoxCollider2D _collider;
+    private float _gravityScale;
+    #endregion
 
-    public TextMeshPro MumbleText => _mumbleText;
+    #region 플레이어 UI 관련
+    public TextMeshPro MumbleText => _mumbleText;   // 혼잣말
+    TextMeshPro _mumbleText;
+    #endregion
 
+    #region 상태 관련
     public bool IsMove { get { return _isMove; } set { _isMove = value; } }
     public bool IsJump { get { return _isJump; } set { _isJump = value; } }
     public bool IsLanding { get { return _isLanding; } set { _isLanding = value; } }
-    public bool IsChargeLanding { get { return _isChargeDown; } set { _isChargeDown = value; } }
+    public bool IsAirStop { get { return _isAirStop; } set { _isAirStop = value; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
-    public bool IsGrabJump { get { return _isGrabJump; } set { _isGrabJump = value; } }
     public bool IsGround => _isGround;
-    public bool IsWall => _isWall;
 
-    private Rigidbody2D _rb;
-    private BoxCollider2D _collider;
-    [SerializeField] private Transform _playerTransform;
-    public Transform PlayerTransform { get { return _playerTransform; } }
-    TextMeshPro _mumbleText;
-    private float _gravityScale;
-    public float GravityScale { get { return _gravityScale; } set { _gravityScale = value; }}
-    
     [SerializeField] bool _isSeeRight = true;
     [SerializeField] bool _isMove;
     [SerializeField] bool _isJump;
     [SerializeField] bool _isLanding;
-    [SerializeField] bool _isChargeDown;
-    [SerializeField] bool _isDash;
-    [SerializeField] bool _isGrabJump;
-    
+    [SerializeField] bool _isAirStop;
+    [SerializeField] bool _isDash;    
     [SerializeField] bool _isGround;
-    [SerializeField] bool _isWall;
 
-    public bool IsSeeRight => _isSeeRight;
+    Coroutine _dashCoolTimeCoroutine;   // 대시 쿨타임 코루틴 (땅 끊기는 문제 방지용)
+    #endregion
 
     #region 벽 관련
+    public bool IsWall => _isWall;
+    public bool IsGrabJump { get { return _isGrabJump; } set { _isGrabJump = value; } }
     public bool IsHoldWall { get { return _isHoldWall; } set { _isHoldWall = value; } }
+    [SerializeField] bool _isWall;
+    [SerializeField] bool _isGrabJump;
     [SerializeField] bool _isHoldWall = false;
     #endregion
 
-
-
-    Coroutine _dashCoolTimeCoroutine;
-
-
     #region 플레이어 외형
-    Transform _visual;  // 플레이어 외형
+    public bool IsSeeRight => _isSeeRight;
     public Transform Visual => _visual;
+    Transform _visual;  // 플레이어 외형
     #endregion
 
+    #region 플레이어 기능 관련
+    public PlayerAirStop PlayerAirStop => _playerAirStop;
+    public PlayerLanding PlayerLanding => _playerLanding;
     PlayerMove _playerMove;
     PlayerCheckObstacle _playerCheckObstacle;
     PlayerGrab _playerGrab;
     PlayerJump _playerJump;
     PlayerAirStop _playerAirStop;
-    public PlayerAirStop PlayerAirStop => _playerAirStop;
     PlayerLanding _playerLanding;
-    public PlayerLanding PlayerLanding => _playerLanding;
+    #endregion
 
-
-    void Awake()
+    private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
-        _playerTransform = GetComponent<Transform>();
 
         _playerMove = GetComponent<PlayerMove>();
         _playerCheckObstacle = GetComponent<PlayerCheckObstacle>();
@@ -156,9 +153,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("중력4-1");
             }
 
-
             //SetGravityScale(_gravityScale);
-
             //Debug.Log("중력5");
         }
 
@@ -167,11 +162,10 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_isWall && !_isGround) // 벽 감지, 공중
+        if (_isWall && !_isGround && (_isMove || _isDash)) // 벽 감지, 공중, 이동 및 대시 중
         {
-            HoldWall();
+            HoldWallState();
             _playerGrab.Grab(_rb);
-            Debug.Log("벽 붙잡기");
         }
         _playerMove.Move(_rb);
     }
@@ -181,7 +175,7 @@ public class PlayerController : MonoBehaviour
         _rb.gravityScale = gravityScale;
     }
 
-    public void LandOnGround()
+    public void LandOnGroundState()
     {
         _rb.constraints = RigidbodyConstraints2D.None;
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -201,23 +195,24 @@ public class PlayerController : MonoBehaviour
         Manager.Input.IsJumpCut = false;
     }
 
-    IEnumerator WaitDashCoroutine()
+    private IEnumerator WaitDashCoroutine()
     {
         yield return new WaitForSeconds(Time.deltaTime);
         _isDash = false;
         _dashCoolTimeCoroutine = null;
     }
 
-
-    public void HoldWall()
+    public void HoldWallState()
     {
+        _isDash = false;        // 다시 대시 가능하게 하기 위함
         _isHoldWall = true;
         _isJump = false;
         _isGrabJump = false;
     }
 
-    public void DetachWall()
+    public void DetachWallState()
     {
+        _isDash = false;        // 다시 대시 가능하게 하기 위함
         _isHoldWall = false;
         _isJump = true;
         _isGrabJump = true;

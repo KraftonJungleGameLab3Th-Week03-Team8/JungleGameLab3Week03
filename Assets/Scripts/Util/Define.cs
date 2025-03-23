@@ -1,4 +1,3 @@
-
 public class Define
 {
     public enum Platform

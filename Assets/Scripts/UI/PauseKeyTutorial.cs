@@ -44,21 +44,21 @@ public class PauseKeyTutorial : MonoBehaviour
         switch (keyNames[0])
         {
             case Define.KeyskinName.space:
-                if(Manager.Game.PlayerController.IsChargeLanding)
+                if(Manager.Game.PlayerController.IsAirStop)
                 {
                     return true;
                 }
                 break;
             case Define.KeyskinName.leftArrow:
-                if (Manager.Game.PlayerController.IsDash)
+                if (Manager.Input.IsPressDash)
                 {
                     if (Manager.Input.MoveDir.x < 0)
                         return true;
                 }
                 break;
             case Define.KeyskinName.rightArrow:
-                Debug.Log("Manager.Input.IsPressDash: " + Manager.Input.IsPressDash);
-                if(Manager.Game.PlayerController.IsDash)
+                //Debug.Log("Manager.Input.IsPressDash: " + Manager.Input.IsPressDash);
+                if(Manager.Input.IsPressDash)
                 {
                     Debug.Log("Manager.Input.MoveDir.x: " + Manager.Input.MoveDir.x);
                     if (Manager.Input.MoveDir.x > 0)

@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Manager : MonoBehaviour
@@ -45,10 +44,8 @@ public class Manager : MonoBehaviour
          */
         Resource.Init();
         Sound.Init();
-        //Game.Init();
         Input.Init();
         UI.Init();
-        Debug.Log("Manager.Init().5th");
     }
 
     public void Clear()

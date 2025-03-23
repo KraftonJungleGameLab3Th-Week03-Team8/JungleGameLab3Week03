@@ -12,7 +12,10 @@ public class PlayerCheckObstacle : MonoBehaviour
 
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
-    void Start()
+
+    [SerializeField] Transform _currentWall; // 디버깅용
+
+    private void Start()
     {
         _boxCollider = GetComponent<BoxCollider2D>();
         _playerWidth = _boxCollider.size.x * transform.localScale.x;
@@ -49,7 +52,7 @@ public class PlayerCheckObstacle : MonoBehaviour
                     LandingEffect.MakeLandingEffect(extraForce);
                     
                 }
-                Manager.Game.PlayerController.LandOnGround();
+                Manager.Game.PlayerController.LandOnGroundState();
             }
         }
         else // 공중에 떠있을 때
@@ -75,7 +78,9 @@ public class PlayerCheckObstacle : MonoBehaviour
             // 닿았을때 대시, 벽점프 초기화 하면 점프하고 다시 벽에 붙는 문제 발생
             // 사유) 벽닿은 상태로 그대로 손을 놓으면 공중 제어가 되어야하고 점프를하면 공중제어는 못해도 점프는 초기화 되어야함.
 
-            Manager.Game.PlayerController.IsDash = false;
+            //Manager.Game.PlayerController.IsDash = false; <- 이것 때문에 연속 벽 잡기가 안되어서 주석처리함
+
+            _currentWall = hit.collider.transform;
         }
         else
         {

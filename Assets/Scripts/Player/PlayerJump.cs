@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class PlayerJump : MonoBehaviour
 {
+    // 원래는 점프데이터 클래스를 만들어서 관리해야함. 일단 기능구현부터.
+    public float JumpCutGravityMultiplier => _jumpCutGravityMultiplier;
+    public float MaxFallSpeed => _maxFallSpeed;
+    public float JumpHangTime => _jumpHangTime;
+    public float JumpHangGravityMultiplier => _jumpHangGravityMultiplier;
+    public float FallGravityMultiplier => _fallGravityMultiplier;
+
     [Header("JumpForce 결정변수")]
     [SerializeField] private float _jumpHeight;
     [SerializeField] private float _jumpTimeToApex;
@@ -16,13 +23,6 @@ public class PlayerJump : MonoBehaviour
     [SerializeField] private float _jumpHangTime;
     [SerializeField] private float _jumpHangGravityMultiplier;
     [SerializeField] private float _fallGravityMultiplier;
-
-    // 원래는 점프데이터 클래스를 만들어서 관리해야함. 일단 기능구현부터.
-    public float JumpCutGravityMultiplier => _jumpCutGravityMultiplier;
-    public float MaxFallSpeed => _maxFallSpeed;
-    public float JumpHangTime => _jumpHangTime;
-    public float JumpHangGravityMultiplier => _jumpHangGravityMultiplier;
-    public float FallGravityMultiplier => _fallGravityMultiplier;
 
     private void Start()
     {
@@ -54,7 +54,7 @@ public class PlayerJump : MonoBehaviour
         StartCoroutine(WaitOneSecondCouroutine());
     }
 
-    IEnumerator WaitOneSecondCouroutine()
+    private IEnumerator WaitOneSecondCouroutine()
     {
         yield return new WaitForSeconds(Time.fixedDeltaTime);
         Manager.Game.PlayerController.IsJump = true;

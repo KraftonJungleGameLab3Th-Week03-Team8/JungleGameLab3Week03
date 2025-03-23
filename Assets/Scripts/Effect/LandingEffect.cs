@@ -8,7 +8,7 @@ public class LandingEffect : MonoBehaviour
 
     static public void MakeLandingEffect(float extraForce)
     {
-        Transform playerTransform = Manager.Game.PlayerController.PlayerTransform;
+        Transform playerTransform = Manager.Game.PlayerController.transform;
         GameObject dustPrefab;
 
         _numOfDust = (int)(extraForce) / 10;
