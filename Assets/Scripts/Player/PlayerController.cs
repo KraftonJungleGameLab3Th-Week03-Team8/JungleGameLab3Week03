@@ -145,25 +145,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //// 1. 벽점프 중이 아닐 경우에만 Grab 가능
-        //if (!IsGrabJump && !_isWallJumping)
-        //{
-        //    //_playerGrab.Grab(_rb);
-        //}
-
         if (_isWall && !_isGround) // 벽 감지, 공중
         {
             HoldWall();
             _playerGrab.Grab(_rb);
             Debug.Log("벽 붙잡기");
         }
-
-
-        //// 2. Grab 상태이거나 땅에 서 있으면 이동 가능
-        //if (_isHoldWall || IsGround)
-        //{
-        //    _playerMove.Move(_rb);
-        //}
         _playerMove.Move(_rb);
     }
 

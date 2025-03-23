@@ -35,15 +35,19 @@ public class PlayerCheckObstacle : MonoBehaviour
         //땅에 닿았을 때
         if (hit.collider != null)
         {
-            //Debug.Log("Ground");
-            isGround = true;
-
-            if(Manager.Game.PlayerController.IsLanding)
+            if (isGround == false)
             {
-                LandingEffect.MakeLandingEffect();
-            }
 
-            Manager.Game.PlayerController.LandOnGround();
+                //Debug.Log("Ground");
+                isGround = true;
+
+                if (Manager.Game.PlayerController.IsLanding)
+                {
+                    LandingEffect.MakeLandingEffect();
+                }
+
+                Manager.Game.PlayerController.LandOnGround();
+            }
         }
         else // 공중에 떠있을 때
         {
