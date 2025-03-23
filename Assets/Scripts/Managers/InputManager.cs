@@ -161,6 +161,14 @@ public class InputManager
 
                 jumpAction?.Invoke(_rb);
             }
+            else if(!_playerController.IsGround) // 공중에 떠있을 때, 키 입력 인식
+            {
+                _isPressJump = true;
+                if(_isPressJump)
+                {
+                    _playerController.IsReadyJumpBuffer = true;
+                }
+            }
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
