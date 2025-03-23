@@ -165,7 +165,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator WaitDashCoroutine()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(Time.deltaTime);
         _isDash = false;
         _dashCoolTimeCoroutine = null;
     }
