@@ -73,8 +73,8 @@ public class PlayerController : MonoBehaviour
     /* 점프 버퍼 */
     public float JumpBufferTime { get { return _jumpBufferTime; } set { _jumpBufferTime = value; } }
     public float JumpBufferTimeTimer { get { return _jumpBufferTimeTimer; } set { _jumpBufferTimeTimer = value; } }
-    private float _jumpBufferTime = 0.2f;
-    private float _jumpBufferTimeTimer;
+    [SerializeField] private float _jumpBufferTime = 0.2f;
+    [SerializeField] private float _jumpBufferTimeTimer;
     #endregion
 
     private void Awake()
@@ -97,7 +97,7 @@ public class PlayerController : MonoBehaviour
         _playerCheckObstacle.CheckWall(ref _isWall);
         _playerCheckObstacle.CheckLandingHeight(ref _isCanAirStop);
 
-        /* 점브 버퍼*/
+        /* 점브 버퍼(코요테 타임도 결합됨)*/
         if(Manager.Input.IsPressJump)
         {
             _jumpBufferTimeTimer = _jumpBufferTime;
@@ -108,16 +108,14 @@ public class PlayerController : MonoBehaviour
         }
         if(_coyoteTimeTimer > 0f && _jumpBufferTimeTimer > 0f)
         {
-            _playerJump.Jump(_rb);
+            Debug.LogWarning("점프 버퍼");
+
+            //_playerJump.Jump(_rb);
             _jumpBufferTimeTimer = 0f;
         }
 
         #region 중력 깍기 : 점프, 벽, 땅 등등 다 여기서 처리하도록 이식해주세요.
-        if (_isGround)
-        {
-            SetGravityScale(0f);
-        }
-        else if (!_isDash)
+        if (!_isDash)
         {
             if (_isGrabJump && _rb.linearVelocityY > 0)
             {
@@ -138,14 +136,14 @@ public class PlayerController : MonoBehaviour
                 //여기서 벨로시티 건드려서 머지 후 테스트할때 여기 체크 한번해야해요. 내용은 최대 떨어지는 속도 체크입니다.
                 _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
 
-                Debug.Log("중력1");
+                //Debug.Log("중력1");
             }
             // 호버링
             else if (_isJump && Mathf.Abs(_rb.linearVelocity.y) < _playerJump.JumpHangTime)
             {
                 SetGravityScale(_gravityScale * _playerJump.JumpHangGravityMultiplier);
 
-                Debug.Log("중력2");
+                //Debug.Log("중력2");
             }
             else if (_rb.linearVelocityY < 0)
             {
@@ -155,13 +153,13 @@ public class PlayerController : MonoBehaviour
                 SetGravityScale(_gravityScale * _playerJump.FallGravityMultiplier);
                 _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
 
-                Debug.Log("중력3");
+                //Debug.Log("중력3");
             }
             else // 평소 중력
             {
                 SetGravityScale(_gravityScale);
 
-                Debug.Log("중력4");
+                //Debug.Log("중력4");
             }
         }
         else
@@ -174,13 +172,13 @@ public class PlayerController : MonoBehaviour
                 SetGravityScale(_gravityScale * _playerJump.FallGravityMultiplier);
                 _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
 
-                Debug.Log("중력3-1");
+                //Debug.Log("중력3-1");
             }
             else // 평소 중력
             {
                 SetGravityScale(_gravityScale);
 
-                Debug.Log("중력4-1");
+                //Debug.Log("중력4-1");
             }
 
             //SetGravityScale(_gravityScale);

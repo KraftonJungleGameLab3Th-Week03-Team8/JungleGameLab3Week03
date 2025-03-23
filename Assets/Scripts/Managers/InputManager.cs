@@ -181,8 +181,8 @@ public class InputManager
         if (isLockAirStopStart)
             return;
 
-        // 최소 높이 이상이고 랜딩 아닌 경우, 해당 키 누르면 에어 스탑
-        if (_playerController.IsCanAirStop && !_playerController.IsLanding && context.started)
+        // 최소 높이 이상이고 랜딩 아니며, 코요테 타임 지난 경우에 해당 키 누르면 에어 스탑
+        if (_playerController.IsCanAirStop && !_playerController.IsLanding && _playerController.CoyoteTimeTimer < 0f && context.started)
         {
             _isPressLand = true;
             _playerController.IsAirStop = true;
