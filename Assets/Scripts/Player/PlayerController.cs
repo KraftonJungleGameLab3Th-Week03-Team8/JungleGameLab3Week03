@@ -90,6 +90,19 @@ public class PlayerController : MonoBehaviour
         }
         else if (!_isDash)
         {
+            if (_isGrabJump && _rb.linearVelocityY > 0)
+            {
+                SetGravityScale(_gravityScale);
+                Debug.Log("벽 점프");
+                return;
+            }
+            if (_isGrabJump && _rb.linearVelocityY < 0)
+            {
+                SetGravityScale(_gravityScale * _playerJump.FallGravityMultiplier);
+                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
+                Debug.Log("벽 점프이후 추락 중력");
+                return;
+            }
             if (Manager.Input.IsJumpCut)
             {
                 SetGravityScale(_gravityScale * _playerJump.JumpCutGravityMultiplier);

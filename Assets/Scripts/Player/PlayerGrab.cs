@@ -9,8 +9,8 @@ public class PlayerGrab : MonoBehaviour
 
     private void Start()
     {
-        _wallJumpForceX = 25f; // 원래 50
-        _wallJumpForceY = 25f; // 원래 200이었는데 50으로 하니까 딱 맞음
+        _wallJumpForceX = 7f; // KDY
+        _wallJumpForceY = 27.5f; // KDY
 
         Manager.Input.wallJumpAction += GrabJump;
     }
