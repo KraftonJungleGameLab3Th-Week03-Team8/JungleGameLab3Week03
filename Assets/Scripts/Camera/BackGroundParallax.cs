@@ -9,9 +9,7 @@ public class BackGroundParallax : MonoBehaviour
 
     private void Start()
     {
-        if (cameraTransform == null)
-            cameraTransform = Camera.main.transform;
-
+        cameraTransform = Manager.Game.NewCameraController.transform;
         startY = transform.position.y;
     }
 

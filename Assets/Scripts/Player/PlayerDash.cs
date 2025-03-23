@@ -1,9 +1,7 @@
-using System.Collections;
 using UnityEngine;
 
-public class PlayerFlashJump : MonoBehaviour
+public class PlayerDash : MonoBehaviour
 {
-    // 콘테스트 : 김동영ver 플래시 점프입니다. 일단 이게 최고임
     [Tooltip("대쉬 힘")]
     [SerializeField] private float _force;  // 플래시 점프 거리 조절
     [Tooltip("대쉬 각도")]

@@ -4,20 +4,17 @@ public class GameManager
 {
     public bool IsGameStart => _isGameStart;
     public PlayerController PlayerController =>_playerController;
-    public CameraController CameraController => _cameraController;
 
-    public NewCameraController NewCameraController => _newCameraController;
+    public CameraController NewCameraController => _newCameraController;
 
     private bool _isGameStart;
     private PlayerController _playerController;
-    private CameraController _cameraController;
-    private NewCameraController _newCameraController;
+    private CameraController _newCameraController;
 
 
     public void Init()
     {
-        _cameraController = Camera.main.gameObject.GetComponent<CameraController>();
-        _newCameraController = GameObject.FindAnyObjectByType<NewCameraController>();
+        _newCameraController = GameObject.FindAnyObjectByType<CameraController>();
         
         //TODO
         /*
@@ -32,12 +29,7 @@ public class GameManager
         Debug.Log("SpawnPlayer()");
         GameObject playerPrefab = Manager.Resource.Instantiate("MCPlayerPrefab");
 
-        if (playerPrefab == null)
-            Debug.Log("널");
-        else
-            Debug.Log("소환됨");
-
-            _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
+        _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
         Manager.Input.FindPlayer();
 
         Debug.Log("플레이어 등록 완료");
@@ -49,7 +41,6 @@ public class GameManager
 
         _isGameStart = true;
         SpawnPlayer();
-        //_cameraController.SetTarget(_playerController.transform);
         _newCameraController.Init(_playerController.transform);
     }
 

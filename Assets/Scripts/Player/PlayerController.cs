@@ -182,6 +182,7 @@ public class PlayerController : MonoBehaviour
     public void LandOnGround()
     {
         _rb.constraints = RigidbodyConstraints2D.None;
+        _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         _rb.gravityScale = 1f;  // 중력 복구
 
         _isHoldWall = false;    // 벽 붙잡기 X

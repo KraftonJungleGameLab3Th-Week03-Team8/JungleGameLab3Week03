@@ -42,7 +42,7 @@ public class PlayerCheckObstacle : MonoBehaviour
                 {  
                     float extraForce = Manager.Game.PlayerController.PlayerAirStop.StartHeight 
                         - Manager.Game.PlayerController.PlayerTransform.position.y
-                        + Manager.Game.PlayerController.PlayerAirStop.StartRotation;
+                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation;
 
                     LandingEffect.MakeLandingEffect(extraForce);
                 }
