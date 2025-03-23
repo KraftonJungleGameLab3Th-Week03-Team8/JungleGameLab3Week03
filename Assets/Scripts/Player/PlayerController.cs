@@ -63,7 +63,6 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("PlayerController.Awake()");
         _rb = GetComponent<Rigidbody2D>();
         _collider = GetComponent<BoxCollider2D>();
         _playerTransform = GetComponent<Transform>();
@@ -89,29 +88,58 @@ public class PlayerController : MonoBehaviour
                 SetGravityScale(_gravityScale * _playerJump.JumpCutGravityMultiplier);
                 //여기서 벨로시티 건드려서 머지 후 테스트할때 여기 체크 한번해야해요. 내용은 최대 떨어지는 속도 체크입니다.
                 _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
+
+                Debug.Log("중력1");
             }
             // 호버링
             else if (_isJump && Mathf.Abs(_rb.linearVelocity.y) < _playerJump.JumpHangTime)
             {
                 SetGravityScale(_gravityScale * _playerJump.JumpHangGravityMultiplier);
+
+                Debug.Log("중력2");
             }
             else if (_rb.linearVelocityY < 0)
             {
-                if (_playerJump == null)
-                    Debug.Log("플레이어 점프가 널");
+                //if (_playerJump == null)
+                //    Debug.Log("플레이어 점프가 널");
 
                 SetGravityScale(_gravityScale * _playerJump.FallGravityMultiplier);
                 _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
+
+                Debug.Log("중력3");
             }
             else // 평소 중력
             {
                 SetGravityScale(_gravityScale);
+
+                Debug.Log("중력4");
             }
         }
         else
         {
-            SetGravityScale(_gravityScale);
+            if (_rb.linearVelocityY < 0)
+            {
+                //if (_playerJump == null)
+                //    Debug.Log("플레이어 점프가 널");
+
+                SetGravityScale(_gravityScale * _playerJump.FallGravityMultiplier);
+                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, Mathf.Max(_rb.linearVelocity.y, -_playerJump.MaxFallSpeed));
+
+                Debug.Log("중력3-1");
+            }
+            else // 평소 중력
+            {
+                SetGravityScale(_gravityScale);
+
+                Debug.Log("중력4-1");
+            }
+
+
+            //SetGravityScale(_gravityScale);
+
+            //Debug.Log("중력5");
         }
+
         #endregion
     }
 
@@ -131,11 +159,11 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        // 2. Grab 상태이거나 땅에 서 있으면 이동 가능
-        if (_isHoldWall || IsGround)
-        {
-            _playerMove.Move(_rb);
-        }
+        //// 2. Grab 상태이거나 땅에 서 있으면 이동 가능
+        //if (_isHoldWall || IsGround)
+        //{
+        //    _playerMove.Move(_rb);
+        //}
         _playerMove.Move(_rb);
     }
 

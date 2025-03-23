@@ -26,6 +26,7 @@ public class PlayerAirStop : MonoBehaviour
         {
             if (_rotateSpeed <= _rotateSpeedMax)
             {
+                
                 Rotate();
             }
         }
@@ -33,6 +34,7 @@ public class PlayerAirStop : MonoBehaviour
 
     private void Rotate()
     {
+        _rb.constraints = RigidbodyConstraints2D.FreezePosition;
         _rotateSpeed += _rotateSpeedCharge;
         _rb.AddTorque(_rotateSpeed);
     }
@@ -40,6 +42,5 @@ public class PlayerAirStop : MonoBehaviour
     private void OnDownStarted()
     {
         _rotateSpeed = _defaultRotateSpeed;
-        _rb.constraints = RigidbodyConstraints2D.FreezePosition;
     }
 }
