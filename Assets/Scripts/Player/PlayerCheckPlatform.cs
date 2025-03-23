@@ -30,7 +30,7 @@ public class PlayerCheckPlatform : MonoBehaviour
     }
 
     // 땅 감지
-    public void CheckGround(ref bool isGround)
+    public void CheckGround(ref bool isGround , ref float coyoteTime , ref float coyoteTimeTimer)
     {
         // 좌측 하단에서 가로(right) 방향으로 레이 쏘기
         Ray2D ray = new Ray2D(transform.position - new Vector3(_playerWidth / 2, _playerHeight / 2 + _rayYOffset, 0), Vector2.right);
@@ -43,7 +43,8 @@ public class PlayerCheckPlatform : MonoBehaviour
             if (isGround == false)
             {
                 isGround = true;
-                if(Manager.Game.PlayerController.IsLanding)
+                coyoteTimeTimer = coyoteTime;   // 코요테 타임 초기화
+                if (Manager.Game.PlayerController.IsLanding)
                 {  
                     
                     // extraForce가 높이랑 회전얼마나했는지 다 계산한 값. 충격 세기 => 카메라 흔드는 정도에도 아래와 같이 계산해서 적용하면 될것.
@@ -61,6 +62,7 @@ public class PlayerCheckPlatform : MonoBehaviour
         {
             Manager.Game.PlayerController.RB.gravityScale = 4f;
             isGround = false;
+            coyoteTimeTimer -= Time.deltaTime;  // 코요테 타임 감소
         }
     }
 
@@ -94,7 +96,10 @@ public class PlayerCheckPlatform : MonoBehaviour
     {
         // 현재 위치에서 Ray를 쏴서 땅을 감지하고 땅과의 높이 계산
         Transform visual = Manager.Game.PlayerController.Visual;
-        Vector3 startPosition = visual.position;
+
+        float offset = (Manager.Game.PlayerController.IsSeeRight) ? -_playerWidth / 2 : _playerWidth / 2;
+        Vector3 startPosition = visual.position + Vector3.right * offset;
+
         RaycastHit2D hit = Physics2D.Raycast(startPosition, Vector2.down, 100f, _groundLayer);
         Debug.DrawRay(startPosition, Vector2.down * _isCanAirStopHeight, Color.red);   // 최소 히어로 랜딩 높이 디버깅
 
@@ -102,7 +107,7 @@ public class PlayerCheckPlatform : MonoBehaviour
         if (hit.collider != null)
         {
             float distance = Vector2.Distance(visual.position, hit.point);
-            Debug.Log("땅과의 거리 : " + distance);
+            //Debug.Log("땅과의 거리 : " + distance);
             isCanAirStop = distance >= _isCanAirStopHeight;
         }
         else

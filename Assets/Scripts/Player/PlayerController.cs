@@ -63,6 +63,12 @@ public class PlayerController : MonoBehaviour
     PlayerJump _playerJump;
     PlayerAirStop _playerAirStop;
     PlayerLanding _playerLanding;
+
+    /* 코요테 타임 */
+    public float CoyoteTime { get { return _coyoteTime; } set { _coyoteTime = value; } }
+    public float CoyoteTimeTimer { get { return _coyoteTimeTimer; } set { _coyoteTimeTimer = value; } }
+    [SerializeField] private float _coyoteTime = 0.2f;
+    [SerializeField] private float _coyoteTimeTimer;
     #endregion
 
     private void Awake()
@@ -81,7 +87,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _playerCheckObstacle.CheckGround(ref _isGround);
+        _playerCheckObstacle.CheckGround(ref _isGround, ref _coyoteTime, ref _coyoteTimeTimer);
         _playerCheckObstacle.CheckWall(ref _isWall);
         _playerCheckObstacle.CheckLandingHeight(ref _isCanAirStop);
 

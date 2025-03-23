@@ -145,6 +145,17 @@ public class InputManager
             else if (_playerController.IsGround)
             {
                 // 점프
+                if (_playerController.CoyoteTimeTimer > 0f)
+                    Debug.LogWarning("일반 점프");
+
+                jumpAction?.Invoke(_rb);
+            }
+            else if(!_playerController.IsGround && _playerController.CoyoteTimeTimer > 0f)
+            {
+                // 코요테 점프
+                if (_playerController.CoyoteTimeTimer > 0f)
+                    Debug.LogWarning("코요테 타임 점프");
+
                 jumpAction?.Invoke(_rb);
             }
         }
