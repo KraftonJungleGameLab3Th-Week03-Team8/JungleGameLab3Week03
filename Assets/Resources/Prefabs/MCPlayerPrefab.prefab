@@ -184,7 +184,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3249065416031341374}
   - component: {fileID: 5765967659878249913}
-  - component: {fileID: 1413202174739844437}
+  - component: {fileID: 3443948348066938236}
+  - component: {fileID: 5295457428930429331}
   - component: {fileID: 249846858972290190}
   - component: {fileID: 810625320240650360}
   - component: {fileID: 3187278334014450663}
@@ -243,9 +244,55 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 0
---- !u!61 &1413202174739844437
+  m_Constraints: 4
+--- !u!61 &3443948348066938236
 BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561900641667957177}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.5, y: 0.5}
+  m_EdgeRadius: 0
+--- !u!58 &5295457428930429331
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -279,17 +326,7 @@ BoxCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.5, y: 0.5}
-  m_EdgeRadius: 0
+  m_Radius: 0.25
 --- !u!114 &249846858972290190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,7 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 9a9f46cecc3e0e8438069bdfa7b9ebff, type: 3}
+  m_Actions: {fileID: 0}
   m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -389,13 +426,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9725fe9fefc8884cbbbb546a247772b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpHeight: 3.5
-  _jumpTimeToApex: 0.3
-  _jumpCutGravityMultiplier: 2
+  _jumpHeight: 2.45
+  _jumpTimeToApex: 0.4
+  _jumpCutGravityMultiplier: 1.7
   _maxFallSpeed: 25
-  _jumpHangTime: 1
+  _jumpHangTime: 0.25
   _jumpHangGravityMultiplier: 0.5
-  _fallGravityMultiplier: 1.5
+  _fallGravityMultiplier: 1.4
 --- !u!114 &8621545516944072929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,9 +445,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46fc39a4dafa22a49973a07e7bc12ac9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rotateSpeed: 0
+  _currentRotation: 0
+  _startHeight: 0
   _rotateSpeedCharge: 0
-  _rotateSpeedMax: 0
+  _rotationLimit: 0
 --- !u!114 &185908230766616554
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,8 +473,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c68003d46fb5bd2469f94f33edf912a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _force: 0
-  _acceleration: 0
+  _force: 13
+  _acceleration: 0.8
 --- !u!114 &4327034975934213863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,8 +487,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e4a2eaa96f35c24c84e9b64411e0688, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wallJumpForceX: 0
-  _wallJumpForceY: 0
+  _wallJumpForceX: 5
+  _wallJumpForceY: 13
 --- !u!1 &6587826948573879142
 GameObject:
   m_ObjectHideFlags: 0

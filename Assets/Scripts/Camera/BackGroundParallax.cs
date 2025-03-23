@@ -9,9 +9,6 @@ public class BackGroundParallax : MonoBehaviour
 
     private void Start()
     {
-        if (cameraTransform == null)
-            cameraTransform = Camera.main.transform;
-
         startY = transform.position.y;
     }
 

@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 public class PlayerGrab : MonoBehaviour
@@ -45,12 +43,6 @@ public class PlayerGrab : MonoBehaviour
             force.x -= rb.linearVelocity.x;
         if (rb.linearVelocity.y < 0)
             force.y -= rb.linearVelocity.y;
-
-
-
-        
-
-
 
         Debug.LogWarning("force" + force);
         rb.AddForce(force, ForceMode2D.Impulse);

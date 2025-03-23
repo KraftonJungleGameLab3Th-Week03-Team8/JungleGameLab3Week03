@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class InputManager
@@ -36,7 +35,7 @@ public class InputManager
     #region 플레이어 액션 등록 = 실제 동작하는 로직, inputSystem에서 호출
     public Action<Rigidbody2D> jumpAction;
     public Action airStopAction;
-    public Action<Rigidbody2D> landAction;
+    public Action<Rigidbody2D> landingAction;
     public Action<Rigidbody2D, Vector2> dashAction;
     public Action<Rigidbody2D> wallJumpAction;   // 벽점프
     #endregion
@@ -105,7 +104,6 @@ public class InputManager
         _rightDashInputAction.performed += OnRightDash;
         #endregion
 
-        //_isHoldJump = false;
         _isJumpCut = false;
         _isPressLand = false;
         _isPressDash = false;
@@ -186,7 +184,7 @@ public class InputManager
             _isPressLand = false;
             _playerController.IsChargeLanding = false;
             _playerController.IsLanding = true;
-            landAction?.Invoke(Manager.Game.PlayerController.RB);
+            landingAction?.Invoke(Manager.Game.PlayerController.RB);
         }
     }
     #endregion
@@ -246,6 +244,6 @@ public class InputManager
         jumpAction = null;     // 점프
         dashAction = null;      // 대시
         airStopAction = null;   // Air Stop
-        landAction = null;      // 다운
+        landingAction = null;      // 다운
     }
 }
