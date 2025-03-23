@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
     PlayerJump _playerJump;
     PlayerAirStop _playerAirStop;
     public PlayerAirStop PlayerAirStop => _playerAirStop;
+    PlayerLanding _playerLanding;
+    public PlayerLanding PlayerLanding => _playerLanding;
 
 
     void Awake()

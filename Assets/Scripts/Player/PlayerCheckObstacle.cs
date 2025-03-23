@@ -40,11 +40,14 @@ public class PlayerCheckObstacle : MonoBehaviour
                 isGround = true;
                 if(Manager.Game.PlayerController.IsLanding)
                 {  
-                    float extraForce = Manager.Game.PlayerController.PlayerAirStop.StartHeight 
-                        - Manager.Game.PlayerController.PlayerTransform.position.y
-                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation;
+                    
+                    // extraForce가 높이랑 회전얼마나했는지 다 계산한 값. 충격 세기 => 카메라 흔드는 정도에도 아래와 같이 계산해서 적용하면 될것.
+                    float extraForce = (Manager.Game.PlayerController.PlayerAirStop.StartHeight 
+                        - transform.position.y) * 5
+                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation / 200;
 
                     LandingEffect.MakeLandingEffect(extraForce);
+                    
                 }
                 Manager.Game.PlayerController.LandOnGround();
             }
