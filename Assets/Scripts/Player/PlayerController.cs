@@ -69,6 +69,12 @@ public class PlayerController : MonoBehaviour
     public float CoyoteTimeTimer { get { return _coyoteTimeTimer; } set { _coyoteTimeTimer = value; } }
     [SerializeField] private float _coyoteTime = 0.2f;
     [SerializeField] private float _coyoteTimeTimer;
+
+    /* 점프 버퍼 */
+    public float JumpBufferTime { get { return _jumpBufferTime; } set { _jumpBufferTime = value; } }
+    public float JumpBufferTimeTimer { get { return _jumpBufferTimeTimer; } set { _jumpBufferTimeTimer = value; } }
+    private float _jumpBufferTime = 0.2f;
+    private float _jumpBufferTimeTimer;
     #endregion
 
     private void Awake()
@@ -91,8 +97,23 @@ public class PlayerController : MonoBehaviour
         _playerCheckObstacle.CheckWall(ref _isWall);
         _playerCheckObstacle.CheckLandingHeight(ref _isCanAirStop);
 
+        /* 점브 버퍼*/
+        if(Manager.Input.IsPressJump)
+        {
+            _jumpBufferTimeTimer = _jumpBufferTime;
+        }
+        else
+        {
+            JumpBufferTimeTimer -= Time.deltaTime;
+        }
+        if(_coyoteTimeTimer > 0f && _jumpBufferTimeTimer > 0f)
+        {
+            _playerJump.Jump(_rb);
+            _jumpBufferTimeTimer = 0f;
+        }
+
         #region 중력 깍기 : 점프, 벽, 땅 등등 다 여기서 처리하도록 이식해주세요.
-        if(_isGround)
+        if (_isGround)
         {
             SetGravityScale(0f);
         }

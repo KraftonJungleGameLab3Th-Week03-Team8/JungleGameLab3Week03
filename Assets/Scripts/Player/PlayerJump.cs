@@ -40,7 +40,7 @@ public class PlayerJump : MonoBehaviour
         #endregion
     }
 
-    private void Jump(Rigidbody2D rb)
+    public void Jump(Rigidbody2D rb)
     {
         /* 점프 버퍼링을 위한 코드
         if (rb.linearVelocityY < 0)

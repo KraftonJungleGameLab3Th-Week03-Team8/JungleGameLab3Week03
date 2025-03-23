@@ -7,7 +7,7 @@ public class PlayerDash : MonoBehaviour
 
     private void Start()
     {
-        _force = 20f;
+        _force = 13f;
         _acceleration = 0.8f;
 
         Manager.Input.dashAction += Dash;

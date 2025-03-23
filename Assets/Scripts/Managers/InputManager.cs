@@ -11,11 +11,13 @@ public class InputManager
     private bool _isJumpCut;
     private bool _isPressLand;
     private bool _isPressDash;
+    private bool _isPressJump;
 
     public Vector2 MoveDir => _moveDir;
     public bool IsJumpCut { get { return _isJumpCut; } set { _isJumpCut = value; } }
     public bool IsPressLand => _isPressLand;
     public bool IsPressDash => _isPressDash;
+    public bool IsPressJump => _isPressJump;
     #endregion
 
     #region InputSystem
@@ -137,6 +139,8 @@ public class InputManager
     {
         if (context.phase == InputActionPhase.Started)
         {
+            _isPressJump = true;
+
             if (_playerController.IsHoldWall)    // 벽점프
             {
                 Debug.Log("벽점프");
@@ -145,8 +149,7 @@ public class InputManager
             else if (_playerController.IsGround)
             {
                 // 점프
-                if (_playerController.CoyoteTimeTimer > 0f)
-                    Debug.LogWarning("일반 점프");
+                Debug.LogWarning("일반 점프");
 
                 jumpAction?.Invoke(_rb);
             }
@@ -161,6 +164,8 @@ public class InputManager
         }
         else if (context.phase == InputActionPhase.Canceled)
         {
+            _isPressJump = false;
+
             if (_playerController.IsJump && _rb.linearVelocity.y > 0)
             {
                 _isJumpCut = true;
