@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a22a3eaeb06e8545a0b566dbcacc6ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
+  _moveSpeed: 6
 --- !u!114 &2214878444247671254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,13 +389,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9725fe9fefc8884cbbbb546a247772b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _jumpHeight: 3.5
-  _jumpTimeToApex: 0.3
-  _jumpCutGravityMultiplier: 2
+  _jumpHeight: 2.45
+  _jumpTimeToApex: 0.4
+  _jumpCutGravityMultiplier: 1.7
   _maxFallSpeed: 25
-  _jumpHangTime: 1
+  _jumpHangTime: 0.25
   _jumpHangGravityMultiplier: 0.5
-  _fallGravityMultiplier: 1.5
+  _fallGravityMultiplier: 1.4
 --- !u!114 &8621545516944072929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -411,6 +411,8 @@ MonoBehaviour:
   _rotateSpeed: 0
   _rotateSpeedCharge: 0
   _rotateSpeedMax: 0
+  _startRotation: 0
+  _startHeight: 0
 --- !u!114 &185908230766616554
 MonoBehaviour:
   m_ObjectHideFlags: 0

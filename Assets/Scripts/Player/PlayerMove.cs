@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _moveSpeed;
     PlayerController _playerController;
 
     void Start()
     {
         _playerController = GetComponent<PlayerController>();
+        _moveSpeed = 6f;
     }
 
     public void Move(Rigidbody2D rb)
