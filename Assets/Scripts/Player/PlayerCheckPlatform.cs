@@ -13,7 +13,9 @@ public class PlayerCheckPlatform : MonoBehaviour
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
 
-    [SerializeField] Transform _currentWall; // 디버깅용
+    [Header("현재 벽")]
+    public Transform CurrentWall => _currentWall;
+    [SerializeField] Transform _currentWall;
 
     private void Start()
     {
@@ -40,13 +42,17 @@ public class PlayerCheckPlatform : MonoBehaviour
         //땅에 닿았을 때
         if (hit.collider != null)
         {
+            if (Manager.Game.PlayerController.IsLanding)
+                Manager.Game.CameraController.ShakeCamera();
+
             if (isGround == false)
             {
+                Manager.Game.PlayerController.DetachWallState();
+
                 isGround = true;
                 coyoteTimeTimer = coyoteTime;   // 코요테 타임 초기화
                 if (Manager.Game.PlayerController.IsLanding)
                 {  
-                    
                     // extraForce가 높이랑 회전얼마나했는지 다 계산한 값. 충격 세기 => 카메라 흔드는 정도에도 아래와 같이 계산해서 적용하면 될것.
                     float extraForce = (Manager.Game.PlayerController.PlayerAirStop.StartHeight 
                         - transform.position.y) * 5
