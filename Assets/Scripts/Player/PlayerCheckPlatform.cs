@@ -47,6 +47,8 @@ public class PlayerCheckPlatform : MonoBehaviour
 
             if (isGround == false)
             {
+                Manager.Game.PlayerController.PlayerParticleController.PlayFallParticle();
+
                 Manager.Game.PlayerController.DetachWallState();
 
                 isGround = true;
