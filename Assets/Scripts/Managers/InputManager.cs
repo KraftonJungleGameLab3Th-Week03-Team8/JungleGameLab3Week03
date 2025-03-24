@@ -200,9 +200,13 @@ public class InputManager
 
     void OnAirStopCanceled(InputAction.CallbackContext context) // == 슈퍼 히어로 랜딩
     {
-        bool isLockSuperHeroLanding = !_playerController.IsAirStop || _playerController.IsHoldWall;
-        if(isLockSuperHeroLanding)
+        bool isLockSuperHeroLanding = !_playerController.IsAirStop || _playerController.IsHoldWall || !_playerController.IsCanAirStop;
+        if (isLockSuperHeroLanding)
+        {
+            _playerController.IsAirStop = false;
+            _isPressLand = false;
             return;
+        }
 
         if (context.canceled)
         {

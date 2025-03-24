@@ -3,7 +3,8 @@ public class Define
     public enum Platform
     {
         Ground = 6,
-        Wall
+        Wall,
+        MoveGround
     }
 
     public enum KeyskinName

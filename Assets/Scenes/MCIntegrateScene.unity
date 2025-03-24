@@ -7286,6 +7286,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
   _cinemachineCamera: {fileID: 0}
+  _zoomInWeight: 0.005
+  _zoomOutWeight: 0.1
+  _zoomInFollowOffsetY: -2
 --- !u!114 &1799765568
 MonoBehaviour:
   m_ObjectHideFlags: 0

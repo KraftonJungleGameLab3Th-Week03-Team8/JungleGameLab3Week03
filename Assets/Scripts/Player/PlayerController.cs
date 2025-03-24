@@ -60,12 +60,14 @@ public class PlayerController : MonoBehaviour
     #region 플레이어 기능 관련
     public PlayerAirStop PlayerAirStop => _playerAirStop;
     public PlayerLanding PlayerLanding => _playerLanding;
+    public PlayerParticleController PlayerParticleController => _playerParticleController;
     PlayerMove _playerMove;
     PlayerCheckPlatform _playerCheckPlatform;
     PlayerInteractionWall _playerInteractionWall;
     PlayerJump _playerJump;
     PlayerAirStop _playerAirStop;
     PlayerLanding _playerLanding;
+    PlayerParticleController _playerParticleController;
 
     /* 코요테 타임 */
     public float CoyoteTime { get { return _coyoteTime; } set { _coyoteTime = value; } }
@@ -90,6 +92,7 @@ public class PlayerController : MonoBehaviour
         _playerJump = GetComponent<PlayerJump>();
         _playerInteractionWall = GetComponent<PlayerInteractionWall>();
         _playerAirStop = GetComponent<PlayerAirStop>();
+        _playerParticleController = GetComponentInChildren<PlayerParticleController>();
 
         _originalPlayerPrefabParent = transform.parent;
         _visual = transform.GetChild(0);

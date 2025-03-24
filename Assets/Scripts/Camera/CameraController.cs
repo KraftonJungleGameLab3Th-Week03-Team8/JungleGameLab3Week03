@@ -45,11 +45,11 @@ public class CameraController : MonoBehaviour
 
         if (_cinemachineCamera != null)
         {
-            if (Manager.Game.PlayerController.IsAirStop)
+            if (Manager.Game.PlayerController.IsAirStop && !Manager.Game.PlayerController.IsGround)
             {
                 ZoomIn();
             }
-            else if (Manager.Game.PlayerController.IsLanding)
+            else if (Manager.Game.PlayerController.IsLanding || Manager.Game.PlayerController.IsGround)
             {
                 ZoomOut();
             }
