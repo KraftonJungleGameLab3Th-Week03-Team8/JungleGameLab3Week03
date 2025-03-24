@@ -60,23 +60,26 @@ public class PlayerCheckPlatform : MonoBehaviour
                
                 Debug.LogError("문구 테스트를 위한 extraForce : " + extraForce);
 
-                if (extraForce > 30f)
+                if (extraForce > 51f)
                 {
                     Debug.LogError("extraForce(엔딩) : " + extraForce);
+                    StartCoroutine(MumbleCoroutine("슈퍼 히어로 랜딩!"));
                 }
-                else if (extraForce > 4f)
+                else if (extraForce > 3f)
                 {
                     Debug.LogError("extraForce(이게 아닌데 : " + extraForce);
+                    StartCoroutine(MumbleCoroutine("이게 아니야..!"));
                 }
                 else
                 {
                     Debug.LogError("extraForce(무반응) : " + extraForce);
                 }
-                // Manager.Game.CameraController.ShakeCamera(extraForce, 0.4f);
+                Manager.Game.CameraController.ShakeCamera(extraForce - 1, 0.4f);
             }
 
             if (isGround == false)
             {
+                _playerController.TrailRenderer.enabled = false;
                 _currentGround = hit.collider.transform;
                 _playerController.PlayerParticleController.PlayFallParticle();
                 _playerController.DetachWallState();
@@ -88,7 +91,6 @@ public class PlayerCheckPlatform : MonoBehaviour
                     float extraForce = GetExtraForce(5, 200);
                     _cameraController.ShakeCamera(extraForce, 0.4f);
                     LandingEffect.MakeLandingEffect(extraForce);
-                    StartCoroutine(MumbleCoroutine("이게 아니야..!"));
                 }
                 Manager.Game.PlayerController.LandOnGroundState();
             }
@@ -141,7 +143,8 @@ public class PlayerCheckPlatform : MonoBehaviour
         float offset = (_playerController.IsSeeRight) ? -_playerWidth / 2 : _playerWidth / 2;
         Vector3 startPosition = visual.position + Vector3.right * offset;
 
-        RaycastHit2D hit = Physics2D.Raycast(startPosition, Vector2.down, 100f, _groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, Vector2.down, 200f, _groundLayer);
+        Debug.DrawRay(startPosition, Vector2.down * 200f, Color.blue);   // 땅 감지 디버깅
         Debug.DrawRay(startPosition, Vector2.down * _isCanAirStopHeight, Color.red);   // 최소 히어로 랜딩 높이 디버깅
 
         // 랜딩 가능한 높이 감지
@@ -177,9 +180,6 @@ public class PlayerCheckPlatform : MonoBehaviour
             isFrontGround = false;
         }
     }
-
-
-
 
     // 랜딩 후 혼잣말
     public IEnumerator MumbleCoroutine(string message)

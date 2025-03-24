@@ -13,6 +13,7 @@ public class PlayerLanding : MonoBehaviour
 
     private void Landing(Rigidbody2D rb)
     {
+        Manager.Game.PlayerController.TrailRenderer.enabled = true;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.constraints = RigidbodyConstraints2D.FreezePositionX;
         rb.angularVelocity = 0;

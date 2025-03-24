@@ -57,7 +57,10 @@ public class PlayerController : MonoBehaviour
     #region 플레이어 외형
     public bool IsSeeRight => _isSeeRight;
     public Transform Visual => _visual;
+    public TrailRenderer TrailRenderer => _trailRenderer;
+
     Transform _visual;  // 플레이어 외형
+    TrailRenderer _trailRenderer;
     #endregion
 
     #region 플레이어 기능 관련
@@ -102,6 +105,7 @@ public class PlayerController : MonoBehaviour
         _originalPlayerPrefabParent = transform.parent;
         _visual = transform.GetChild(0);
         _mumbleText = transform.GetComponentInChildren<TextMeshPro>();
+        _trailRenderer = transform.GetComponentInChildren<TrailRenderer>();
     }
 
     private void Update()

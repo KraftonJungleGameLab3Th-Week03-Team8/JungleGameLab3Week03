@@ -15,6 +15,7 @@ public class PlayerDash : MonoBehaviour
 
     private void Dash(Rigidbody2D rb, Vector2 dir)
     {
+        Manager.Game.PlayerController.TrailRenderer.enabled = true;
         Vector2 dashDirection = (dir + new Vector2(0, _acceleration)).normalized;
         Debug.Log("dashDirection : " + dashDirection);
         rb.linearVelocity = dashDirection * _force;
