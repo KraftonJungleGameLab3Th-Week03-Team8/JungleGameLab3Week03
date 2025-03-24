@@ -47,6 +47,8 @@ public class PlayerCheckPlatform : MonoBehaviour
 
             if (isGround == false)
             {
+                Manager.Game.PlayerController.DetachWallState();
+
                 isGround = true;
                 coyoteTimeTimer = coyoteTime;   // 코요테 타임 초기화
                 if (Manager.Game.PlayerController.IsLanding)

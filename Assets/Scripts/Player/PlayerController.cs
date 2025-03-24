@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isWall;
     [SerializeField] bool _isGrabJump;
     [SerializeField] bool _isHoldWall = false;
+    [SerializeField] Transform _originalPlayerPrefabParent;
     #endregion
 
     #region 플레이어 외형
@@ -90,6 +91,7 @@ public class PlayerController : MonoBehaviour
         _playerInteractionWall = GetComponent<PlayerInteractionWall>();
         _playerAirStop = GetComponent<PlayerAirStop>();
 
+        _originalPlayerPrefabParent = transform.parent;
         _visual = transform.GetChild(0);
     }
 
@@ -249,7 +251,7 @@ public class PlayerController : MonoBehaviour
 
     public void DetachWallState()
     {
-        transform.SetParent(null);
+        transform.SetParent(_originalPlayerPrefabParent);
         _isMove = true;         // 벽 다시 붙이게 하기 위해
         _isDash = false;        // 다시 대시 가능하게 하기 위함
         _isHoldWall = false;

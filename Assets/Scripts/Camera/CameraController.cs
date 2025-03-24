@@ -15,9 +15,9 @@ public class CameraController : MonoBehaviour
     // 줌 인/아웃
     private float _originalOrthographicSize;
     private float _zommInLimit = 3f;            // 줌 인 제한
-    private float _zoomInWeight = 0.05f;
-    private float _zoomOutWeight = 0.1f;
-    private float _zoomInFollowOffsetY = -2f;
+    [SerializeField] private float _zoomInWeight = 0.005f;
+    [SerializeField] private float _zoomOutWeight = 0.1f;
+    [SerializeField] private float _zoomInFollowOffsetY = -2f;
 
      
     public void Init(Transform target)
