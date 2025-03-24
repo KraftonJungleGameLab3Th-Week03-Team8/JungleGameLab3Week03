@@ -32,6 +32,7 @@ public class GameManager
     {
         Debug.Log("SpawnPlayer()");
         GameObject playerPrefab = Manager.Resource.Instantiate("MCPlayerPrefab");
+        playerPrefab.transform.position = new Vector3(15, 6, 0);
 
         _playerController = playerPrefab.GetComponentInChildren<PlayerController>();
         Manager.Input.FindPlayer();
