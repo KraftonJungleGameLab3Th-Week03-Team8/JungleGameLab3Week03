@@ -4,6 +4,8 @@ using System.Collections;
 public class PlayerCheckPlatform : MonoBehaviour
 {
     BoxCollider2D _boxCollider;
+    PlayerController _playerController;
+    CameraController _cameraController;
 
     [Header("Ray Settings")]
     [SerializeField] private float _playerWidth;
@@ -23,6 +25,9 @@ public class PlayerCheckPlatform : MonoBehaviour
     private void Start()
     {
         _boxCollider = GetComponent<BoxCollider2D>();
+        _playerController = Manager.Game.PlayerController;
+        _cameraController = Manager.Game.CameraController;
+
         _playerWidth = _boxCollider.size.x * transform.localScale.x;
         _playerHeight = _boxCollider.size.y * transform.localScale.y;
         _rayYOffset = 0.02f;
@@ -37,6 +42,9 @@ public class PlayerCheckPlatform : MonoBehaviour
     // 땅 감지
     public void CheckGround(ref bool isGround , ref float coyoteTime , ref float coyoteTimeTimer)
     {
+        if (_playerController == null)
+            return;
+
         // 좌측 하단에서 가로(right) 방향으로 레이 쏘기
         Ray2D ray = new Ray2D(transform.position - new Vector3(_playerWidth * 0.5f, _playerHeight * 0.5f + _rayYOffset, 0), Vector2.right);
         RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction, _playerWidth * 0.5f * 2, _groundLayer);
@@ -45,36 +53,44 @@ public class PlayerCheckPlatform : MonoBehaviour
         //땅에 닿았을 때
         if (hit.collider != null)
         {
-            if (Manager.Game.PlayerController.IsLanding)
+            if (_playerController.IsLanding) // 랜딩 상태일 때
             {
-                float extraForce = (Manager.Game.PlayerController.PlayerAirStop.StartHeight
-                        - transform.position.y) / 3
-                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation / 3500;
-                extraForce -= 1;
-                if(extraForce < 1f)
-                    extraForce = 0f;
-                Debug.Log("extraForce : " + extraForce);
-                Manager.Game.CameraController.ShakeCamera(extraForce, 0.4f);
+                float extraForce = GetExtraForce(0.3f, 3500);
+
+               
+                Debug.LogError("문구 테스트를 위한 extraForce : " + extraForce);
+
+                if (extraForce > 51f)
+                {
+                    Debug.LogError("extraForce(엔딩) : " + extraForce);
+                    StartCoroutine(MumbleCoroutine("슈퍼 히어로 랜딩!"));
+                }
+                else if (extraForce > 3f)
+                {
+                    Debug.LogError("extraForce(이게 아닌데 : " + extraForce);
+                    StartCoroutine(MumbleCoroutine("이게 아니야..!"));
+                }
+                else
+                {
+                    Debug.LogError("extraForce(무반응) : " + extraForce);
+                }
+                Manager.Game.CameraController.ShakeCamera(extraForce - 1, 0.4f);
             }
 
             if (isGround == false)
             {
+                _playerController.TrailRenderer.enabled = false;
                 _currentGround = hit.collider.transform;
-                Manager.Game.PlayerController.PlayerParticleController.PlayFallParticle();
-                Manager.Game.PlayerController.DetachWallState();
+                _playerController.PlayerParticleController.PlayFallParticle();
+                _playerController.DetachWallState();
 
                 isGround = true;
                 coyoteTimeTimer = coyoteTime;   // 코요테 타임 초기화
                 if (Manager.Game.PlayerController.IsLanding)
-                {  
-                    // extraForce가 높이랑 회전얼마나했는지 다 계산한 값. 충격 세기 => 카메라 흔드는 정도에도 아래와 같이 계산해서 적용하면 될것.
-                    float extraForce = (Manager.Game.PlayerController.PlayerAirStop.StartHeight 
-                        - transform.position.y) * 5
-                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation / 200;
-
+                {
+                    float extraForce = GetExtraForce(5, 200);
+                    _cameraController.ShakeCamera(extraForce, 0.4f);
                     LandingEffect.MakeLandingEffect(extraForce);
-                    StartCoroutine(MumbleCoroutine("이게 아니야..!"));
-
                 }
                 Manager.Game.PlayerController.LandOnGroundState();
             }
@@ -90,7 +106,10 @@ public class PlayerCheckPlatform : MonoBehaviour
     // 플레이어 앞 벽 체크
     public void CheckWall(ref bool isWall)
     {
-        Transform visual = Manager.Game.PlayerController.Visual;
+        if (_playerController == null)
+            return;
+
+        Transform visual = _playerController.Visual;
         Vector3 startPosition = visual.position;
         RaycastHit2D hit = Physics2D.Raycast(startPosition, visual.right, _playerWidth * 0.55f, _wallLayer);
         Debug.DrawRay(startPosition, visual.right * _playerWidth * 0.55f, Color.green);   // 디버깅
@@ -115,13 +134,17 @@ public class PlayerCheckPlatform : MonoBehaviour
 
     public void CheckLandingHeight(ref bool isCanAirStop)
     {
-        // 현재 위치에서 Ray를 쏴서 땅을 감지하고 땅과의 높이 계산
-        Transform visual = Manager.Game.PlayerController.Visual;
+        if (_playerController == null)
+            return;
 
-        float offset = (Manager.Game.PlayerController.IsSeeRight) ? -_playerWidth / 2 : _playerWidth / 2;
+        // 현재 위치에서 Ray를 쏴서 땅을 감지하고 땅과의 높이 계산
+        Transform visual = _playerController.Visual;
+
+        float offset = (_playerController.IsSeeRight) ? -_playerWidth / 2 : _playerWidth / 2;
         Vector3 startPosition = visual.position + Vector3.right * offset;
 
-        RaycastHit2D hit = Physics2D.Raycast(startPosition, Vector2.down, 100f, _groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, Vector2.down, 200f, _groundLayer);
+        Debug.DrawRay(startPosition, Vector2.down * 200f, Color.blue);   // 땅 감지 디버깅
         Debug.DrawRay(startPosition, Vector2.down * _isCanAirStopHeight, Color.red);   // 최소 히어로 랜딩 높이 디버깅
 
         // 랜딩 가능한 높이 감지
@@ -139,7 +162,10 @@ public class PlayerCheckPlatform : MonoBehaviour
 
     public void CheckFrontGround(ref bool isFrontGround)
     {
-        Transform visual = Manager.Game.PlayerController.Visual;
+        if(_playerController == null)
+            return;
+
+        Transform visual = _playerController.Visual;
         Vector3 startPosition = visual.position - Vector3.up * 0.15f;
         RaycastHit2D hit = Physics2D.Raycast(startPosition, visual.right, _playerWidth * 0.55f, _groundLayer);
         Debug.DrawRay(startPosition, visual.right * _playerWidth * 0.55f, Color.blue);   // 디버깅
@@ -155,22 +181,27 @@ public class PlayerCheckPlatform : MonoBehaviour
         }
     }
 
-
-
-
     // 랜딩 후 혼잣말
     public IEnumerator MumbleCoroutine(string message)
     {
         Debug.LogWarning("혼잣말");
 
-        Manager.Game.PlayerController.MumbleText.enabled = true;
+        _playerController.MumbleText.enabled = true;
         //Manager.Game.PlayerController.MumbleText.color =
         //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 1f);
-        Manager.Game.PlayerController.MumbleText.text = message;
+        _playerController.MumbleText.text = message;
         yield return new WaitForSeconds(1.0f);
-        Manager.Game.PlayerController.MumbleText.enabled = false;
+        _playerController.MumbleText.enabled = false;
         //Manager.Game.PlayerController.MumbleText.color =
         //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 0f);
 
+    }
+
+    public float GetExtraForce(float multiplyDiffY, float divideRotation)
+    {
+        float extraForce = (_playerController.PlayerAirStop.StartHeight
+                        - transform.position.y) * multiplyDiffY
+                        + _playerController.PlayerAirStop.CurrentRotation / divideRotation;
+        return extraForce;
     }
 }

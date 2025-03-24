@@ -30,6 +30,7 @@ public class PlayerInteractionWall : MonoBehaviour
     // 벽 점프
     public void WallJump(Rigidbody2D rb)
     {
+        Manager.Game.PlayerController.TrailRenderer.enabled = true;
         /* 벽 점프 후 바라볼 방향 설정 */
         Vector2 jumpDirection = Vector2.right;
         float targetDirection = (Manager.Game.PlayerController.IsSeeRight) ? -1 : 1;
