@@ -13,13 +13,15 @@ public class PlayerMove : MonoBehaviour
 
     public void Move(Rigidbody2D rb)
     {
-        bool isCanMove = !_playerController.IsDash && !_playerController.IsAirStop && !_playerController.IsGrabJump;
+        bool isCanMove = !_playerController.IsDash && !_playerController.IsAirStop && !_playerController.IsGrabJump && !_playerController.IsFrontGround;
         if (isCanMove)
         {
             rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;
-            Manager.Game.PlayerController.Flip(rb.linearVelocityX);
+            Manager.Game.PlayerController.Flip(Manager.Input.MoveDir.x);
+
+            Debug.Log("이동 " + rb.linearVelocityX);
         }
-        else if(Manager.Input.MoveDir.x == 0)
+        else if(Manager.Input.MoveDir.x == 0) 
         {
             Manager.Game.PlayerController.IsMove = false;
             Debug.Log("무브 안됨");
