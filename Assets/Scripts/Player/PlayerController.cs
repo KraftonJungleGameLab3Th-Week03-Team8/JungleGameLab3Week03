@@ -234,6 +234,8 @@ public class PlayerController : MonoBehaviour
         _isJump = false;        // 점프 X
         _isGrabJump = false;    // 벽 점프 X
         Manager.Input.IsJumpCut = false;
+
+        transform.SetParent(_playerCheckPlatform.CurrentGround);
     }
 
     private IEnumerator WaitDashCoroutine()

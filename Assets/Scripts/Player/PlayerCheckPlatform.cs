@@ -13,8 +13,10 @@ public class PlayerCheckPlatform : MonoBehaviour
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
 
-    [Header("현재 벽")]
+    [Header("현재 바닥 및 벽")]
+    public Transform CurrentGround => _currentGround;
     public Transform CurrentWall => _currentWall;
+    [SerializeField] Transform _currentGround;
     [SerializeField] Transform _currentWall;
 
     private void Start()
@@ -56,8 +58,8 @@ public class PlayerCheckPlatform : MonoBehaviour
 
             if (isGround == false)
             {
+                _currentGround = hit.collider.transform;
                 Manager.Game.PlayerController.PlayerParticleController.PlayFallParticle();
-
                 Manager.Game.PlayerController.DetachWallState();
 
                 isGround = true;
