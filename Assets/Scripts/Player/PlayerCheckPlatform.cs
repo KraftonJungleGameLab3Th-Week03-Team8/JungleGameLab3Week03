@@ -27,7 +27,7 @@ public class PlayerCheckPlatform : MonoBehaviour
         _isCanAirStopHeight = 0.9f;
 
         // 레이어 마스크 설정
-        _groundLayer = 1 << (int)Define.Platform.Ground;
+        _groundLayer = (1 << (int)Define.Platform.Ground) | (1 << (int)Define.Platform.MoveGround);
         _wallLayer = 1 << (int)Define.Platform.Wall;
     }
 

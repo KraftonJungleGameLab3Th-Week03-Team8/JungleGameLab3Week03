@@ -22,13 +22,19 @@ public class PlayerAirStop : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Manager.Input.IsPressLand)
+        if (Manager.Input.IsPressLand && Manager.Game.PlayerController.IsCanAirStop)
         {
             _currentRotation = _rb.rotation;
             if (_currentRotation <= _rotationLimit)
             {
                 Rotate();
             }
+        }
+        else
+        {
+            _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+            _rb.angularVelocity = 0;
+            _rb.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
 
