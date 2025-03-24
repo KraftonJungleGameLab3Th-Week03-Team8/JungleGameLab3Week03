@@ -198,8 +198,10 @@ public class PlayerCheckPlatform : MonoBehaviour
         //Manager.Game.PlayerController.MumbleText.color =
         //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 1f);
         _playerController.MumbleText.text = message;
-        yield return new WaitForSeconds(1.0f);
-        _playerController.MumbleText.enabled = false;
+        yield return new WaitForSeconds(5.0f);
+
+        if(message != "슈퍼 히어로 랜딩!")
+            _playerController.MumbleText.enabled = false;
         //Manager.Game.PlayerController.MumbleText.color =
         //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 0f);
 
