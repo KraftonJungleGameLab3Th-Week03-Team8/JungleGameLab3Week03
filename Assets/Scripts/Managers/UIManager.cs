@@ -47,20 +47,6 @@ public class UIManager
             , (int)(timer * 100f) % 100); ;
     }
 
-    // 랜딩 후 혼잣말
-    private IEnumerator MumbleCoroutine(string message)
-    {
-        Manager.Game.PlayerController.MumbleText.enabled = true;
-        //Manager.Game.PlayerController.MumbleText.color =
-        //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 1f);
-        Manager.Game.PlayerController.MumbleText.text = message;
-        yield return new WaitForSeconds(1.0f);
-        Manager.Game.PlayerController.MumbleText.enabled = false;
-        //Manager.Game.PlayerController.MumbleText.color =
-        //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 0f);
-
-    }
-
     // 키 가이드 제어
     public void SetKeyGuidePosition(Vector3 pos)
     {

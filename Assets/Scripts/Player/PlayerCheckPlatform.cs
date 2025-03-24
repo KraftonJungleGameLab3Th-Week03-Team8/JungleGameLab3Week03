@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerCheckPlatform : MonoBehaviour
 {
@@ -72,7 +73,8 @@ public class PlayerCheckPlatform : MonoBehaviour
                         + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation / 200;
 
                     LandingEffect.MakeLandingEffect(extraForce);
-                    
+                    StartCoroutine(MumbleCoroutine("이게 아니야..!"));
+
                 }
                 Manager.Game.PlayerController.LandOnGroundState();
             }
@@ -151,5 +153,24 @@ public class PlayerCheckPlatform : MonoBehaviour
         {
             isFrontGround = false;
         }
+    }
+
+
+
+
+    // 랜딩 후 혼잣말
+    public IEnumerator MumbleCoroutine(string message)
+    {
+        Debug.LogWarning("혼잣말");
+
+        Manager.Game.PlayerController.MumbleText.enabled = true;
+        //Manager.Game.PlayerController.MumbleText.color =
+        //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 1f);
+        Manager.Game.PlayerController.MumbleText.text = message;
+        yield return new WaitForSeconds(1.0f);
+        Manager.Game.PlayerController.MumbleText.enabled = false;
+        //Manager.Game.PlayerController.MumbleText.color =
+        //    UIKeyGuideDisplay.SetAlphaColor(Manager.Game.PlayerController.MumbleText.color, 0f);
+
     }
 }
