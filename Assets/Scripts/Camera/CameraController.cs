@@ -57,7 +57,7 @@ public class CameraController : MonoBehaviour
     }
 
     #region 흔들림
-    public void ShakeCamera(float intensity = 1.5f, float time = 0.5f)
+    public void ShakeCamera(float intensity = 1.5f, float time = 0.4f)
     {
         _cinemachineBasicMultiChannelPerlin.AmplitudeGain = intensity;   // 진폭
         _startingIntensity = intensity;

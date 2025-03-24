@@ -11,6 +11,8 @@ public class PauseKeyTutorial : MonoBehaviour
     private Vector3 _displayPosOffset = new Vector3(0, 1f, 0f);
     public bool isInProcess = false;
     private PlayerController _playerCtrl;
+    private float _delayFixedDelta;
+    private float _delayTime = 0.2f;
 
     private void Update()
     {
@@ -21,6 +23,9 @@ public class PauseKeyTutorial : MonoBehaviour
 
         if (!usePuase)
             return;
+        //_delayFixedDelta += Time.fixedDeltaTime;
+        //if (_delayFixedDelta < _delayTime)
+        //    return;
         //if(InputKet...)
         if (CheckInputKey() || testTrigger)
         {
@@ -50,17 +55,17 @@ public class PauseKeyTutorial : MonoBehaviour
                 }
                 break;
             case Define.KeyskinName.leftArrow:
-                if (Manager.Input.IsPressDash)
+                //if (Manager.Input.IsPressDash)
+                if (Manager.Game.PlayerController.IsDash)
                 {
                     if (Manager.Input.MoveDir.x < 0)
                         return true;
                 }
                 break;
             case Define.KeyskinName.rightArrow:
-                //Debug.Log("Manager.Input.IsPressDash: " + Manager.Input.IsPressDash);
-                if(Manager.Input.IsPressDash)
+                //if(Manager.Input.IsPressDash)
+                if (Manager.Game.PlayerController.IsDash)
                 {
-                    Debug.Log("Manager.Input.MoveDir.x: " + Manager.Input.MoveDir.x);
                     if (Manager.Input.MoveDir.x > 0)
                         return true;
                 }
@@ -85,6 +90,7 @@ public class PauseKeyTutorial : MonoBehaviour
             isInProcess = true;
             if(usePuase)
                 Manager.Game.SetPause();
+            _delayFixedDelta = 0;
             
             //Manager.UI.SetKeyGuidePosition(playerCtrl.transform.position + _displayPosOffset);
             foreach(Define.KeyskinName keyName in keyNames)
