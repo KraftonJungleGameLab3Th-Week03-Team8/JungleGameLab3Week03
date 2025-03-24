@@ -50,8 +50,8 @@ public class PlayerJump : MonoBehaviour
         */
         Manager.Game.PlayerController.CoyoteTimeTimer = 0f; // 코요테 타임 0
         Debug.Log("점프");
+        transform.SetParent(Manager.Game.PlayerController.OriginalPlayerPrefabParent);
         rb.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-        transform.SetParent(Manager.Game.PlayerController.transform.parent);
         StartCoroutine(WaitOneSecondCouroutine());
     }
 

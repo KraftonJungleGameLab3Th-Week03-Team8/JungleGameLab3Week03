@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     public bool IsWall => _isWall;
     public bool IsGrabJump { get { return _isGrabJump; } set { _isGrabJump = value; } }
     public bool IsHoldWall { get { return _isHoldWall; } set { _isHoldWall = value; } }
+    public Transform OriginalPlayerPrefabParent { get { return _originalPlayerPrefabParent; } }
     [SerializeField] bool _isWall;
     [SerializeField] bool _isGrabJump;
     [SerializeField] bool _isHoldWall = false;
