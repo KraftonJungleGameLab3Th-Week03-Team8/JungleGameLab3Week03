@@ -13,7 +13,7 @@ public class PlayerMove : MonoBehaviour
 
     public void Move(Rigidbody2D rb)
     {
-        bool isCanMove = !_playerController.IsDash && !_playerController.IsAirStop && !_playerController.IsGrabJump && !_playerController.IsFrontGround;
+        bool isCanMove = !_playerController.IsDash && !_playerController.IsAirStop && !_playerController.IsGrabJump && !_playerController.IsFrontGround && !_playerController.IsLanding;
         if (isCanMove)
         {
             rb.linearVelocityX = Manager.Input.MoveDir.x * _moveSpeed;

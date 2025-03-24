@@ -30,7 +30,7 @@ public class PlayerCheckPlatform : MonoBehaviour
 
         _playerWidth = _boxCollider.size.x * transform.localScale.x;
         _playerHeight = _boxCollider.size.y * transform.localScale.y;
-        _rayYOffset = 0.02f;
+        _rayYOffset = 0.03f;
 
         _isCanAirStopHeight = 0.9f;
 
