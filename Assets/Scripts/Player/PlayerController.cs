@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     #region 플레이어 UI 관련
     public TextMeshPro MumbleText => _mumbleText;   // 혼잣말
-    TextMeshPro _mumbleText;
+    [SerializeField] TextMeshPro _mumbleText;
     #endregion
 
     #region 상태 관련
@@ -70,14 +70,16 @@ public class PlayerController : MonoBehaviour
     PlayerAirStop _playerAirStop;
     PlayerLanding _playerLanding;
     PlayerParticleController _playerParticleController;
+    #endregion
 
-    /* 코요테 타임 */
+    #region 코요테 타임
     public float CoyoteTime { get { return _coyoteTime; } set { _coyoteTime = value; } }
     public float CoyoteTimeTimer { get { return _coyoteTimeTimer; } set { _coyoteTimeTimer = value; } }
     [SerializeField] private float _coyoteTime = 0.2f;
     [SerializeField] private float _coyoteTimeTimer;
+    #endregion
 
-    /* 점프 버퍼 */
+    #region 점프 버퍼
     public float JumpBufferTime { get { return _jumpBufferTime; } set { _jumpBufferTime = value; } }
     public float JumpBufferTimeTimer { get { return _jumpBufferTimeTimer; } set { _jumpBufferTimeTimer = value; } }
     [SerializeField] private float _jumpBufferTime = 0.2f;
@@ -98,6 +100,7 @@ public class PlayerController : MonoBehaviour
 
         _originalPlayerPrefabParent = transform.parent;
         _visual = transform.GetChild(0);
+        _mumbleText = transform.GetComponentInChildren<TextMeshPro>();
     }
 
     private void Update()
