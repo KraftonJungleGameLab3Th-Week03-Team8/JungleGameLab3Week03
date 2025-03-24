@@ -5,13 +5,28 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform _target;
     [SerializeField] CinemachineCamera _cinemachineCamera;
+    CinemachineFollow _cinemachineFollow;
+    CinemachineBasicMultiChannelPerlin _cinemachineBasicMultiChannelPerlin;
+
     private float _shakeTimer;
     private float _shakeTimerTotal;
     private float _startingIntensity;
 
+    // 줌 인/아웃
+    private float _originalOrthographicSize;
+    private float _zommInLimit = 3f;            // 줌 인 제한
+    private float _zoomInWeight = 0.05f;
+    private float _zoomOutWeight = 0.1f;
+    private float _zoomInFollowOffsetY = -2f;
+
+     
     public void Init(Transform target)
     {
         _cinemachineCamera = GetComponent<CinemachineCamera>();
+        _cinemachineFollow = GetComponent<CinemachineFollow>();
+        _cinemachineBasicMultiChannelPerlin = GetComponent<CinemachineBasicMultiChannelPerlin>();
+
+        _originalOrthographicSize = _cinemachineCamera.Lens.OrthographicSize;
 
         // 타겟 설정
         _target = target;
@@ -20,10 +35,31 @@ public class CameraController : MonoBehaviour
         _cinemachineCamera.Follow = _target;
     }
 
+    private void Update()
+    {
+        if (_shakeTimer > 0)
+        {
+            ShakeTimer();
+        }
+
+
+        if (_cinemachineCamera != null)
+        {
+            if (Manager.Game.PlayerController.IsAirStop)
+            {
+                ZoomIn();
+            }
+            else if (Manager.Game.PlayerController.IsLanding)
+            {
+                ZoomOut();
+            }
+        }
+    }
+
+    #region 흔들림
     public void ShakeCamera(float intensity = 1.5f, float time = 0.5f)
     {
-        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = GetComponent<CinemachineBasicMultiChannelPerlin>();
-        cinemachineBasicMultiChannelPerlin.AmplitudeGain = intensity;
+        _cinemachineBasicMultiChannelPerlin.AmplitudeGain = intensity;   // 진폭
         _startingIntensity = intensity;
         _shakeTimerTotal = time;
         _shakeTimer = time;
@@ -34,17 +70,22 @@ public class CameraController : MonoBehaviour
         _shakeTimer -= Time.deltaTime;
         if (_shakeTimer <= 0)
         {
-            CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = GetComponent<CinemachineBasicMultiChannelPerlin>();
-
-            cinemachineBasicMultiChannelPerlin.AmplitudeGain = Mathf.Lerp(_startingIntensity, 0f, 1 - (_shakeTimer / _shakeTimerTotal));
+            _cinemachineBasicMultiChannelPerlin.AmplitudeGain = Mathf.Lerp(_startingIntensity, 0f, 1 - (_shakeTimer / _shakeTimerTotal));
         }
     }
+    #endregion
 
-    private void Update()
+    #region 줌 인/아웃
+    public void ZoomIn()
     {
-        if (_shakeTimer > 0)
-        {
-            ShakeTimer();
-        }
+        _cinemachineCamera.Lens.OrthographicSize = Mathf.Lerp(_cinemachineCamera.Lens.OrthographicSize, _zommInLimit, _zoomInWeight);
+        _cinemachineFollow.FollowOffset.y = Mathf.Lerp(_cinemachineFollow.FollowOffset.y, _zoomInFollowOffsetY, _zoomInWeight);
     }
+
+    public void ZoomOut()
+    {
+        _cinemachineCamera.Lens.OrthographicSize = Mathf.Lerp(_cinemachineCamera.Lens.OrthographicSize, _originalOrthographicSize, _zoomOutWeight);
+        _cinemachineFollow.FollowOffset.y = Mathf.Lerp(_cinemachineFollow.FollowOffset.y, 0f, _zoomInWeight);
+    }
+    #endregion
 }

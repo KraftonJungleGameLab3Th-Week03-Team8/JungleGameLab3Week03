@@ -2882,11 +2882,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0, y: 10.005879}
-      - {x: -29.948713, y: 9.825868}
+    - - {x: 0, y: 49.938877}
+      - {x: -29.948713, y: 49.758865}
       - {x: -29.955809, y: -12.42331}
       - {x: 30.008076, y: -12.561358}
-      - {x: 30.105793, y: 9.966143}
+      - {x: 30.105793, y: 50.247902}
   m_UseDelaunayMesh: 0
 --- !u!4 &598553268
 Transform:
@@ -7261,7 +7261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NoiseProfile: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
-  PivotOffset: {x: 0, y: 0, z: 0}
+  PivotOffset: {x: 1, y: 1, z: 1}
   AmplitudeGain: 0
   FrequencyGain: 5
   m_NoiseOffsets: {x: 0, y: 0, z: 0}
