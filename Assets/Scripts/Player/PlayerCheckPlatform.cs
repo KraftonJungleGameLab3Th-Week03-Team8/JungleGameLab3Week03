@@ -43,7 +43,16 @@ public class PlayerCheckPlatform : MonoBehaviour
         if (hit.collider != null)
         {
             if (Manager.Game.PlayerController.IsLanding)
-                Manager.Game.CameraController.ShakeCamera();
+            {
+                float extraForce = (Manager.Game.PlayerController.PlayerAirStop.StartHeight
+                        - transform.position.y) / 3
+                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation / 3500;
+                extraForce -= 1;
+                if(extraForce < 1f)
+                    extraForce = 0f;
+                Debug.Log("extraForce : " + extraForce);
+                Manager.Game.CameraController.ShakeCamera(extraForce, 0.4f);
+            }
 
             if (isGround == false)
             {
