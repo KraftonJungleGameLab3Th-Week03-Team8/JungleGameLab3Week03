@@ -60,8 +60,8 @@ public class PlayerController : MonoBehaviour
     public PlayerAirStop PlayerAirStop => _playerAirStop;
     public PlayerLanding PlayerLanding => _playerLanding;
     PlayerMove _playerMove;
-    PlayerCheckPlatform _playerCheckObstacle;
-    PlayerInteractionWall _playerGrab;
+    PlayerCheckPlatform _playerCheckPlatform;
+    PlayerInteractionWall _playerInteractionWall;
     PlayerJump _playerJump;
     PlayerAirStop _playerAirStop;
     PlayerLanding _playerLanding;
@@ -85,9 +85,9 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<BoxCollider2D>();
 
         _playerMove = GetComponent<PlayerMove>();
-        _playerCheckObstacle = GetComponent<PlayerCheckPlatform>();
+        _playerCheckPlatform = GetComponent<PlayerCheckPlatform>();
         _playerJump = GetComponent<PlayerJump>();
-        _playerGrab = GetComponent<PlayerInteractionWall>();
+        _playerInteractionWall = GetComponent<PlayerInteractionWall>();
         _playerAirStop = GetComponent<PlayerAirStop>();
 
         _visual = transform.GetChild(0);
@@ -95,9 +95,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _playerCheckObstacle.CheckGround(ref _isGround, ref _coyoteTime, ref _coyoteTimeTimer);
-        _playerCheckObstacle.CheckWall(ref _isWall);
-        _playerCheckObstacle.CheckLandingHeight(ref _isCanAirStop);
+        _playerCheckPlatform.CheckGround(ref _isGround, ref _coyoteTime, ref _coyoteTimeTimer);
+        _playerCheckPlatform.CheckWall(ref _isWall);
+        _playerCheckPlatform.CheckLandingHeight(ref _isCanAirStop);
 
         /* 점브 버퍼(코요테 타임도 결합됨)*/
         if(Manager.Input.IsPressJump)
@@ -201,7 +201,7 @@ public class PlayerController : MonoBehaviour
         if (_isWall && !_isGround && (_isMove || _isDash)) // 벽 감지, 공중, 이동 및 대시 중
         {
             HoldWallState();
-            _playerGrab.WallHold(_rb);
+            _playerInteractionWall.WallHold(_rb);
         }
         _playerMove.Move(_rb);
     }
@@ -240,6 +240,7 @@ public class PlayerController : MonoBehaviour
 
     public void HoldWallState()
     {
+        transform.SetParent(_playerCheckPlatform.CurrentWall);
         _isDash = false;        // 다시 대시 가능하게 하기 위함
         _isHoldWall = true;
         _isJump = false;
@@ -248,6 +249,7 @@ public class PlayerController : MonoBehaviour
 
     public void DetachWallState()
     {
+        transform.SetParent(null);
         _isMove = true;         // 벽 다시 붙이게 하기 위해
         _isDash = false;        // 다시 대시 가능하게 하기 위함
         _isHoldWall = false;

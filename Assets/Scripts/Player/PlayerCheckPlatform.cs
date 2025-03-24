@@ -13,7 +13,9 @@ public class PlayerCheckPlatform : MonoBehaviour
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
 
-    [SerializeField] Transform _currentWall; // 디버깅용
+    [Header("현재 벽")]
+    public Transform CurrentWall => _currentWall;
+    [SerializeField] Transform _currentWall;
 
     private void Start()
     {
