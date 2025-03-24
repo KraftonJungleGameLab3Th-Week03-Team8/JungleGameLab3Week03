@@ -13,8 +13,10 @@ public class PlayerCheckPlatform : MonoBehaviour
     [SerializeField] LayerMask _groundLayer;
     [SerializeField] LayerMask _wallLayer;
 
-    [Header("현재 벽")]
+    [Header("현재 바닥 및 벽")]
+    public Transform CurrentGround => _currentGround;
     public Transform CurrentWall => _currentWall;
+    [SerializeField] Transform _currentGround;
     [SerializeField] Transform _currentWall;
 
     private void Start()
@@ -56,8 +58,8 @@ public class PlayerCheckPlatform : MonoBehaviour
 
             if (isGround == false)
             {
+                _currentGround = hit.collider.transform;
                 Manager.Game.PlayerController.PlayerParticleController.PlayFallParticle();
-
                 Manager.Game.PlayerController.DetachWallState();
 
                 isGround = true;
@@ -130,6 +132,24 @@ public class PlayerCheckPlatform : MonoBehaviour
         else
         {
             isCanAirStop = false;
+        }
+    }
+
+    public void CheckFrontGround(ref bool isFrontGround)
+    {
+        Transform visual = Manager.Game.PlayerController.Visual;
+        Vector3 startPosition = visual.position - Vector3.up * 0.15f;
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, visual.right, _playerWidth * 0.55f, _groundLayer);
+        Debug.DrawRay(startPosition, visual.right * _playerWidth * 0.55f, Color.blue);   // 디버깅
+
+        // 벽 감지
+        if (hit.collider != null)
+        {
+            isFrontGround = true;
+        }
+        else
+        {
+            isFrontGround = false;
         }
     }
 }
