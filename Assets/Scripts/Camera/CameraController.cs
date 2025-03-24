@@ -18,6 +18,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _zoomInWeight = 0.005f;
     [SerializeField] private float _zoomOutWeight = 0.1f;
     [SerializeField] private float _zoomInFollowOffsetY = -2f;
+    [SerializeField] private float _zoomStartTime = 0.5f; // 줌 시작 시간
+    [SerializeField] private float _zoomTime = 0f; // 현재 누른 시간
 
      
     public void Init(Transform target)
@@ -78,6 +80,12 @@ public class CameraController : MonoBehaviour
     #region 줌 인/아웃
     public void ZoomIn()
     {
+        // start time 이상 모으고 있어야 시작
+        if (_zoomStartTime > _zoomTime)
+        {
+            _zoomTime += Time.deltaTime;
+            return;
+        }
         _cinemachineCamera.Lens.OrthographicSize = Mathf.Lerp(_cinemachineCamera.Lens.OrthographicSize, _zommInLimit, _zoomInWeight);
         _cinemachineFollow.FollowOffset.y = Mathf.Lerp(_cinemachineFollow.FollowOffset.y, _zoomInFollowOffsetY, _zoomInWeight);
     }
@@ -86,6 +94,7 @@ public class CameraController : MonoBehaviour
     {
         _cinemachineCamera.Lens.OrthographicSize = Mathf.Lerp(_cinemachineCamera.Lens.OrthographicSize, _originalOrthographicSize, _zoomOutWeight);
         _cinemachineFollow.FollowOffset.y = Mathf.Lerp(_cinemachineFollow.FollowOffset.y, 0f, _zoomInWeight);
+        _zoomTime = 0f;
     }
     #endregion
 }
