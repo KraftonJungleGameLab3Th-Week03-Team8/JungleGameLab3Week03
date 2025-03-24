@@ -74,7 +74,15 @@ public class PlayerCheckPlatform : MonoBehaviour
                 {
                     Debug.LogError("extraForce(무반응) : " + extraForce);
                 }
-                Manager.Game.CameraController.ShakeCamera(extraForce - 1, 0.4f);
+
+                extraForce = (Manager.Game.PlayerController.PlayerAirStop.StartHeight
+                        - transform.position.y) / 3
+                        + Manager.Game.PlayerController.PlayerAirStop.CurrentRotation / 3500;
+                extraForce -= 1;
+                if (extraForce < 1f)
+                    extraForce = 0f;
+                Debug.Log("extraForce : " + extraForce);
+                Manager.Game.CameraController.ShakeCamera(extraForce, 0.4f);
             }
 
             if (isGround == false)
@@ -89,7 +97,7 @@ public class PlayerCheckPlatform : MonoBehaviour
                 if (Manager.Game.PlayerController.IsLanding)
                 {
                     float extraForce = GetExtraForce(5, 200);
-                    _cameraController.ShakeCamera(extraForce, 0.4f);
+                    //_cameraController.ShakeCamera(extraForce, 0.4f);
                     LandingEffect.MakeLandingEffect(extraForce);
                 }
                 Manager.Game.PlayerController.LandOnGroundState();
