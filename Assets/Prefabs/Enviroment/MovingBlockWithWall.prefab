@@ -146,7 +146,7 @@ GameObject:
   - component: {fileID: 8064730729887682015}
   - component: {fileID: 1793317106705012905}
   - component: {fileID: 7287344432190632851}
-  m_Layer: 6
+  m_Layer: 8
   m_Name: MovingBlockWithWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
