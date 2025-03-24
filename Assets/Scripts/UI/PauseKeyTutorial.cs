@@ -49,7 +49,7 @@ public class PauseKeyTutorial : MonoBehaviour
         switch (keyNames[0])
         {
             case Define.KeyskinName.space:
-                if(Manager.Game.PlayerController.IsAirStop)
+                if(Manager.Game.PlayerController.IsAirStop || Manager.Game.PlayerController.IsLanding)
                 {
                     return true;
                 }
@@ -69,8 +69,6 @@ public class PauseKeyTutorial : MonoBehaviour
                     if (Manager.Input.MoveDir.x > 0)
                         return true;
                 }
-                break;
-            case Define.KeyskinName.downArrow:
                 break;
         }
 
