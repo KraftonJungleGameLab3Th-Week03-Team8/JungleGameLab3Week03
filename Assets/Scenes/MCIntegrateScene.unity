@@ -4676,11 +4676,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7287344432190632851, guid: 2182778c4f16c81429650256f809039e, type: 3}
       propertyPath: _isVertical
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7287344432190632851, guid: 2182778c4f16c81429650256f809039e, type: 3}
       propertyPath: _isHorizontal
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

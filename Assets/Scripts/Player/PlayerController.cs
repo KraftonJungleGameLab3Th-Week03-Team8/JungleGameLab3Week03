@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     public bool IsCanAirStop { get { return _isCanAirStop; } }
     public bool IsAirStop { get { return _isAirStop; } set { _isAirStop = value; } }
     public bool IsDash { get { return _isDash; } set { _isDash = value; } }
+    public bool IsFrontGround => _isFrontGround;
     public bool IsGround => _isGround;
     public bool IsReadyJumpBuffer { get { return _isReadyJumpBuffer; } set { _isReadyJumpBuffer = value; } }
 
@@ -36,6 +37,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool _isAirStop;
     [SerializeField] bool _isDash;    
     [SerializeField] bool _isGround;
+    [SerializeField] bool _isFrontGround;
     [SerializeField] bool _isReadyJumpBuffer;
 
     Coroutine _dashCoolTimeCoroutine;   // 대시 쿨타임 코루틴 (땅 끊기는 문제 방지용)
@@ -101,6 +103,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _playerCheckPlatform.CheckGround(ref _isGround, ref _coyoteTime, ref _coyoteTimeTimer);
+        _playerCheckPlatform.CheckFrontGround(ref _isFrontGround);
         _playerCheckPlatform.CheckWall(ref _isWall);
         _playerCheckPlatform.CheckLandingHeight(ref _isCanAirStop);
 

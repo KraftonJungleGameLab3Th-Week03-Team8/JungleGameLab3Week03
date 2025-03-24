@@ -134,4 +134,22 @@ public class PlayerCheckPlatform : MonoBehaviour
             isCanAirStop = false;
         }
     }
+
+    public void CheckFrontGround(ref bool isFrontGround)
+    {
+        Transform visual = Manager.Game.PlayerController.Visual;
+        Vector3 startPosition = visual.position - Vector3.up * 0.15f;
+        RaycastHit2D hit = Physics2D.Raycast(startPosition, visual.right, _playerWidth * 0.55f, _groundLayer);
+        Debug.DrawRay(startPosition, visual.right * _playerWidth * 0.55f, Color.blue);   // 디버깅
+
+        // 벽 감지
+        if (hit.collider != null)
+        {
+            isFrontGround = true;
+        }
+        else
+        {
+            isFrontGround = false;
+        }
+    }
 }
